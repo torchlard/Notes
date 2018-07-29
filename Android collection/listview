@@ -1,0 +1,38 @@
+
+1. simple listview of text by 
+    android.R.layout.simple_list_item_1
+    
+2. listview for implementing checklist
+lv.adapter = ArrayAdapter<String>(this,andorid.R.simple_list_item_checked,strs)
+lv.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE)
+
+3. single choice list (Radio Button)
+lv.adapter = ArrayAdapter<String>(this,andorid.R.simple_list_item_single_choice,strs)
+lv.setChoiceMode(ListView.CHIOCE_MODE_SINGLE)
+
+4. with SimpleAdapter
+# to display sth other than words
+<RelativeLayout>
+    <ImageView/>
+    <TextView/>
+</RelativeLayout>
+
+class MyListViewSimple: Activity{
+val listItem = ArrayList<HashMap<String, Object>>
+for (i in 0..9){
+    val map = HashMap<String, Object>
+    map.put("ItemImage", R.drawable.icon)
+    map.put("ItemTitle", "$i row")
+    map.put("ItemText", "This is $i row")
+    listItem.add(map)
+}
+val mSimpleAdapter = SimpleAdapter(this, listItem, R.layout.item,
+    arrayOf("ItemImage","ItemTitle","ItemText"),
+    intArrayOf(R.id.ItemImage, R.id.ItemTitle, R.id.ItemText))
+lv.adapter = mSimpleAdapter
+
+}
+
+5. listView in listView
+
+
