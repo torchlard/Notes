@@ -644,21 +644,170 @@ do {
 
 /* RW lock in reader process */
 do {
-  wait(mutex);
+  wait(mutex);  // ensure atomic read_count update
   read_count++;
   if(read_count == 1)
-    wait(rw_mutex);
+    wait(rw_mutex);   // if someone writing, wait..
   signal(mutex);
   ...
   // reading performed
   ...
-  wait(mutex);
+  wait(mutex);  // ensure atomic read_count update
   read_count--;
   if(read_count == 0)
     signal(rw_mutex);
   signal(mutex);
 } while(true);
 ```
+when 1 writer in critical seciont, n readers waiting
+  => 1 reader on rw_mutex, n-1 reader on mutex
+  -> after writer execute signal(rw_mutex), may resume waiting reader/single waiting writer
+
+## dining-philosopher problem
+5 philosopher think and eat, they share circular table with 5 chairs, each belong to 1 philosopher
+when philosopher gets hungry, pick up 2 chopsticks closest to her, but can only pick 1 chopstick at a time
+after eating, put down both chopstick
+
+attempt 1: (may create deadlock. eg. all people pick left at same time)
+```c
+semaphore chopstick[5];
+do {
+  wait(chopstick[i]); // pick left
+  wait(chopstick[(i+1)%5]);   // pick right
+  /* eat for awhile */
+  signal(chopstick[i]);   // put back left
+  signal(chopstick[(i+1)%5]);   // put back right
+  /* think for a while */
+  ..
+} while(true);
+```
+
+possible solutions:
+1. allow at most 4 people sitting simultaneously at table
+2. allow philosopher pick up chopstick only if both chopsticks available
+3. odd numbered people first pick left, even numbered people first pick right
+
+### monitor type
+
+abstract data type: encapsulate data with set of functions operate on data
+monitor construct ensure only 1 process active at a time
+
+still get starvation problem:
+```c
+monitor DiningPhilosophers {
+  enum {THINKING, HUNGRY, EATING} state[5];
+  condition self[5];
+
+  void pickup(int i){
+    state[i] = HUNGRY;
+    test(i);
+    if(state[i] != EATING) // if not yet ready for eating
+      self[i].wait();
+  }
+
+  void putdown(int i){
+    state[i] = THINKING;
+    // send wake up signal to two neighbors
+    test((i+4)%5);
+    test((i+1)%5);
+  }
+
+  // pause if two neighbors are eating
+  void test(int i){
+    if((state[(i+4)%5] != EATING) && (state[i]==HUNGRY) &&
+      (state[(i+4)%5] != EATING) ) {
+        state[i] = EATING;
+        self[i].signal();
+      }
+  }
+
+  initialization_code(){
+    for(int i=0; i<5; i++)
+      state[i] = THINKING;
+  }
+}
+```
+implementation
+```c
+int x_sem = 0, x_count = 0, mutex = 1;
+// mutex for each monitor
+x.wait(){
+  x_count++;
+  if(next_count > 0) // #process suspended on next
+    signal(next);
+  else
+    signal(mutex);
+  wait(x_sem);
+  x_count--;
+}
+
+x.signal(){   // 
+  if(x_count > 0){
+    next_count++;
+    signal(x_sem);
+    wait(next);
+    next_count--;
+  }
+}
+```
+which suspended proces resume first?
+1. first-come, first serve
+define ResourceAllocator in monitor to allocate single resource
+
+in Java, implement by `synchronized` keyword
+
+### sync in windows
+thread sync in kernel: spinlock
+thread sync outside kernel: dispatcher objects
+  mutex, semaphore, events(~ condition variable), timer(notify >=1 thread time expire)
+signaled state: available; non-signaled state: not available
+
+when thread blocks on non-signaled, ready -> waiting, place in waiting queue
+when signaled, kernel move thead waiting -> ready state
+          release mutex
+non-signaled ----------> signaled
+             <----------
+    only 1 thread acquire mutex lock
+
+### sync in linux
+mutex, spinlock, semaphore (+ reader-writer version)
+
+single processor          | multiple processors
+--------------------------|---------------------
+disable kernel preemption | get spin lock
+enable kernel preemption  | release spin lock
+
+spinlock only for short duration task, longer duration semaphore/mutex better
+
+## transactional memory
+atomic memory read-wite 
+problem with tradition: 
+  when #threads increase, level of contention among threads for lock ownership is very high
+
+```c
+void update(){
+  atomic {
+    // modify shared data
+  }
+}
+```
+adv: avoid deadlock
+implement either software(instruction code) /hardware(hardware cache hierarchy, cache coherency protocol)
+
+## OpenMP
+```c
+#pragma omp critical
+```
+
+## functional programming language
+immutable variable
+
+# CPU scheduling
+
+
+
+
+
 
 
 
