@@ -803,16 +803,108 @@ implement either software(instruction code) /hardware(hardware cache hierarchy, 
 immutable variable
 
 # CPU scheduling
+simple: process executed until it must wait
+multiprogramming: make use of waiting time, several process kept in memory at one time
+- IO bound: has many short CPU burst
+  CPU bound: few long CPU burst
 
+when schedule?
+1. process running -> waiting
+2. process running -> ready
+3. process waiting -> ready
+4. process terminates
 
+- scheduling scheme
+  non-preemptive: scheduling only in 1,4
+    once CPU allocated to process, process keep running until terminate/waiting
+    used by old OS
+  preemptive: schduling in others
 
+disable interrup at entry, reenable interrupt at exit
+dispatcher:
+  module let CPU control process selected by short-term scheduler
+  switch context, switch to user mode, jump to proper location in user program to restart
+  - should be less dispatch latency
 
+## scheduling criteria
+CPU utilization: 40-90%
+Throughtput: #processes completed per time unit
+Turnaround time: how long takes to execute that process
+Waiting time: amount of time waiting in ready queue
+Response time: time for submission request until first response
 
+some condition we prefer to optimize min/max rather than average
+for interactive system, min variance in response time, better than min average
 
+## process scheduling algorithm
+### first come, first serve
+not good when P1=24, P2=3, P3=3
+average waiting time = (0+24+27)/3
+- since nonpreemptive, once CPU allocated, run til end
 
+### shortest-job-first
+min average waiting time
+difficulty: knowing length of next CPU request
+cannot used in short-term CPU scheduling, so we predict next burst have similar length as previous one
 
+exponential average of previous bursts
+can be either preemptive [shortest-remaining-time-first] / non-preemptive
 
+eg. for preemptive
+P1,P2,P4,P1,P3
 
+### Priority scheduling
+each process has priority, CPU allocated to highest priority proess
+internally defined priority: use some measurable quantity to compute
+  eg. time limit, memory requirement
+external: criteria outside OS
+  eg. importance of process, type & amount of fund paid 
+
+problem: indefinite blocking / starvation
+solution: aging - gradually increase priority of process waiting for long time
+
+### round robin scheduling
+designed for time-sharing system
+define time interval for switching process
+performance: depends on size of time quantum
+  if too long, same as FCFS; if too short,too many context switch overhead
+
+### multilevel queue scheduling
+classify into foreground (interactive), background (batch) process
+each queue has own scheduling algorithm
+scheduling among queues: ususally fixed-priority preemptive scheduling
+
+1. system process [highest priority]
+2. interactive process
+3. interactive editing process
+4. batch process
+5. student process  [lowest priority]
+
+### multilevel feedback queue scheduling
+allow process to move between queues
+eg. there are 3 queues, must finish all in queue 0 before do queue 1, and then queue 2
+  give highest priority to process CPU burst < 8ms, such process quickly get CPU
+  go oofto next IO. process 24>t>8 serve quickly, though lower priority
+
+## thread scheduling
+process contention scope(PCS): user level thread run on LWP
+system-contention scope(SCS): decide which kernel thread schedule to CPI
+PCS done by priority: select highest priority runnable thread 
+
+### Pthread scheduling
+allow PCS, SCS
+PTHREAD_SCOPE_PROCESS: schedule user thread to LWP
+PTHREAD_SCOPE_SYSTEM: schedle policy will create and bind LWP for each user thread on many-to-many systems
+
+## multiple processor scheduling
+assume homogeneous processors
+1. asymmetric multiprocessing
+   all scheduling decision, IO processing, system activities handled by single processor
+2. symmetric multiprocessing
+   each processor is self-scheduling, maybe in common ready queue/ have their own private queue for ready process
+
+processor affinity: 
+  since invalidate & rebuild cache memory in processors is high cost, process has affinity for processor currently running
 
 
 
