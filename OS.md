@@ -905,6 +905,195 @@ assume homogeneous processors
 
 processor affinity: 
   since invalidate & rebuild cache memory in processors is high cost, process has affinity for processor currently running
+soft affinity: attempt keep process running in sanme processor, not guarenteed
+hard affinity: system call allow specify processor
+
+non-uniform memory access(NUMA): CPU access some part of main memory faster than others
+
+        slow
+  CPU  access   CPU
+   |---------    |
+   |fast    |    |fast access
+   |access  |    |
+ memory     |--memory
+
+for system with common run queue, load balance not necessary
+### push migration
+specific task periodically check loads on each processor, move processes to evenly distribute load
+### pull migration
+idle processor pull waiting tasks from busy processor
+oftern push and pull migration implemented in parallel
+
+## multicore processor
+memory stall: processor spend significant amount of time accessing memory for data
+  reason: eg. cache miss
+  so assign 2 thread to each core => if 1 thread memory stall, core switch to another thread
+coarse-grained multithreading: thread execute on processor until long latency event (eg. memory stall)
+find-grained multithreading: typically boundary of instruction cycle for switching
+
+need two level of scheduling for multi-threading
+1. OS decide which software thread on hardware thread
+2. specify how each core decide which hardware thread to run
+
+## real time CPU scheduling
+soft real-time: no guarentee when critical real time process scheduled
+hard real-time: task must be serviced by deadline, service after deadline expired
+event latency: time taken from event occur to serviced
+interrupt latency: time taken from arrival of interrup to start of routine that service interrupt
+  interrupt [-> determine interrput type -> context switch -> ]interrupt service routine
+  factor: interrupt disabled while kernel data structure update
+dispatch latency: time taken stop 1 process and start another
+
+|<---------------response interval------------>|
+|                                              |
+|interrupt |                         |         |
+|processing|<----dispatch latency--->|real     |
+|<-------->|                         |time     |
+|          |<-conflict->|<-dispatch->|process  | 
+|          |            |            |execution|
+|          |            |            |<------->|
+
+conflict phase: preemption of any running process, high-priority take low-priority process resource
+
+### priority based scheduling
+periodic process
+fixed processing time < deadline < period
+1st deadline, 2nd deadline, ...
+admission-control algorithm: admit process/reject request if cannot guarantee serviced by deadline
+### rate monotonic scheduling
+optimal, choose shorter period process as higher priority
+each process execute periodically in order, remaining process execute in next cycle
+problem: cannot fully maximize CPU resource; sometimes cannot guarentee meet deadline
+
+### earliest deadline first scheduling
+earlier deadline, higher priority
+not require periodic processing
+theoretically can meet deadline requirement, CPU utiliza 100%
+
+### proportional share scheduling
+allocate T shares among all applications, must work with admission-control
+
+### POSIX scheduling
+SCHED_FIFO: no time slicing among threads of equal priority
+SCHED_RR: have time slicing among threads of equal priority
+SCHED_OTHER: undefined, system specific
+
+### Linux implementation
+based on scheduling class, each class assigned specific priority
+1. default scheduling class using completely fair scheduler
+   record how long each task run by virtual runtime, not directly assign priority
+   associate with decay factor
+   scheduler pick smallest `vruntime` process to run next
+   linux use 2 separate priority ranges (real time task, normal task)
+2. real time scheduling class
+
+### windows implementation
+priority based, preemptive scheduling
+thread given prioirty class and relative priority
+
+## evaluation
+1. deterministic modeling: put some cases to test
+2. queuing model: describe distribution of times where process arrive in system
+3. simulations
+
+
+# Deadlocks
+under normal operation mode, process utilize resource in following sequence:
+  request -> use -. release 
+system table records whether each resource is free or allocated, process allocated
+
+eg. T1: get mutex lock 2,1 ; T2: get mutex lock 1,2
+  possible deadlock if run in parallel
+
+necessary condition:
+1. mutual exclusion: at least 1 resource held in non-sharable mode
+2. hold and wait: a process must hold at least 1 resource and wait additional resource held by others
+3. no preemption
+4. circular wait
+
+## resource allocation graph
+
+## solution
+1. use protocol to prevent deadlock
+2. allow system to enter deadlock, detect and recover
+3. ignore problem, pretend deadlock never occur
+
+third solution used by most OS, let application developer handle deadlock
+
+### safe state
+safe state: system can allocate resource to each process up to max
+deadlock state is unsafe state
+
+### Banker's algorithm
+when process enter system, must declare max num of instance of each resource type it may need, 
+  cannot exceed total #resource in system
+when user request a set of resource, system must determine whethre allocatio will leave system in safe state;
+  if not, wait until some other resource available
+
+## recovery
+### process termination
+1. abort all deadlocked processes
+2. abort one process at a time until deadlock cycle eliminated
+
+### resource preemption
+1. select a victim: decide order of preemption to minimize cost
+2. rollback
+3. starvation: ensure process picked as victim only finite times
+
+
+# Main Memory
+first fetch instruction from memory, then decode, cause operands to be fetched from memory. After instruction
+  executed on operands, result stored back to memory
+  we can ignore how program generates memory address, interested only in sequence of memory address generated by running program
+
+any instrucitons in execution and data used by instruction, must be in direct-access storage devices
+register: accessible in one CPU cycle
+
+## process protection
+make sure each process has separate memory space:
+  protect process from each other
+  - need ability to determine range of legal address, ensure process can only access those address
+base register: smallest legal physical memory address
+limit register: size of range
+- base and limit register only can loaded by OS using privileged instruction (only in kernel mode)
+
+compare every address generated in user mode with registers
+
+## address binding
+process may move between disk and memory during execution
+binding instructions and data to memory address:
+  1. compile time
+     if you know where process reside in memory, absolute code can be generated
+     if later starting location changes, need to recompile code
+  2. load time
+     if not known position, compiler must generate relocatable code
+     final binding is delayed until load time
+  3. execution time*
+     if process can be moved between memory segment, binding must be delayed until runtime
+     most OS use this method
+
+object file in C: 
+  real output from comilation phase. mostly machine code, has info that allow linker to see what 
+  symbols are in and symbols(global objects,functions..) required to work
+
+                                                      other object module           system library
+                    [compile time]                       [   |           load time          |  ]
+source program -> compiler/assembler -> object module -> linkage editor -> load module -> loader 
+-> in-memory binary memory image [run time]
+            | (dynamic linkage)
+    dynamically loaded
+    system library
+
+
+
+
+
+
+
+
+
+
+
 
 
 
