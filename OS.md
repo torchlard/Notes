@@ -1174,24 +1174,159 @@ use segment-number as offset in segment table to find entry
 
 ## paging
 frames: break physical memory into fixed sized blocks
-pages: break logical memory into blocks of same size
+pages: break logical memory into blocks of same size, size=power of 2 (512B - 1GB / page)
 
 logical address space totally separated from physical address space, 
   can have logical 64-bit when system < 2^64 B physical memory
 
 address by CPU: page number(index), page offset
 page table: base address of each page in physical memory
+frame table: table keep info which frames allocated, which available, total frames are
 
     (logical address)
           ------------- 
           |           |
 CPU -> [p d]       [f d] (physical address)
-        |     ...   |
-        |    p...   |
-        -----  f  ---
-              ...
-              ...
+        |  page#,   |
+        |  frame#   |
+        |   ...     |
+        |-- ... ----|
+        |   ...     |
+        |           |
+        |   ...     |
+    if  |  p...     |
+    TLB ---- f  -----
+    miss    ...
+            ...
           (page table) 
+
+if 2^m logical address space size, 2^n page size => m-n bit page number, n bit page offset
+
+smaller page size -> less internal fragmentation, but higher overhead (more page table entry), less IO efficient
+  so current page size grows larger
+  page size between 4KB - 8KB
+
+paging let us use physical memory larger than what can addressed by CPU's address pointer length
+each page of process need 1 frame
+separation between programmer's view of memory and actual physical memory
+
+### hardware implementation
+page table as set of dedicated registers -> high speed logic to make paging-address translation efficient
+CPU dispatcher reloads register, only OS can modify page table
+when page table is very large(eg. 1M entries), page table kept in main memory
+  page-table base register (PTBR) point to page table
+  change page table only require chaning 1 register
+  but two memory access needed to access a byte
+
+-> solution: use translation look-aside buffer (TLB)
+  associative, high-speed memory; 
+  item: 'key, value'
+  TLB as cache for frame number search
+  if TLB miss, go back search for page table
+  must keep small, typically 32 - 1024 entries
+
+TLB replacement policy
+  1. least recently used
+  2. round-robin
+  3. random
+
+some TLB store address space identifier
+CPU today provide multiple levels of TLB
+  eg. intel i7, 128 entry L1 instruction TLB, 64 entry L1 data TLB
+      512-entry L2 TLB
+
+### protection
+read-write, read-only, execute-only protection
+separate protection bits for each kind of access, allow any combination of these access
+valid-invalid bit: 
+  valid: associated page in logical address space => legal page
+  invalid: not in logical address space
+
+### shared pages
+allow sharing common code
+each process has its own data page
+
+## hierarchical paging
+two level paging algorithm
+32bit logical address space, page size=4KB -> 20 bit page number + 12 bits page offset
+  page number -> 10 bit page number + 10 bit offset
+                   10   10    12
+final structure: [ p1 | p2  | d ]
+                 page number|page offset
+
+forward-mapped page table:
+logical address -> outer page table -> page of page table -> memory
+
+## hashed page tables
+each entry in hash table has linked list element hash to same location
+1. virtual page number
+2. value of mapped page frame
+3. pointer to next element in linked list
+
+logical address (p|d) -> hash function -> hash table -> [q|s| ] -> [p|r| ] -> (r|d) -> physical memory
+
+clustered page table: ~hash table, except each entry refer to several pages, not single
+  good for sparse address space
+
+## inverted page table
+
+             -----------
+ (logical)   |         |
+  [pid | p | d]   [i | d]----> physical
+    |           _  |           memory
+    -----> .....|  |
+     search.....|i |
+           .....|  |
+           pid|p ---
+           .....
+           .....
+    (inverted page table)
+
+1 entry for each real page/frame of memory
+entry: virtual address of page in real memory location
+  `<process-id, page-number, offset>`
+inverted page table entry: `<process-id, page-number>`
+  process-id assume role of address space identifier
+page table sort by physical address
+
+table usually contains several different address spaces mapping physical memory
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
