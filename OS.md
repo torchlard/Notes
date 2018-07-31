@@ -1292,7 +1292,43 @@ page table sort by physical address
 table usually contains several different address spaces mapping physical memory
 
 
+# virtual memory
+allow execution of processes not completely in memory
+allow process to share files easily and implement shared memory
 
+sometimes don't need entire program:
+  error handling code
+  array,list,table allocate more memory than needed
+  certain options and features used rarely
+
+adv: 
+  1. program not constrained by amount of physical memory
+  2. more program run at the same time, increase CPU utilization, throughput
+  3. less IO to load/swap memory
+
+sparse address space: virtual address space includes holes
+demand paging: load pages only as they are needed
+
+swapper manipulate entire process; pager concerned with individual pages of process
+page table set valid and invalid bit to frames
+  valid: page both legal and in memory
+  invalid: not in logical address space / valid but currently on disk
+
+page fault: access to page marked invalid
+
+process access page not in memory:
+1. check internal table (in PCB) to see if reference was valid or invalid
+2. if invalid, end process. if valid, page it
+3. find free frame
+4. bring desired page into newly allocated frame
+5. modify internal table, page table indicate page now in memory
+6. restart instruction
+
+hardware support:
+1. page table: mark entry invalid through valid-invalid bit / other
+2. secondary memory: swap device, swap space
+
+problem: 1 instruction may modify several different locations
 
 
 
