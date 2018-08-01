@@ -1330,7 +1330,165 @@ hardware support:
 
 problem: 1 instruction may modify several different locations
 
+# copy on write
+allow parent and child process to initially share same pages
+only page that modified are copied
+OS provide pool of free pages, allocated when stack/heap for process must expand
+zero-fill-on-demand: pages zeroed-out before being allocated
+virtual memory fork: fork() with copy-on-write
 
+over-allocating memory: when increase degree of multiprogramming
+  source: buffer IO
+  result: page fault occurs
+
+when over-allocating  memory
+1. terminate user process
+2. swap out process
+3. page replacement
+
+## page replacement
+if no frame is free, find one not currently in use and free it
+  free by write content to swap space and change page table
+
+1. find location of desired page in disk
+2. if free frame, use it. If no free frame, use page-replacement algorithm to select victim frame. 
+   write victim frame to disk, change page and frame table
+3. page in desired page
+4. set desired frame to valid. continue user process
+
+modify bit: each page/frame use modify bit to show whether it is modified
+  if not modified, we can skip page out victim page, to reduce overhead
+
+
+### page replacement algorithm
+consider:
+  which one has lowest page fault rate?
+
+reference string: string of memory references
+#### FIFO page replacement
+first in first out, FIFO queue
+increase number of frame not always decrease fault rate (Belady;s anomaly)
+
+#### Optimal Page Replacement
+replace page will not be used for longest period of time
+nned future knowledge of reference string
+
+#### LRU (least recently used) page replacement
+each page with time of that page's last use
+optimal page replacement algorithm looking backward in time
+
+to calc time-of-use:
+1. conunter
+2. stack
+
+#### LRU approximation
+reference bit: whether page is referenced (read/write to page)
+don't know order of use
+##### additional reference bit algorithm
+keep 8-bit type for each page
+for each time period, shift register to left => keep last eight time period
+##### second-change algorithm
+FIFO, inspect reference bit
+  if value=0, proceed replace this page
+  if value=1, give 2nd chance, move on select next FIFO page
+    reference bit cleared, arrival time set to current time
+
+once victim page found, page replaced, new page inserted in circular queue
+
+##### enhanced second-chance algorithm
+(reference bit, modify bit)
+1. (0,0) => best to replace
+2. (0,1) => not quite good
+3. (1,0) => probably will use again soon
+4. (1,1) => likely use again soon
+
+#### counting-based 
+least frequently used: shift count right by 1 bit at regular intervals
+most frequently used: page with smallest count
+
+#### page buffering algorithms
+system commonly keep a pool of free frames
+  choose victim frame, desired page read into free frame before victim written out
+
+maintain list of modified pages:
+  when paging device idle, modified page selected and written to disk
+
+keep pool of free frame, remember which page was in each frame
+  when page fault occurs, first check if desired page in free-frame pool, if yes, no IO needed
+    if not, select free frame and read
+
+raw disk: some OS give special programs ability to use disk partition as large sequential array of logical blocks
+  IO bypass any IO filesystem services
+
+
+### frame-allocation algorithm
+consider:
+  for mutiple processes, decide how many frames allocates for each process, when page placcement required
+  disk I/O is expensive
+
+when free-frame list exhausted, page replacement algorithm used to select 1 of 93 page replaced with 94th
+
+#### min number of frames
+allocation < total #frame available (unless page sharing)
+at least 1 frame -> instruction, 1 frame -> memory reference
+worst case scenario: allow multiple level of indirection (eg. 16 bit word contain 15-bit address, 1-bit indirect indicator)
+  load instruction -> indirect address -> indirect address -> indirect address -> ... -> until every virtual memory touched
+=> must limit max #moery reference per instruction to 17
+
+#### allocation
+equal allocation
+proportional allocation: frame = page/(total pages) * (total frame)
+global replacement: allow process to select replacement frame from set of all frames, even frame currently allocated to others
+  eg. high-priority process can select from low-priority for replacement
+local replacement: can only select own set of allocated frame
+
+#### non-uniform memory access
+when multiple CPU used, access to main memory may not be equal
+allocate frames for process close to CPU (less latency)
+eg. latency group: schedule all threads and process and allocate all memory of process within lgroup
+
+## Thrashing
+any process not have enough frame
+thrashing: high paging activity, spending more time paging than executing
+
+            |------------------------------------repeat cycle----------------------------------------
+if CPU utilization too low -> increase degree of multiprogramming -> process need more pages        |
+  -> more page fault, take frame from other process -> process queue up for paging device -> decrease CPU utilization
+
+local replacement algorithm: if one process start thrashing, cannot steal frame from another process
+
+working-set strategy: look at how many frames a process actually using
+locality: defined by data structure, program structure
+working set: set of pages in most recent D page references (D: parameter define working-set window)
+
+OS monitor working set of each process and provide working set enough frames
+page with >= 1 bit on = in working set
+
+### page fault frequency
+establish upper and lower bounds on desired page fault rate, give/remove frame if exceed limit
+
+## memory-mapped file
+memory mapping: use virtual memory technique to treat file IO as routine memory access
+  mapping disk block to page in memory
+  when access, page-sized portion of file read from fs to physical page
+
+multiple processes allowed to map same file concurrently
+page hold copy of disk block
+often shared memory is implemented by memory mapping files
+
+## memory-mapped IO
+each IO controller includes registers to hold commands and data being transferred
+special IO instructions allow data transfer register <---> system memory
+
+convenient for serial and parallel port to connect modems and printers to computer
+  IO port: CPU transfer data by read & write few device registers
+  programmed IO: CPU use polling to watch control bit
+
+## kernel memory
+kernel memory often allocated from free memory pool
+1. kernel request memory for data structure of varying sizes, so should min waste
+2. pages allocated to suer process no need contiguous physical memory
+   certain hardware device interact directly with physical memory need contiguous page
 
 
 
