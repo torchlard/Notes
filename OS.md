@@ -1330,7 +1330,7 @@ hardware support:
 
 problem: 1 instruction may modify several different locations
 
-# copy on write
+## copy on write
 allow parent and child process to initially share same pages
 only page that modified are copied
 OS provide pool of free pages, allocated when stack/heap for process must expand
@@ -1457,9 +1457,11 @@ if CPU utilization too low -> increase degree of multiprogramming -> process nee
 
 local replacement algorithm: if one process start thrashing, cannot steal frame from another process
 
+### working-set
 working-set strategy: look at how many frames a process actually using
 locality: defined by data structure, program structure
 working set: set of pages in most recent D page references (D: parameter define working-set window)
+  if D too large, may overlap locality
 
 OS monitor working set of each process and provide working set enough frames
 page with >= 1 bit on = in working set
@@ -1490,7 +1492,60 @@ kernel memory often allocated from free memory pool
 2. pages allocated to suer process no need contiguous physical memory
    certain hardware device interact directly with physical memory need contiguous page
 
+### buddy system
+memory using power-of-2 allocator
+256kB -> 128+128 -> (64+64) + (64+64) -> (32+32) + ...
+adv: adjacent buddies combined to form larger segments quickly -- coalescing
 
+### slab allocation
+slab: one/more physically contiguous pages
+cache: >= 1 slabs
+objects: instantiation of kernel data structure the cache represents
+
+all objects in cache marked as free -> need new obj for kernel data structure -> assign free obj from cache
+adv: 
+  1. no waste due to fragmentation
+  2. memory requests satisfied quickly. ok for frequent allocate & deallocate (obj created in advance)
+in linux, SLUB allocator replace SLAB
+  move metadata from slab to page structure the kernel use for each page
+  remove per-CPU queue that SLAB allocator maintains for objects in each cache
+
+## consideration
+prepaging: prevent high level of initial paging, bring into memory at one time all page that will be needed
+page size: medium
+TLB Reach
+IO interlock: prevent low priority IO to be replaced by high priority IO
+
+# mass storage device
+## magnetic disk
+disk head files on microns level thin cushion of air
+head crash: head damage magnetic surface, though disk platter coated with thin protective layer
+
+seek time: time to move disk arm to desired cyliner
+rotational latency: time for desired sector to rotate to disk head
+
+IO bus: ATA, SATA, eSATA, USB, fibre channel
+controller: special electronic processor controlling data transfer on bus
+host controller: controller at computer end of bus
+disk controller: built into each disk drive, have built in cache
+
+disk IO command: computer place command to host controller (using memory-mapped IO port),
+  host then send command via message to disk controller, 
+  disk controller operate disk driveto carry out command
+
+## SSD
+faster because no seek time/latency
+no moving parts
+
+## disk structure
+addressed as 1D array of logical blocks (usually size 512 B)
+eg. sector 0 = first sector of first track on outermost cylinder
+
+difficult to convert logical block -> disk address
+1. hide defective sectors by substituting spare sectors from elsewhere on disk
+2. number of sectors per track not constant
+ 
+constant linear velocity: density of bits per track
 
 
 
