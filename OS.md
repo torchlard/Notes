@@ -1546,18 +1546,220 @@ difficult to convert logical block -> disk address
 2. number of sectors per track not constant
  
 constant linear velocity: density of bits per track
+constant angular velocity: density of bits decrease from inner to outer tracks
 
+## disk attachment
+host-attached storage: through local IO port
+network-attached storage: over network (iSCSI: NAS protocol)
+storage-area network: private network connecting servers and storage unit
 
+when issue IO:
+1. input / output?
+2. disk address for transfer?
+3. memory address for transfer?
+4. number of sectors to be transferred?
+when desired controller busy, new request placed in queue
 
+### FCFS scheduling
+first come, first serve
+### SSTF scheduling
+shortest seek time first algorithm [same as shortest-job-first scheduling]
+good to serve all request close to current head position first
+### SCAN scheduling [elevator algorithm]
+disk arm start at one end of disk, move towards other end
+at the other end, direction of head movement reversed
 
+queue: 98,183,37,122,14,124,65,67 ; head: 53
+schedule: 53,37,14, 0 , 65,67,98,122,124,183 
 
+### C-SCAN scheduling (circular scan)
+also move head from one end to other
+but when head arrive at other end, immediately return to beginning of disk, and start scan again
+-> treat cylinders as circular list; provide more uniform wait time
 
+### LOOK scheduling
+look for request before continue to move in given direction
 
+### SSD scheduling
+since no seek time in SSD, linux just use FCFS policy, but modifies it to merge adjacent requests
 
+### selection
+SCAN, C-SCAN place heavy load on disk, but less likely cause starvation problem
+SSTF: optimal seek time, but higher computation 
 
+performance depend heavily on number and types of requests, file allocation method
+  location of directories and index blocks
+if IO performance is only concern, OS can hand over control to disk controller
+if there are other constraints, like order to write, OS chhose to do own disk scheduling, 
+  feed request to disk controller one by one
 
+## formatting
+low-level formatting/physical formatting: fill disk with special data structure for each sector
+  consist of (header,trailer)(info used by disk controller, eg. error correcting code), data area
+  disk controller possible to choose among few sector size 
 
+1. partition disk into >=1 groups of cylinders
+2. logical formatting: creation of file system, store initial fs data strucutre 
+cluster: group blocks together
+disk IO via blocks, file system IO via clusters
 
+raw disk: special program ability to use disk partition without any file system
+raw IO: IO to raw disk
+  eg. some database use raw IO, can control exact disk location, make app more efficient
+
+## boot block
+bootstrap stored in ROM => in fixed location processor can start execute when power up
+most system store tiny bootstrap loader program in boot ROM => bring full bootstrap program from disk
+boot disk/system disk: where full bootstrap program stores in boot block
+
+## bad block
+any bad block flagged as unusable so file system doesn't allocate them
+controller maintain list of bad blocks, low level formatting set aside spare sectors not visible to OS
+  sector sparing: replace bad blocks logically with spare sector
+
+1. OS tries to read logical block 87
+2. controller calc ECC find sector is bad, report to OS
+3. next time reboot special command tell controller to replace bad sector with sparce
+4. next time request block 87, request translated into replacement address by controller
+  (could invalidate any optimization on disk scheduling)
+
+sector slipping: 
+  when block 17 become defective and spare 202 sector, remap all sectors from 17 to 202
+  202 copied into spare, 201->202, 200->201, ... , 18->19, 17->18  
+
+## swap-space management
+some system merge swapping and paging
+virtual memory use disk space as extension of main memory
+swap space to hold entire process image
+
+### Location
+swap space in: 
+  normal file system: easy to implement, inefficient (external fragmentation, navigate directory structure)
+  separate disk partition: use swap space storage manager allocate, deallocate blocks from raw partition
+    life of data much shorter
+
+initial: swap entire process between contiguous disk region and memory
+swap space only for anonymous memory
+                         |--swap area--|
+                        page slot
+                            |
+swap file/swap partition  [  |  |  |  ]   (hold swapped pages)
+swap map                  [ 1  0  3  0]  (array of integer counter for #process)
+
+## RAID (redundant array of independent disks)
+solid state non-volatile RAM: write-ack cache protected from data loss during power failure
+bit-level striping: splitting bits of each byte across multiple disks
+block-level striping: blocks of file striped across multiple disks
+parallelism:
+1. increase throughput, load balance
+2. reduce response time of large access
+
+RAID 0: O O O O    non-redundant striping
+RAID 1: O O O O C C C C   mirrored disks
+RAID 2: O O O O P P P     memory-style ECC
+RAID 3: O O O O P       bit-interleaved parity
+RAID 4: O O O O P       block-interleaved parity
+RAID 5: P P P P P       block-interleaved distributed parity
+RAID 6: P P (PP) (PP) (PP) (PP)   P+Q redundancy
+
+snapshot: view of file system before last update
+replication: auto duplication of writes between separate sites for redundancy and disaster recovery
+  sync: slower, must write locally ; async: faster, maybe data loss
+
+hot spare: replacement hard disk for disk failure => eg. rebuild mirrored pair when one disk fail, no waiting
+problem:
+1. software bug
+2. lack of flexibility
+
+ZFS maintains internal checksums of all blocks, including data and metadata
+inode: data structure storing file system metadata, with pointers to data
+  if data mirrored, and there is block with correct checksum and one with incorrect checksum,
+  ZFS auto update bad block with good one
+  also have checksum for inode
+
+Disks gathered together via RAID sets into pools of storage, a pool can hold >=1 ZFS
+
+traditional:
+FS -- volume
+FS -- volume
+FS -- volume
+
+ZFS:
+ZFS --|                  |-- disk
+ZFS --|-- storage pool --|-- disk
+ZFS --|                  |-- disk
+
+disk write outcome:
+1. success
+2. partial failure: failure occur in the midst of transfer, so only some sectors written with new data, some corrupted
+3. total failure: fail before start, previous data remain intact
+
+# file system
+
+collection of file, directory structure
+file attribute: name, identifier, type, location, size, protection, time, date, user identification
+extended file attribute: character encoding, file checksum, ..
+file operation: create, write, read, repositioning within file (file seek: search sth), delete, 
+  truncate(erase content of file but keep attribute)
+
+file pointer: read(), write() use same pointer
+file-open ocunt: trace number of opens and closes and reaches zero on last close
+disk location: information needed to locate file on disk kept in memory
+access right: stored on per-process table so OS can allow/deny IO
+
+UNIX use crude magic number stored at beginning of file to indicate roughly type of file 
+  not all files have magic numbers, so allow file-extension hint
+
+file type indicate internal structure of file
+some OS support minimal number of file structure, at least include executable file
+
+UNIX define all files simply streams of bytes, each byte individually addressable by offset from beginning/end of file
+internal fragmentation:
+  eg. physical block = 512 B, file=1949 B
+      must use 4 blocks = 2048 B to store file, 99 B wasted
+
+## sequential access
+information in file processed in order
+read_next(), write_next()      
+
+## direct access/relative access
+fiexed length logical records: read, write records rapidly without particular order
+random access to any file block
+read(n), write(n)
+relative block number: index relative to beginning of file
+OS decide where files should place
+
+## other access
+on top of direct-access
+indexed sequential-access method: 
+  master index -> disk blocks of secondary index -> actual file blocks
+  to search item:
+    binary search of master index => block number of secondary index
+    block read in, binary search find block containing desired record
+    block searched sequentially
+
+volume: entity containing file system
+  can be subset of device, whole device, multiple device linked into RAID set
+
+## directory
+search file, create file, delete file, list directory, rename file, 
+  traverse file system: save content, structure of entire fs at regular intervals
+
+### two-level directory
+user file directory: lists only files of single user
+master file directory: store user 
+a special user directory is defined to contain system file, so to share among users
+search path: sequence of directories searched when a file is named
+
+deletion of directory:
+  if directory is empty, simply delete
+  if exist subdirectory, delete subdirectory first / recursive delete
+
+soft link: link reference to a file; in linux, when file deleted, soft link left
+hard link: form acyclic graph, a file has >1 parent directory
+           use counter to count #parent, decrement 1 when one link deleted
+
+if allow cycles in directory tree, must avoid infinite loop in naviagation
 
 
 
