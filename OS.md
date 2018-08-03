@@ -1760,8 +1760,75 @@ hard link: form acyclic graph, a file has >1 parent directory
            use counter to count #parent, decrement 1 when one link deleted
 
 if allow cycles in directory tree, must avoid infinite loop in naviagation
+  since self-referencing is possible in cyclic tree, need to use grabage collection:
+    traverse entire file system, mark everything can be accessed -> 2nd pass collect everything not marked to free space
+    very time consuming
 
+## file system mounting
+OS given name of device and mount point
+eg. partition of user's home mounted in /home
 
+mount over directory that contain files: 
+1. disallow OR
+2. make files temporarily obscured until unmounted
+
+allow same filesystem mount repeatedly at different mount point 
+  OR
+only allow 1 mount 
+
+## file sharing
+owner, group
+
+## remote file system
+client-server model
+spoofed: unauthorized client allowed access to server
+
+distrubted information system / distributed naming service: unified access to information needed for remote computing
+MS: common internet file system (CIFS)
+lightweight directory access protocol: secure distributed naming mechanism
+
+## failure mode
+may fail disk, metadata, disk controller, cable, host-adapter
+system either terminate all operations / delay
+to implement recovery from failure, some kind of state information maintained on both client and server
+
+NFS: stateless DFS
+## consistency semantics
+specify how multiple user system to access shared file simultaneously
+  related to process sync algorithm
+  
+### UNIX semantics
+writes to open file by user visible immediately to other user
+allow user to share pointer of current location into file
+  advancing of pointer by one ser affects all sharing users
+### session semantics
+writes to file by user not visible immediately to other user that have same file open
+once file closed, changes made visible in sessions starting later
+### immutable shared files semantics
+once file is declared as shared by creator, name and content cannot be modified
+
+## protection
+access control
+password protection
+
+# file system implementation
+1. how should file system look to user
+2. create algorithm and data structure map logical file system to physical secondary storage
+
+application program -> logical file system -> file organization module -> basic file system
+  -> I/O control -> devices
+
+IO control: device driver, interrupt handler for main memory<-->disk
+basic fs: generic commands to appropriate device driver to read and write physical blocks on disk
+file organization module: know about file, logical, physical blocks
+  translation logical->physical, free space manager
+logical fs: manage metadata, file control block(inode in UNIX) contain metadata; protection
+
+## overview
+boot control block: per volume, info to boot OS 
+volume control block: per volume, volume detain, #blocks in partition, size blocks, #free-block ..
+directory structure: per fs {filename, associated inode num} {master file table}
+FCB: per file, detail about file
 
 
 
