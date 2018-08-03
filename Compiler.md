@@ -15,22 +15,17 @@ source code
 -> 寄存器分配: 每一變量和臨時數據選寄存器, 不同活躍點共用register
 -> 代碼流出: 機器寄存器替代每一指令的臨時變量名
 
+有用抽象: 上下文無關文法(語法分析), regex(詞法分析)
+## 樹語言
+straight line program
+compoundStm, AssignStm, PrintStm, IdExp..
 
+Stm: 語句 (eg. s1;s2, i:=e)
+Exp: 表逹式 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+每一項文法規則都有一個構造器
+  有右部成分
+對於每一種選擇，創建一個構造函數(constructor function)
 
 
 

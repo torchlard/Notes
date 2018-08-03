@@ -1830,21 +1830,36 @@ volume control block: per volume, volume detain, #blocks in partition, size bloc
 directory structure: per fs {filename, associated inode num} {master file table}
 FCB: per file, detail about file
 
+UNIX treat directory same as file
+1. open() call pass filename to logical file system
+   if already in use, per-process open-file table entry point to system-wide open-file table
+   if not, search for given filename
+2. once file found, FCB copied to system-wide open-file table
+3. entry made in per-process table
+4. open() return pointer, all file operation performed via this pointer
 
+  user space        kernel memory     secondary storage
+  ---------------------------------------------------
+                    ......     <------ directory structure
+  open(filename)--> XXXXXX ----|
+                    ......     ------> file-control block
 
+                  ...          ... --------> data blocks
+  read(index) --> xxx ------>  xxx <-------- FCB
+                  ...          ...
+                per-process system-wide
+                open-file
+                table
 
+entry: file descriptor / file handle
 
+## mounting
+a boot loader understand multiple filesystem and multiple OS occupt boot space
+root partition: contain OS kernel checked if valid in boot time
+  if invalid, have consistency checked and possibly corrected
 
-
-
-
-
-
-
-
-
-
-
+Virtual File System: 
+OS concurrently support multiple types of filesystem into directory structure
 
 
 
