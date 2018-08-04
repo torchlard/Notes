@@ -1838,8 +1838,9 @@ UNIX treat directory same as file
 3. entry made in per-process table
 4. open() return pointer, all file operation performed via this pointer
 
+```
   user space        kernel memory     secondary storage
-  ---------------------------------------------------
+  
                     ......     <------ directory structure
   open(filename)--> XXXXXX ----|
                     ......     ------> file-control block
@@ -1850,7 +1851,7 @@ UNIX treat directory same as file
                 per-process system-wide
                 open-file
                 table
-
+```
 entry: file descriptor / file handle
 
 ## mounting
@@ -1858,8 +1859,219 @@ a boot loader understand multiple filesystem and multiple OS occupt boot space
 root partition: contain OS kernel checked if valid in boot time
   if invalid, have consistency checked and possibly corrected
 
-Virtual File System: 
+## Virtual File System
 OS concurrently support multiple types of filesystem into directory structure
+first layer: file-system interface: open(),close(), read(),write()
+second layer: virtual file system (VFS)
+  1. separate generic operation from implementation
+  2. mechanism for represent file thoughtout network
+     based on file-representation structure called vnode
+     inocde uniuq within only single fs
+
+distinguish local file from remote ones
+
+                                 |---> remote fs type1 [network]
+fs interface --> VFS interface --|---> local fs type2 [disk]
+                                 |---> local fs type1 [disk]
+
+inode object: individual file
+file object: an open file
+superblock object: entire file system
+dentry object: individual directory entry 
+
+## directory implementation
+### Linear List
+linear list of file names with pointers to data blocks
+create file:
+1. search directory no existing file has same name
+2. add new entry at end of directory
+linked list can also be used
+
+software cache to store most recently used directory information
+balance tree, sorted list
+
+### hash table
+take value computed from filename and return pointer to filename in linear list
+insertion, deletion: avoid collision is ok
+chained-overflow hash table: each hash entry is linked list
+
+## allocation method
+### contiguous
+each file occupy set of contiguous blocks on disk
+filesystem remembers disk address of last block referenced
+problem: 
+1. external fragmentation, need expensive compacts on free space
+   maybe fs unmounted when offline defragmentation
+2. need pre-defined how much space needed for a file
+   if too much assigned, waste space; too less, error
+
+### linked allocation
+each file is linked list of disk blocks
+effective only for sequential access file
+problem:
+1. inefficient for direct access. eg. to access i-th block, need jump i-th times
+2. more space to save pointer
+3. reliability: if pointer lost/damaged, cannot read
+   solution: use doubly linked list
+
+file-allocation table(FAT):
+  section of disk at beginning of each volume contain table
+  1 entry for each blcok, indexed by block number
+  directory entry: first block's block number of file
+  table entry: block num of next block in file (chain)
+
+### indexed allocation
+bring all pointers together into index block
+each file has own index block. i-th block=i-th index-block entry
+allow direct access, no external fragmentation
+
+how to set dynamic index-block size?
+1. linked linst of index blocks
+2. multilevel index (eg. first-level index point to second-level index block)
+3. combined scheme
+   eg. 15 pointers of index-block in inode; 
+       12 as direct block: direct point to blocks of file data
+       3 as {single,double,triple} indirect block
+        point to another/2 layers/3 layers of indirect/direct blocks
+index block can be canced in memory
+
+### performance
+type of access can be declared when file created:
+1. sequential access -- linked
+2. direct access -- contiguous
+
+## free space management
+maintain free space list: record of all free blocks
+### bit vector
+free=1, allocated=0
+eg. 00111100111..
+can sequentially check each word in bit map to find first non-0 free block
+use clustering of blocks to increse efficiency; not possible keep entire vector in main memory
+
+### linked list
+link all free blocks, pointer to first free block
+grouping: first free block: address of n free blocks, last block: next n free blocks address
+
+### counting
+in general several contiguous blocks allocated/freed simultaneously
+each entry = {disk address:address of first free block, count:number(n) of free contiguous blocks after first}
+entry stored in balanced tree
+
+### ZFS
+metaslabs: divide space on device into chunks of manageable size, each has associated space map
+use log-structured fs to log all block activities (allocating, freeing) in time order
+  load space map into memory in balanced tree
+=> in-memory space map show allocated & free space in metaslabs
+combine contiguous free blocks => single entry
+
+## efficiency
+cluster size grows as file grows
+to track 'last access date', anytime file opened for reading, directory entry must read & write also => inefficient
+ZFS support 128-bit pointer for massive file system
+
+separate section of main memory for buffer cache (assume data will use shortly)
+page cache -> cache file data
+virtual address far better caching through physical disk block
+unified virtual memory: use page caching to cache process pages and file data
+
+without unified buffer cache, to open and access file:
+1. memory mapping: need use page and buffer cache
+2. call read(), write()
+
+memory mapping: read disk block from fs and store them in buffer cache
+double caching: content in buffer cache copied to page cache
+=> so we use unified buffer cache to avoid waste
+
+synchronous write: wait data to reach disk before proceed
+most write async, but metadata writes can be sync
+flag in system call: indicate if perform sync => atomic transaction
+
+sequential access optimization:
+  free-behind: remove previous page from buffer when next page requested
+  read-ahead: requested page & several subsequent pages read and cached
+
+## recovery
+1. scan all metadata on each file => take very long
+2. record state within fs metadata
+consistency checker: eg. fsck compare data in directory structure with data blocks on disk, try to fix any inconsistencies
+journaling file system: use log based recovery technique
+  all metadata changes written to log, perform transaction
+  if system crashes, any transactions not completed will complete
+    transaction aborted will be undone
+those updates proceed much faster than applied directly on disk data structure
+  better than costly sync random metadata writes
+
+WAFL: never overwrite blocks with new data, use transaction
+  after transaction complete, metadata structure update pointer from old to new block
+  if old blocks kept, create snapshot
+ZFS: checksum all metadata, data blocks; no need consistency checker
+
+backup method:
+  full backup first day, then changed since day1 (incremental backup) 2nd day, ... , 
+    until changed since N-1 day, go back to day1
+  usually plan full backup from time to time and saved forever
+
+## NFS
+goal: 
+1. some degree of sharing among independent file systems
+2. work in heterogeneous environment
+once mount completed, become subtree of local fs, replace subtree descending from local directory
+diskless workstation :even mount their own roots from server
+
+independence achieved by RPC primitives built on top to external data representation (XDR)
+NFS protocol:
+1. mount protocol: server maintian export list specifying lcoal fs for mounting
+2. remote file access protocol
+   - search file, read directory entry, manipulate link, file attribute, read-write
+   - stateless connection, no speal measure to recover if server crash
+   - modified data must commit to server disk before result returned to client
+   - single NFS guarantee to be atomic, but no concurrency-control mechanism, need service outside NFS provide locking
+
+NFS integrated into OS iva VFS
+
+                      |--> other fs                      ---> RPC/XDR --> NFS --> VFS interface --> UNIX fs --> disk
+system call --> VFS --|--> UNIX fs --> disk              |
+                      |--> NFS client --> RPC/XDR --> `network`
+
+one-to-one correspondence between UNIX system call on file operation and NFS protocol RPCs
+file attribute cache: update when new attr arrive from server, 
+file blocks cache: used only if cached attributes up to date
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
