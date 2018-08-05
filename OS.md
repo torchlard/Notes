@@ -1,21 +1,3 @@
-# thread-safe
-not thead-safe: 
-  if use multiple threads, then may cause error
-## multi-threading
-1. same program block, cpu new/create multiple threads to execute
-2. different program blocks, cpu execute at different time
-3. hybrid
-
-for condition 1, if exists global variable, then very likely not safe
-for condition 2, also condsider thread code whether share same global variable
-
-program block can be class/function
-each thread has its own stack, auto(local) level variable don't have sharing problem.
-  because they store variables inside memories of each thread
-
-## methods
-1. locking mechanism (mutex, criticalsection, event, semaphore)
-2. let certain thread do all jobs with global variables
 
 # process
 ## history
@@ -51,14 +33,14 @@ doubly linked list of task_struct
 
 ### scheduling
 ready queue: contain pointer to next PCB
-
+```
 ready queue -> CPU --------->
 |                        |
 |<---------IO request  <-|
 |<---------time splice <-|
 |<---------fork child  <-|
 |<------wait interrupt <-|
-
+```
 #### long-term scheduler(job scheduler)
 select process from pool, load into memory
 may need invoke when process leave system -> control degree of multiprogramming
@@ -166,26 +148,26 @@ when process create new process:
    
 address-space possibility:
 1. child = duplicate of parent
-2. hild = new program
+2. child = new program
    
 new process created by fork() system call, consist of copy of address space of original process => allow parent communicate easily with child
 - child inherit privilege and scheduling attributes from parentm resources
-
+```
                           parent(pid>0)
                        |------------------> wait() ---> parent resume
                        |                    ^
 parent --> pid=fork() -|                    | 
                        |------> exec() ---> exit()
                       child(pid=0)
-
+```
 parent terminate child process if
 1. exceed usage of resource
 2. task to child not required
 3. parent exiting (cascading termination)
 
-zombie: if process is terminated, but parent not yet called wait()
+zombie: if child process is terminated, but parent not yet called wait()
 orphans: parent not invoke wait() and terminated
-=> init process peridically invokes wait() => allow exit status of any ophaned proces collected
+=> init process peridically invokes wait() => allow exit status of any ophaned process collected
 
 ## interprocess communication
 process **independent** if no effect on/by others
@@ -201,9 +183,9 @@ process **independent** if no effect on/by others
 (3. distributed shared memory)
 #### shared memory
 - process must attach to address space to access shared data
-normally OS forbid one process access another process's 
+  normally OS forbid one process access another process's 
 - producer-consumer pattern: have buffer of items, producer and consumer must be synchronized
-- unbounded buffer: no limit size of bufer VS bounded buffer: fixed buffer size
+- unbounded buffer: no limit size of buffer VS bounded buffer: fixed buffer size
 
 #### message passing
 interface: send(message), receive(message)
@@ -223,7 +205,7 @@ automatic / explicit buffering
 ##### advanced local procedure call (windows)
 1. small messages (256B): port message queue for storage, msg copied between process
 2. larger msg: passed through section object (region of shared memory with channel)
-3. > section object: API allow server direct read/write to address space of client
+3. section object: API allow server direct read/write to address space of client
    
 ##### socket
 endpoint for communication: communication over network use pair of socket, one per process
@@ -248,12 +230,14 @@ if transfer wole file, may use several requests
 2. if two-way, half duplex / full duplex?
 3. must have relationship (eg. parent-child)?
 4. pipe over network? same machine?
-###### ordinary pipe
+##### ordinary pipe
 communicate in producer-consumer fashion: one-way
+```
+fd(0): read file descriptor, fd(1): write file descriptor
 
 child fd(0)  ->|================|<-- parent fd(1)
 parent fd(0) ->|================|<-- child fd(1)
-
+```
 in windows, termed anonymous pipe => unidirectional, parent-child relation
 
 
@@ -261,7 +245,13 @@ in windows, termed anonymous pipe => unidirectional, parent-child relation
 share memory suffer from cache coherency issue
 for multi core system, IPC may perform better
 
-
+### fork
+```c
+fork()
+fork()
+```
+process split when one fork() called
+1 -> 2 2 -> 3 3 3 3
 
 ### chrome process
 3 types of process:
@@ -274,19 +264,41 @@ renderer run in sandbox, restrict access to disk, network IO
 
 # Thread
 ## single-thread
+```
   | code   data  files |
   | registers     stack|
   ----------------------
   |                    |
   |    thread          |
+```
+## thread-safe
+not thead-safe: 
+  if use multiple threads, then may cause error
 
 ## multi-thread
-  | code      data           files |
+```
+  | code          data       files |
   | registers | register | register|
   |   stack   |   stack  |  stack  |
   ----------------------------------
   |           |          |         |
   |    thread |  thread  | thread  |
+```
+1. same program block, cpu new/create multiple threads to execute
+2. different program blocks, cpu execute at different time
+3. hybrid
+
+for condition 1, if exists global variable, then very likely not safe
+for condition 2, also condsider thread code whether share same global variable
+
+program block can be class/function
+each thread has its own stack, auto(local) level variable don't have sharing problem.
+  because they store variables inside memories of each thread
+
+## methods
+1. locking mechanism (mutex, criticalsection, event, semaphore)
+2. let certain thread do all jobs with global variables
+
 
 ## benefits
 responsiveness
