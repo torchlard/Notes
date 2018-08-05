@@ -2038,47 +2038,174 @@ file attribute cache: update when new attr arrive from server,
 file blocks cache: used only if cached attributes up to date
 
 
+# IO system
+IO subsystem of kernel: separate rest of kernel from complexity managing IO
+increasing standardization of software and hardware interface
+device driver: uniform device access interface for IO subsystem
 
+## hardware
+storage, transmission(netowrk connection), human-interface (screen, keyboard)
+daisy chain: A connect to B, B connect to C, C plug into port on computer
+controoler on board has registers for data and control signal
+1. use special IO instruction to transfer data
+2. memory-mapped IO: device registers mapped into address space of processor
 
+eg. process send output to screen -> by writing data into memory-mapped region
+I/O port:
+1. data-in register: read by host get input
+2. data-out register: write by host send output
+3. status register: bits read by host indicating states (eg. current command completed?)
+4. control register: write by host to start command / change mode of device
 
+some controller has FIFO chip (hold small burst of data)
 
+## polling (輪詢)
+assume use busy bit and command-ready bit to show status
+1. host repeated read busy bit until bit clear 
+2. host set write bit in command register, write byte into data-out register
+3. host set command-ready bit
+4. when controller notice command-ready, set busy bit
+5. controller see write command, read data-out register to get byte, do IO
+6. controller clear command-ready bit, clear error bit = IO success, clear busy-bit = finish
 
+for step 1, for some device if host cannot service device quickly => data lost
+3 CPU cycle: read -> logical--and -> branch if not zero
+since inefficient, better to let controller to notify CPU when ready => interrupt
 
+## interrput
+1. device init IO, controller init IO when ok
+2. controller input ready, output complete / error gen.
+3. CPU receive interrput, transfer control to interrupt handler
+4. handler process data, return interrput
+5. CPU resume processing of interrupted task
 
+goal:
+1. ability to defer interrupt when critical
+2. dispatch proper interrupt handler 
+3. need multilevel priority interrput by urgency
+   non-maskable, maskable interrupt:
+    address as offset to select specific interrupt handler (interrupt vector)
 
+interrput chaining VS huge interrupt table VS single interrupt handler
+can hanle exception 
+virtual memory paging, page fault: page-fault handler
+software interrupt/trap: 
+  identify desired kernel service, save state, switch to kernel mode, dispatch kernel routine
+- help manage flow of control within kernel
+  - eg. start next pending IO(high priority) over copy data (low priority)
+  
+## direct memory access (DMA)
+programmed IO: processor to watch status bit and feed data to controller register 1B at a time
+better dispatch work to DMA controller
 
+1. device driver told to transfer data, driver tell controller to transfer data
+2. disk controller init DMA transfer, send each byte to DMA controller
+3. DMAcontroller transfer bytes to buffer X
+4. when complete, DMA interrput CPU to signal completion
+host write DMA command block (source,destination of transfer, #bytes) into memory
+  DMA proceed to operate memory bus directly
 
+## application IO interface
+                                | PCI bus device driver --- PCI bus device controller <--> PCI bus
+kernel -- kernel IO subsystem --| keyboard device driver --- keyboard device controller <--> keyboard
+                                | ...                      |-----------------hardware----------------|
 
+character / block
+sequential / random
+sync / async
+dedicated / sharable
+latency, seek time, transfer rate, delay between operations
+read only, write only, read-write
 
+ioctl(): pass arbitraru command from application to device driver
+  - enable application to access any functionality
 
+### block and char
+direct IO: disable buffering and locking (sometimes app have their own locking mechanism)
+raw IO: access block device as simple linear array of blocks
+basic read(), write()
+char interface: get(), put()
 
+### network
+select(): return information about which socket have package waiting to be received; 
+          which socket have room accept package
 
+### clock
+programmable interval timer, can use to generate interrupt
+eg. periodic flushing of dirty cache by disk IO subsystem
 
+### non-blocking, async
+sync/async: relation between two modules
+blocking / non-blocking: situation of 1 module
 
+blocking: current execution suspended == sync
+non-blocking: UI receive keyboard and mouse input while processing and diplaying data on screen
+  - do not halt execution, return quickly
+  - if answer can't return quickly, API return immediately with error and **does nothing**
+async: always return immediately without waiting IO complete
+  - continue to execute code, completion IO at future time
 
+### Vectored IO
+allow 1 system call perform multiple IO operations involving multiple locations
+adv: avoid context-switching, system-call overhead
 
+## kernel IO subsystem
+### IO scheduling
+maintain wait queue for each device
+OS may attach wait queue to device-status table (device type, address, state)
 
+### buffering
+memory area (in main memory) that store data transferred between two devices / device and application
+reason: 
+1. speed mismatch, wait enough data batch IO
+2. adaptation for device that have different data transfer size
+3. support copy semantics for application IO => guarentee get version of data at time of system call
+double buffering: decouple producer data from consumer
 
+### caching
+fast memory hold data copy
+buffer: only hold existing copy of data
+cache: hold copy on faster storage of item
 
+### spool
+buffer that hold output for a device
+managed by system daemon (often kernel thread) coordinate concurrent output
 
+### IO protection
+define all IO instruction to be privileged 
+kernel cannot deny all user access, eg. grpahics game us locking mechanism allow graphic memory allocate
 
+## transform IO request to hardware operation
+UNIX has mount table associate prefix of path names with specific device names, find longest matching prefix
+deivce number: major: device driver ; minor: index into to device table
 
+user process -> kernel IO subsystem -> kernel IO subsystem -> device driver -> interrput handler -> device controller
 
+## Streams
+application to assemble pipelines of driver code dynamically
+full-duplex connection between device driver and user-level process
 
+user process <-> stream head | read queue <- read queue   | driver end <-> device
+                             | write queue -> write queue |
+                             <--------stream module------->
 
+write(): write raw data to stream
+putmsg(): user process to specify message
 
+stream IO is async; when write to stream, user process will block;
+  assume next queue use flow control, until room to copy msg
 
+adv: provide framework for modular approach to write device drivers and entwork protocol
+  networking module use both ethernet card and 802.11 wireless network card
+  support message boundary, control information
 
-
-
-
-
-
-
-
-
-
-
+## performance IO
+1. reduce context switch
+2. reduce copy times
+3. reduce interrupt frequency
+4. increate concurrency by DMA
+5. move processing primitives into hardware
+6. balance CPU, memory subsystem, bus, IO performance
 
 
 
