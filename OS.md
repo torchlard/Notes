@@ -295,8 +295,14 @@ program block can be class/function
 each thread has its own stack, auto(local) level variable don't have sharing problem.
   because they store variables inside memories of each thread
 
+## hyperthreading
+since in each CPU, amount of ALU,FPU is fixed
+goal: when 1 thread only use part of resource in one CPU, start another thread to consume rest of resource in same CPU
+- but if a thread already computational expensive, add thread will fight over resource, inefficient
+- normally for home CPU 1C2T is optimal in computation-power/$
+
 ## methods
-1. locking mechanism (mutex, criticalsection, event, semaphore)
+1. locking mechanism (mutex, critical section, event, semaphore)
 2. let certain thread do all jobs with global variables
 
 
@@ -321,7 +327,8 @@ simultanous multi-threading: core's components duplicated
 speedup <= 1/(S + (1-S)/N), S=portion of serial job, N=#cores
 
 ## user thread VS kernel thread
-                           | user thread             | kernel thread
+
+-                          | user thread             | kernel thread
 ---------------------------|-------------------------|-------------------------
 implementation             | easy                    | complicated
 context switch time        | less                    | more
