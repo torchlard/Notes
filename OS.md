@@ -469,6 +469,8 @@ support by hardware instruction
 if hardware support some mutual exclusive instruction like test_and_set(), when two test_and_set()
   are executed simultaneously on different CPU, they will execute sequentially in some arbitrary order
 
+intro: someone lock=1 first and enter critical, after finish set lock=0, any thread allow to set lock=1 and pass while loop
+
 ```c
 boolean test_and_set(boolean *target) {
   boolean rv = *target;
@@ -528,10 +530,10 @@ do {
   while((j != i) && !waiting[j])
     j = (j+1) % n;
 
-  if (j==i) // same process?
+  if (j==i) // same process
     lock = false;
   else
-    waiting[j] = false;
+    waiting[j] = false; // assign another process to proceed to critical
 } while(true);
 ```
 
@@ -560,6 +562,7 @@ adv: no context switch
 
 ## semaphore
 wait(), signa()
+when S>0, no process in critical; S<=0, some process in critical
 ```c
 wait(S) {
   // process blocked until S>0
@@ -613,21 +616,21 @@ signal(semaphore *S){
 
 ## priority
 priority inversion: >2 priorities, 
-  suppose priority L<M<H, then originally H wait L to finish using resource; 
+- suppose priority L<M<H, then originally H wait L to finish using resource; 
   suddenly M also use resource, H wait longer
 
 priority-inheritance protocol:
-  all process access resource needed by higher priority process inherit higher priority until finished with resource
+- all process access resource needed by higher priority process inherit higher priority until finished with resource
   in example, L inherit H first, so M cannot use resource
 
 ## problems
 ### bounded-buffer problem
-
+```
           full buffer
 producer -----------> consumer
          <-----------
           empty buffer
-
+```
 ```c
 int n;
 semaphore mutex = 1;
