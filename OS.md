@@ -345,7 +345,7 @@ user thread (manage by user), kernel thread (manage by kernel)
 ### many-to-one model
 many user thread -> 1 kernel thread
 entire process will block if thread makes blocking system call
-### ono-to-one model
+### one-to-one model
 map each user thread to kernel thread
 creating user thread requires creating corresponding kernel thread => overhead (restrict #threads)
 ### many-to-many model
@@ -445,7 +445,7 @@ solution with 3 req
    limit on #times other process allow to enter critical section after process made request to enter also
 
 ## Peterson's solution
-for process i,
+restrict to 2 processes(i,j). For process i,
 ```c
 do {
   // critical section
@@ -906,6 +906,9 @@ eg. there are 3 queues, must finish all in queue 0 before do queue 1, and then q
   go oofto next IO. process 24>t>8 serve quickly, though lower priority
 
 ## thread scheduling
+lightweight process (LWP): 
+  user thread: virtual processor schedule user thread
+  each LWP attach to one kernel process
 process contention scope(PCS): user level thread run on LWP
 system-contention scope(SCS): decide which kernel thread schedule to CPI
 PCS done by priority: select highest priority runnable thread 
