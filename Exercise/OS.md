@@ -41,6 +41,48 @@ a. some core idle
 b. make full use; if thread blocked inside kernel(eg. page fault), have to remain idle
 c. blocked kernel thread can swap out in favour of another kernel thread ready to execute
 
+# 5
+## 5.1
+system clock updated at each interrupt
+if no interrupt, system clock easily loose time, loose scheduling purpose
+solution: only stop interrupt for short time
+
+## 5.2
+spinlock: multiprocessing system don't want context switch, allow busy waiting, easy
+mutex: locking resource
+semaphore, conditional variable: synchronization for long period of time, since busy waiting not good long time
+adaptive mutex lock: mutex implemented with spinlock
+
+## 5.3
+busy waiting = process waiting for some condition without putting it to sleep
+can avoid it with overhead to sleep, block on condition and awake in future time
+
+## 5.4
+only process that can break process out of spinlock is by different process
+
+## 5.5
+assue two wait() execute, if not execute atomically, then semaphore value will be decrement two times
+
+## 5.6
+do {
+  wait(semaphore);
+  signal(semaphore);
+} while(true);
+
+## 5.8
+flag[2] ensure mutual exclusive
+turn variable ensure toggle control among processes
+
+
+
+
+
+
+
+
+
+
+
 
 
 

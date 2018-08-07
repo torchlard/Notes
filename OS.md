@@ -625,6 +625,7 @@ priority-inheritance protocol:
 
 ## problems
 ### bounded-buffer problem
+assume pool has n buffer, each can hold 1 item [limited buffer]
 ```
           full buffer
 producer -----------> consumer
@@ -634,8 +635,8 @@ producer -----------> consumer
 ```c
 int n;
 semaphore mutex = 1;
-semaphore empty = n;
-semaphore full = 0;
+semaphore empty = n;  // num of empty buffer
+semaphore full = 0;   // num full buffer
 
 do {
   wait(full);
@@ -681,9 +682,9 @@ do {
   signal(mutex);
 } while(true);
 ```
-when 1 writer in critical seciont, n readers waiting
+when 1 writer in critical section, n readers waiting
   => 1 reader on rw_mutex, n-1 reader on mutex
-  -> after writer execute signal(rw_mutex), may resume waiting reader/single waiting writer
+  -> after writer execute signal(rw_mutex), may resume waiting reader / single waiting writer
 
 ## dining-philosopher problem
 5 philosopher think and eat, they share circular table with 5 chairs, each belong to 1 philosopher
@@ -749,21 +750,24 @@ monitor DiningPhilosophers {
   }
 }
 ```
-implementation
+implementation using semaphore:
+- for each monitor, mutex is prodided; for each condition x, introduce x_sem
 ```c
-int x_sem = 0, x_count = 0, mutex = 1;
-// mutex for each monitor
-x.wait(){
+semaphore x_sem = 0, mutex = 1;
+semaphore next = 0; // to suspend themselves
+int x_count = 0, next_count=0; // num of process suspended in next
+
+x.wait(){ // process must wait(mutex) before enter monitor
   x_count++;
-  if(next_count > 0) // #process suspended on next
+  if(next_count > 0) // there's process suspended
     signal(next);
   else
-    signal(mutex);
+    signal(mutex);   // no process suspended
   wait(x_sem);
   x_count--;
 }
 
-x.signal(){   // 
+x.signal(){   // signal(mutex) leaving monitor
   if(x_count > 0){
     next_count++;
     signal(x_sem);
@@ -772,6 +776,28 @@ x.signal(){   //
   }
 }
 ```
+ensure correct use of high-level operation `x.wait()`, `x.signal()`, we define `ResourceAllocator`
+```c
+monitor ResourceAllocator {
+  boolean busy;
+  condition x;
+
+  void acquire(int time) {
+    if(busy)
+      x.wait(time);
+    busy = true;
+  }
+  void release(){
+    busy = false;
+    x.signal();
+  }
+  initialization_code(){
+    busy = false;
+  }
+}
+```
+
+
 which suspended proces resume first?
 1. first-come, first serve
 define ResourceAllocator in monitor to allocate single resource
@@ -781,23 +807,21 @@ in Java, implement by `synchronized` keyword
 ### sync in windows
 thread sync in kernel: spinlock
 thread sync outside kernel: dispatcher objects
-  mutex, semaphore, events(~ condition variable), timer(notify >=1 thread time expire)
-signaled state: available; non-signaled state: not available
+- mutex, semaphore, events(~ condition variable), timer(notify >=1 thread time expire)
 
+signaled state: available; non-signaled state: not available
 when thread blocks on non-signaled, ready -> waiting, place in waiting queue
 when signaled, kernel move thead waiting -> ready state
-          release mutex
+```          
+            release mutex
 non-signaled ----------> signaled
              <----------
     only 1 thread acquire mutex lock
-
+```
 ### sync in linux
 mutex, spinlock, semaphore (+ reader-writer version)
-
-single processor          | multiple processors
---------------------------|---------------------
-disable kernel preemption | get spin lock
-enable kernel preemption  | release spin lock
+signle processor: disable/enable kernel preemption (spin lock not suitable for single core)
+multiple processor: get/release spin lock
 
 spinlock only for short duration task, longer duration semaphore/mutex better
 
