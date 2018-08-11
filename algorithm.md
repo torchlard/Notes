@@ -17,5 +17,18 @@ go back to previous starting point+1 step forward
 1. construct next graph for transfer pointer if failiure
 2. start from first char, match each char in match str until mismatch
 3. start from current char, move to next n char to compare
+next[i] depends on max overlapping of characters for certain substring length
+
+
+
+
+
+
+
+
+
+
+
+
 
 

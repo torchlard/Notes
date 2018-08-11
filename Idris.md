@@ -7,6 +7,9 @@ Double: double precision fp
 ## ordinary function
 `the`
 
+## Successor
+S
+eg. S 4 ===> 5
 
 
 
