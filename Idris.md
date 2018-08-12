@@ -61,7 +61,11 @@ Views = dependent types parameterized by data you want to match
 2. alternative ways traversing data structure
 3. hide compplex data behind abstract interface
 
-
+with ~ case
+with introduce new pattern 
+- pattern must be valid
+- value of pattern forced by some other valid pattern
+  
 
 
 # Streams
@@ -99,9 +103,14 @@ take 10 (repeat 94)
 take 10 (iterate (+1) 0)
 ```
 
+# State
+use Stream to mimic local mutable state
+like IO, State Nat ty describe a sequence of operations that read and write mutable state of type Nat
+get: read state
+put: update state
 
-
-
+evalState: return value produced by sequence of operation
+execState: return final state after seq operations
 
 
 
