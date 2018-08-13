@@ -11,6 +11,29 @@ Double: double precision fp
 S
 eg. S 4 ===> 5
 
+## higher-kinded typees
+type operator = functions from type to type
+kind = type of type
+```java (psuedo)
+class GraphSearch<T>{
+  T<Node>frontier;
+}
+```
+GraphSearch has kind (* -> *) -> *
+GraphSeach = higher-kinded as higher-orer functions on level of types
+Functor, Monad are higher-kinded polymorphism in Haskell
+
+## Rank-n types
+Rank-1 type: `a -> b -> a` rewrite as `forall a b. a -> b -> a`
+only one forall needed
+
+Rank-2 type: `(a -> a) -> (b -> b)` rewrite as `(forall a. a -> a) -> (forall b. b -> b)`
+there are 2 forall 
+
+Rank-N type reconstruction is undecidable in general, need some explicit type annotation
+in haskell, Rank-2 / Rank-N need language extension `{-# LANGUAGE Rank2Types #-}` / `{-# LANGUAGE RankNTypes #-}`
+
+
 
 ## type level variables
 `append: Vect n elem -> Vect m elem -> Vect (n+m) elem`
@@ -49,6 +72,37 @@ since output of getLine is IO String, not String, so it cannot be evaluated dire
   eg. `getLine >>= putStrLn`
 
 you can always use >>= to sequence IO actions, but it's ugly, so we have `do` as syntax sugar
+
+
+# first class types
+1. give more meaningful names to composite types
+```
+tri : Vect 3 (Double, Double)
+tri = [(0.0, 0.0), (3.0, 1.0), (3.4, 1.5)]
+
+Position : Type
+Position = (Double, Double)
+
+tri: Vect 3 Position
+tri = [(0.0, 0.0), (3.0, 1.0), (3.4, 1.5)]
+```
+
+2. allow function's type to vary according to some contextual information
+```
+StringOrInt : Bool -> Type
+StringOrInt False = String
+StringOrInt True = Int
+```
+can consider type-level funtions in the same way as ordinary function in most cases
+differences:
+1. type-level fn compile time only, no way to inspect Type directly
+2. only functions that are total will be evaluated at type level
+   - functions that are not total -> as contant, not evaluate further
+
+in type-driven development, often think about functions in terms of transformation between data types
+intermediate types = intermediate stage of computation
+
+
 
 # Views
 pattern matching deconstructs variables into their components
