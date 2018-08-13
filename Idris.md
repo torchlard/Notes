@@ -102,6 +102,24 @@ differences:
 in type-driven development, often think about functions in terms of transformation between data types
 intermediate types = intermediate stage of computation
 
+# Interface
+Functor: extract items from container, apply functions to them, and put items back to container
+Foldable: explains how to reduce structure to single value using initial value and function
+pure: take value of any type and return applicative functor with that value inside 
+- put it in some sort of minimal default context
+  
+Applicative: interface that support function application inside generic type
+- we find way to map function from 1 functor to another by pattern match 
+
+Assume both parameter of <*> are `functor`
+So for Maybe, <*> extracts the function from the left value if it's a Just and maps it over the right value. 
+We cannot extract funciton from Nothing. If any of the parameters is Nothing, Nothing is the result.
+```idris
+Just (+3) <*> Just 9 === Just 12
+pure (+3) <*> Just 9 === Just 12
+pure (+3) <*> Nothing === Nothing
+pure (+) <*> Just 3 <*> Nothing === Nothing
+```
 
 
 # Views
@@ -162,12 +180,22 @@ use Stream to mimic local mutable state
 like IO, State Nat ty describe a sequence of operations that read and write mutable state of type Nat
 get: read state
 put: update state
+pure: produce value
+bind: sequence stateful operations, pass result of first as input to next
+
 
 evalState: return value produced by sequence of operation
 execState: return final state after seq operations
 
-
-
+$: application operator that applies function to an argument
+```
+when (x=="yes") $
+  do ...
+  === [equal to]
+when (x=="yes") (
+  do ...
+)
+```
 
 
 
