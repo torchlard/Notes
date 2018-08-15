@@ -19,7 +19,19 @@ go back to previous starting point+1 step forward
 3. start from current char, move to next n char to compare
 next[i] depends on max overlapping of characters for certain substring length
 
+# binary tree
+## binary search tree
 
+### AVL tree
+first invented self-balancing BST
+
+delete: O(log n)
+search: O(log n)
+space: O(n)
+
+balance_factor = height of right subtree - height of left subtree
+balance_factor must be 0/1/-1 for every node in tree
+if not, need balance again
 
 
 
