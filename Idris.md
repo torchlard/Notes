@@ -1,3 +1,11 @@
+# fundamentals
+## conditional
+```idris
+if a > 1 then "no"
+else if a < -3 then "no2"
+else "haha"
+```
+
 # type
 Int: fixed width signed int (>= 31 bit)
 Integer: unbounded signed int (moire expensive)
