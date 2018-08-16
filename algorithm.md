@@ -49,6 +49,17 @@ black depth = #black node from root to node
 red-black tree less balanced compared to AVL, but much less rotation to balance
   - guarentee < 2x long path from root to nearest leaf
   
+all NULL in BST point to NIL in red black tree: NIL always black, allocated memory
+
+#### insert
+before inserting node, paint node to red
+
+insert 31:
+![](img/Algorithm/right_rotate.png)
+
+delete 20:
+![](img/Algorithm/left_rotate.png)
+
 
 
 
