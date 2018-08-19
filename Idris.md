@@ -1,4 +1,13 @@
 # fundamentals
+## operator
+```
+putStrLn (show (1+1))
+=== putStrLn $ show $ 1+1 
+=== (putStrLn . show) (1+1)
+```
+($): avoid parentheses
+
+
 ## conditional
 ```idris
 if a > 1 then "no"
@@ -204,6 +213,33 @@ when (x=="yes") (
   do ...
 )
 ```
+
+# Effects
+to compile program with effects library, run
+`idris hello.idr -o hello -p effects; ./hello`
+
+`x <- e`: bind result of effectful operation e to variable x
+`pure e`: turns pure value e into result of effectful operation
+
+running an effectful program can change set of effects available
+- updating state contain dependent type
+- open file for reading is an effect, whether file really opened depends on whether open successfully
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
