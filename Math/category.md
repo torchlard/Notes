@@ -6,7 +6,8 @@ more complex structures defined by introducing mltiple operations, different und
 
 
 # Group like structure
-              | totality | associativity | identity | invertibility | commutativity
+
+-             | totality | associativity | identity | invertibility | commutativity
 --------------|----------|---------------|----------|---------------|--------------
 semigroupoid  |          | y             |          |               |
 category      |          | y             | y        |               |
