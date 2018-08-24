@@ -60,10 +60,31 @@ insert 31:
 delete 20:
 ![](img/Algorithm/left_rotate.png)
 
+# heap
+## priority queue
+get max/min priority each time it pop up
 
+min priority queue: 
+1. find max priority
+2. delete 
+3. insert
 
+types
+1. binary head (simpliest)
+2. leftist tree
+3. binomial heap (most ordered)
+4. fibonacci heap (general)
 
+### binary heap
+min binary heap: any node < left,right child
+output array[1]
+1. add new element to last position
+2. if node < parent, swap position (bubble up) until node > parent
 
+extract max:
+1. output max, bring last element up to root
+2. swap to adjust positions
+   
 
 
 
