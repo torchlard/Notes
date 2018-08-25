@@ -1,3 +1,7 @@
+# console usage
+use contrib library
+`idris -p contrib`
+
 # fundamentals
 ## operator
 ```
@@ -225,6 +229,8 @@ running an effectful program can change set of effects available
 - updating state contain dependent type
 - open file for reading is an effect, whether file really opened depends on whether open successfully
 
+`Eff a xs xs'`: operatio begins with effects xs available, ends with effect xs'
+`putM` to update state, `M` indicate type and value being updated
 
 
 

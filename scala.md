@@ -1,5 +1,12 @@
 # fundamentals
-# compile & run
+## install
+1. have java 8 installed
+2. download binary version of scala
+3. move scala to /usr/local/share
+4. export PATH="$PATH:/usr/local/share/scala/bin" write in .bashrc
+
+
+## compile & run
 sbt run under config build.sbt
 
 
@@ -126,8 +133,26 @@ govern exchange of stream data across async boundary - passing elemetns on to an
   while ensuring receiving side not forced to buffer arbitary amounts of data
 allow queures mediate between threads to be bounded
 
+# pattern matching
+## apply
+constructor: list of parameter -> object
+extractor: object -> list of parameter
 
+## unapply
+accept object you provide and process by method defined in unapply() to return Option
+```scala
+object Student {
+  def unapply(str: String): Option[(String, String, String)] = {
+    val parts = str.split(",")
+    if (parts.length == 3) Some(parts(0), parts(1), parts(2)) else None
+  }
+}
 
+val Student(num, name, addr) = "B12,Justin,Kaohsung"
+println(num, name, addr)
+```
+
+when you use pattern matching, it automatically decompose object into parameters
 
 
 # error

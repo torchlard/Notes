@@ -31,6 +31,55 @@ self-tracing models: domain event logs make out model traceable at any point in 
 ### ADT
 define structure of data in model
 
+## algebraic approach
+adv: 
+1. loud and clear
+2. compositionality
+3. verifiability: by defining laws of algebra
+
+## step
+1. algebra-based API design -> subset of functionality
+   - behavior evolved independently using types of objects as contracts
+
+try[Account] abstracts evalution of `open` operation
+monad to compose effectful operations
+
+algebra: refer to types that form the contract but not implementation
+  you have no idea what your type Account, Balance look like, or how you'll implement 
+  behavior of debit or credit, but complete implementation of function is done
+
+## strategy
+Option is the minimal error checking type for use
+Try and Either are more expressive that can give reason it fails
+
+## problem with pattern matching
+1. expose object representation: anti-modular
+2. can't define custom patterns for matching
+-> consider using Scala's Extractor pattern
+
+when create aggregate, API responsible to ensure domain rules honored
+
+## lens
+plain `a.copy` doesn't scale with increasing level of nesting objects
+- lens need to be parametric on type of object `O`, field to update `V`
+  - `case class Lens[O,V] (..)`
+- 1 lens per field
+- getter to access current value of field `get: O => V`
+- setter take an object and new value, return new object `set: (O,V) => O`
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
