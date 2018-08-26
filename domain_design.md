@@ -67,6 +67,28 @@ plain `a.copy` doesn't scale with increasing level of nesting objects
 - getter to access current value of field `get: O => V`
 - setter take an object and new value, return new object `set: (O,V) => O`
 
+### reader monad
+- decomplects implementation
+- make implementation more domain friendly
+- dependency injection: defer injection of concrete repository implementation, make design more modular
+- make unit testing easy
+
+may need to inject multiple repositories / another service / some configuration parameter
+-> can combine all dependencies into single environment type
+
+# functional patterns
+two distinct parts
+1. algebra: completely generic and reusable code
+2. interpreter: context-specific implementation that varies across all instances
+
+## details
+it is found implementations make use of fold => use Monoid 
+define Monoid for Money 
+
+abstraction over context
+`List[A]` provides an effect of repetition of elements of type A
+`Option[A]` model effect of uncertainty
+`Try[A]` provide effect of reification of exceptions
 
 
 
