@@ -52,9 +52,36 @@ parital function X to Y: function f:X'->Y for some proper subset X' of X
   generalize f:X->Y by not forcing f to map every element of X to element of Y
 **total function** if X'=X
 
+## endofunction
+map type to same type
+  eg. Int=>Int, String=>String
+      (x: Int) => x*2  ;  (x: Int) => x*3
+
+Identity function do nothing, it's special case of endofunction
+
+## endofunctor
+assume endofunctor is F, F[Int] => Int
+  for f: Int => String, F[f] => f
+so endofunctor is a Identity functor, do nothing to objects and relations in category
+
+###
+construct category Hask, take example of List, we get
+`List[A], List[List[A]], List[List[List[A]]] ...`
+the results of these mapping are also Hask category, so it's endofunctor
 
 
+## monad
+monad in X is just monoid of endofunctors of X
 
+## functor
+functor is type-oriented programming
+assue F[_] is functor, then mapping: String => F[String]
+
+functor and function both represent mapping, but on different target
+function: mapping among proper types
+  eg. Int => String ; List[T] => Set[T]
+
+functor: mapping among category (can treat category as higher kind type )
 
 
 

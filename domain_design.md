@@ -142,9 +142,46 @@ good to commit to specific implementation as late as possible =>
   only part that model use module implementation is end-user application
   - if implementation leaks out, modules become coupled with each other
 
+## aggreagate modules at bounded context
+in reporting context, Account is value object; in other context, Acccount is entity
+bounded context smaller models within larger model
+- single coherent data and domain model
+- completely different semantics with other bounded context
+- min coupling
 
+## communication
+anticorruption layer: set up explicit layer of communication between 2 bounded context
+provide isolation between 2 components -> no uncontrolled communication across context
+messaging: natural mapping for types, decouple in space and time -> use protocol
 
+## free monad
+after having algebraic data types, define multiple interpreters, each with its own semantics of execution
+features
+- behaviors as pure data forming closed ADT
+- strict separation between creation of computation and execution
+- execution come in form of interpreters, have multiple
 
+### theory
+Free monad = normal form of monad 
+  - for any monad, can be written in constructor by free monad
+  - eg. 1+1 -> Add (Lit1) (Lit1)
+then we can give any interpretation to the language
+=> separate Monadic DSL and monadic interpretation to this DSL
+
+DSL {say, ask}
+```haskell
+do
+  say "hello"
+  say "who are you?"
+  name <- ask
+  say ("nice to meet you, " ++ name ++ "!")
+```
+interpretation
+```
+say = putStrLn
+ask = getLine
+```
+to ensure DSL constructed is direcly a Monad, no need to define it
 
 
 
