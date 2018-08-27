@@ -90,8 +90,57 @@ abstraction over context
 `Option[A]` model effect of uncertainty
 `Try[A]` provide effect of reification of exceptions
 
+Applicative functor VS Monad
+- shape of computation preserved that all context get executed, execution of one not depend on success of another context
+- applicative: need to make independent set of computation
+- monadic effect: have graph based on conditional executoin, need to fail first
 
+1. apply function with custom behavior at point of application
+- eg. flatMap apply `A => F[B]` to `F[A]` and then flattens `F[F[B]]` to `F[B]`
+2. power of funciton composition over additional structure (effects)
+- Kleisli composition: `f: A=>F[B]` compose with `g: B=>F[C]` gives `A=>F[C]`
+3. automatic failure handling
 
+principle: use least powerful abstraction that works for your use case
+
+can also create special-purpose monads by subtyping to extend Monad trait
+Scala can use parametric polymorphism, subtype polymorphism
+
+name concept once, implement it once, reuse code forever
+
+for dynamically typed languages, it enforce constraints in runtime checking,
+for static typed languages, have many additional options (get free tests by type constraints)
+
+## higher kind
+(*->*): List[_]
+(*->*->*): Map[_,_], Function1[_,_]
+  given a type, then another, produce final type
+
+eg. List[String]
+
+covariant functor: Functor[F[_]] : ((*->*)->*)
+
+# module
+## cretiria 
+1. specific and well-defined: each module with specific functionality
+2. cohesive: loose coupling with each other
+3. never expose implementation details -> only publish well-formed algebra to clients
+4. module as first class construct -> compose to form larger module
+5. have proper name
+
+## published algebra
+Name: AccountService
+Operation names: open, close, debit, credit
+Trait as the container: define operations and mixin composition
+type aliases
+parameterized: define module with parameterized types
+compositionality: all operation return type AccountOperation
+implementation independence: module definition has no implementation details
+make collaboration explicit: type definition make it explicit you use dependency injection
+
+good to commit to specific implementation as late as possible =>
+  only part that model use module implementation is end-user application
+  - if implementation leaks out, modules become coupled with each other
 
 
 
