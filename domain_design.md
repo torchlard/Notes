@@ -277,12 +277,66 @@ define hierarchy within actor dedicated for handling any exception that occur wi
   - actors are dispatchers that delegate all domain behaviors to pure functional implementation
 - use type model from Akka Stream, use actor implement those API
 
+## implementation
+front office & back office
+- serialize to binary: to make transformation efficient, serialize into byte stream
+- group and log: grouped logging in batches for optimization
+- write to reactive socket for transmission (can handle back pressure)
+- parse and split data on comma delimiter
+- convert record to domain model objects
+- `ActorSubscriber` summarizer abstract Akka Stream
+- periodically log netted transaction
 
+## supervison
 
+```scala
+val decider: Supervision.Decider = {
+  case _ : FormatException => Supervision.Resume
+  case _                   => Supervision.Stop
+}
+```
 
+persistent actor: ensure all internal states of actor persisted in permanent storage in incremental fashion
+  - append-only store, neven copy data => event sourcing
 
+remove mutation bottlenect
 
+Responsive <- resilience --> server resilience by clustering, failure resilience by supervision, data by persistence
+           <- elasticity --> reactive stream, back pressure
+           <- message driven --> use actor
 
+fully mutable database, loose
+1. query for history of change
+2. roll back system for debug
+3. start system afreash from zero
+
+separate to read, write models
+read can scale linearly, write cannot (shared mutable state)
+
+### command query responsibility segregation (CQRS)
+command: change application state, domain validation
+encourage separate domain model interface for dealing with commands and queries
+
+database level: separate write, read
+domain-model level: separate commands and queries
+
+### event sourcing
+model database writes as streams of events
+can roll back and obtain snapshot of aggregateat any time
+
+domain event: record of domain activity
+event generated only after some activity
+
+characteristics of event
+1. ubiquitous language: eg. name AccountOpened, AccountService
+2. triggered: event generated from execution of commands
+3. publish-subscribe: can subscribe to specific event stream
+4. immutable: event modeled as ADT
+5. timestamped: event occured at specific time
+
+new instance: check if already been created
+if work with existing aggregate, create instance from event store / latest version from snapshot store
+do all business validation 
 
 
 
