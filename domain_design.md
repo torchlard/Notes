@@ -183,6 +183,113 @@ ask = getLine
 ```
 to ensure DSL constructed is direcly a Monad, no need to define it
 
+# reactive
+async as a stackable effect
+combine two effects disjunction (\/) and Future
+
+to handle error reporting, one way is to stack along with already existing effect (List)
+  you can't throw exception as it violates referential transparency
+
+Future: from standard library, no dependency
+Task: clear separation between description of computation and its execution
+  - can control degree of nondeterminism
+  - eg. instead of sequences of binds, execute in parallel, return first completed ...
+  - work on constant stack space
+
+## async msg
+asynchronous boundary between
+eg. application/bounded context, threads, actors, CPU multiple cores, network nodes
+
+Account Management (Generator context): push account info as msg
+-> Message queue ->
+Reporting and Analytics (consumer context): consume msg and populate reports
+
+## stream model
+challenges
+- continuous flow of information
+- solitary look: see data once
+- storage issue
+- back pressure handling
+
+essential criteria
+- async
+- non-blocking
+- elastic for handling back pressure
+- compositional
+
+### Akka Stream
+- source: pipeline starts `Souce[+Out, +Mat]`
+- sink: pipeline ends `Sink[+In, +Mat]`
+- flow: where transformation of data take place `Flow[-In, +Out, +Mat]`
+-> 1 source, few Flows, 1 sink (Source -> Flow* -> Sink)
+- RunnableGraph: multiple Flow structures can be presented between Source and Sink, form junctions
+    -> can be Broadcase, Merge
+
+steps (~ experience using tensorflow)
+1. set up source
+2. split the stream into substreams
+   - split stream based on account number (determined by groupBy), have validation beforehand
+3. end at a sink
+   - run netting computation over each substream, do with fold over Subflow
+   - finally materialize into Sink to get RunnableGraph
+   - Akka used bunch of actors for materializing computation
+4. run the computation
+
+back-pressure handling: Sink keep Source updated about the throttle that it can sustain at this time
+
+## actor model
+actor offer model of computation based on message passing between entities
+  any entity can send msg to actorm, which receive msg in its mailbox
+- process msg from head of its mailbox
+- create new actors
+- update its state information
+- send msg to other actors
+
+### primary features
+1. async message based: msg send to actors usually typed immutable entities 
+  - need define receive loop handling all types of msg
+2. single thread of execution
+  - actor process 1 msg at a time
+  - can have mutable state within actor
+3. supervisor hierarchies
+  - can define parent-child relation between actors
+  - when child actors fails with exception, parent decide whether to restart child
+4. can send msg to anywhere
+5. finite state machine: can change behavior of actor dynamically by `become` method
+
+### drawbacks
+1. actors are not type safe, since it need the power to change states and dynamically serializable
+2. actors don't compose (lack of referential transparency), type `PartialFunction[Any,Unit]` is all about side effects
+3. actor generally not good choice for designing end user API
+  - actor ok for like track max valued debit transaction
+
+general recommendation prefer Futures to actors
+
+### bounded context
+reliable msg system between bounded context
+
+akka allows supervision to be implemented as separate architectural construct within model
+define hierarchy within actor dedicated for handling any exception that occur within child actors
+
+### with functional domain model
+- protect shared mutable state
+- resilience (elasticity): use actor as coarse abstraction
+  - actors are dispatchers that delegate all domain behaviors to pure functional implementation
+- use type model from Akka Stream, use actor implement those API
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
