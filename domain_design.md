@@ -339,15 +339,6 @@ new instance: check if already been created
 if work with existing aggregate, create instance from event store / latest version from snapshot store
 do all business validation 
 
-
-
-
-
-
-
-
-
-=======
 ## event store
 core storage medium for all domain events
 selecting appropriate store
@@ -444,7 +435,6 @@ Availability <-----> Consistency
 3. distributed hash table [Orleans]
 
 reloading state
->>>>>>> 58b74e073d2e2da67907dab15b7677fad8b17472
 
 
 
