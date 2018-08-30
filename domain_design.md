@@ -277,6 +277,7 @@ define hierarchy within actor dedicated for handling any exception that occur wi
   - actors are dispatchers that delegate all domain behaviors to pure functional implementation
 - use type model from Akka Stream, use actor implement those API
 
+<<<<<<< HEAD
 ## implementation
 front office & back office
 - serialize to binary: to make transformation efficient, serialize into byte stream
@@ -346,6 +347,104 @@ do all business validation
 
 
 
+=======
+## event store
+core storage medium for all domain events
+selecting appropriate store
+store events indexed by aggregate ID
+- get list of events 
+- put an event
+- get all events
+
+## distributed CQRS
+event stores replicate
+- across multiple locations
+- nodes across single location
+- process across single node
+
+use protocol preserve causality between events
+may not need distribution of service for multiple bounded context
+- keep dta store local to your bounded context, ensure service only access from store
+
+design each bounded context as independently managed and deployable unit => microservices
+each context have own technique of data management
+
+## implementation
+1. define algebra for events
+2. define command as free monad over event
+3. use algebra of events in interpreter to do command processing 
+   -> all effects within interpreter, event append to event log
+4. define suitable read model (projection)
+
+events are just serialized functions
+FRM, not ORM
+
+# Summary
+1. think in expression
+  - eg. function generate value by evaluating for-expression
+2. abstract early, evaluate late
+  - computation = abstraction over value, Try = abstract over failure, 
+  - Try / scalaz.\/ = abstract outcome of operation 
+3. use least powerful abstraction that fits
+  - abstract level: applicative < Monad
+4. publish what to do, hide how to do within combinators
+  - combinator: andThen 
+5. decouple algebra from implementation
+  - multiple implementation for one algebra
+  - traits-based modular, type class, free monad, interpreter
+6. isolate bounded context
+
+
+# event sourcing
+## problem
+reliably/aotmically publish event whenever state changes
+
+## solution
+persist state of business entity (eg. Order, Customer) as sequence of state changing events
+saving event is single operation => atomic
+events persist in event store, has API to add and get entity's events
+
+instead of storing data in Order table => store as sequence of events, 
+  CustomerService subscribe to order events and update its own state
+
+## advantage
+100% reliable audit log
+avoid object-relational impedance mismatch problem
+
+## drawbacks
+difficult to query -> use CQRS to implement query
+
+# CQRS
+## problem
+how to implement query in microservice architecture?
+
+## solution
+split to command-side (create, update, delete requests), emit events
+query-side: handle queries by executing them against >=1 materialized view
+-> kept update by subscribing to stream of events emitted
+
+            | <-- command side
+event store |
+            | --> query side (MongoDB) <- get xx
+            | --> query side (ElasticSearch) <- get xx
+            | --> query side (Neo4j) <- get xx
+
+# stateful computation
+## motivation
+low latency, data locality
+client talk to same machine, store some data temporarily
+
+## strategy
+Gossip protocol | Consensus system
+Availability <-----> Consistency
+
+1. random placement (write anywhere, read everywhere)
+2. consistency hashing 
+  - may have hot spot problem
+3. distributed hash table [Orleans]
+
+reloading state
+>>>>>>> 58b74e073d2e2da67907dab15b7677fad8b17472
 
 
 
