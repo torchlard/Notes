@@ -1,7 +1,7 @@
-# ajax
+## ajax
 modern browser dont support cross domain: both web page and xml must in same server
 
-# keep event binding after refresh component
+## keep event binding after refresh component
 $("body").on('click',"#btn",function(){
   ...
 });
@@ -289,9 +289,51 @@ choose('b')
 handle input method editor input serial
 
 
+# DOM
+JS is event driven async programming model, when file, browser, element has sth happen, browser
+will emit corresponding events => fundamentals of interaction JS <-> DOM
 
+DOM element support various events -> can use listener to add handler
+- can add by means of DOM0 / DOM2
+event name: click, load, mouseover
 
+## constitution
+- core DOM
+- XML DOM
+- HTML DOM
 
+## DOM 0
+early version of js interact with web API
+eg. images, forms
+exist before W3C standard
+
+start with 'on' => onclick, onload ...
+`<input type="button" value="xx" onclick="showMsg()"/>`
+
+delete event:
+`btn.onclick = null;`
+
+## DOM 1
+W3C standard DOM (first version)
+DOM core: structure of XML document
+DOM HTML: extension on top of DOM core (eg. document object)
+xml namespace
+
+## DOM 2
+more interaction, UI event, iteration, CSS support
+
+addEventListener(), removeEventListener()
+`btn.addEventListener("click", showMsg, false);`
+
+DOM View
+DOM Event
+DOM Style
+DOM traversal and range
+
+## DOM 3
+DOM load and save
+DOM validation
+DOM style 
 
 
 

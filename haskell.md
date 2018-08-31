@@ -47,7 +47,8 @@ class Functor f where
 functor is a typeclass, it only has one method `fmap`
 
 ## compile
-ghc --make <filename>
+<!-- ghc --make <filename> -->
+`ghc -o Sorting Sorting.hs`
 
 ## do
 in haskell, do is for input, output value on screen, has side effect
@@ -56,6 +57,31 @@ line <- getLine [use <- to get input]
 
 ## return
 use pure value exit I/O action
+
+
+# parallel
+## pure parallelism (Control.Parallel)
+solve single problem, more focused
+guarenteed deterministic, no race conditon/deadlock
+
+## concurrency (Control.Concurrent)
+multiple thread of control execute at same time, not require multiple core
+deal continuously with networking protocol, database ..
+- threads in IO monad
+- communication between threads explicitly programmed
+- thread execute on multiple processor simultaneouls
+- can be race condition, deadlock
+
+use parallelism if you can, concurrency otherwise
+
+threaded compile
+`ghc -o Sorting Sorting.hs -threaded; ./sort +RTS -N2`
+
+
+
+
+
+
 
 
 

@@ -96,17 +96,36 @@ design pattern deal with multi-threaded environment
 decouple method execution from method invocation for objects, that each reside in their own thread of control
 elements: proxy, scheduler, callback/variable
 2. balking pattern
+
 3. barrier
 4. double-checked locking
-5. guarded suspension
-6. leaders/followers
-7. monitor object
-8. nuclear reaction
-9. reactor
-10. read write lock
-11. scheduler
-12. thread pool
-13. thread-lcoal storage
+```java
+class Foo {
+  private Helper helper;
+  public Helper getHelper(){
+    if (helper == null){
+      synchronized(this){
+        helper = new Helper();
+      }
+    }
+    return helper;
+  }
+}
+```
+anti-pattern:
+assume thread A check helper is not initialized, then it get lock and init variable
+compiler allow A to update variable and point it to object before variable is initialized
+thread B found that shared variable initialized, return variable -> program throw error
+
+1. guarded suspension
+2. leaders/followers
+3. monitor object
+4. nuclear reaction
+5. reactor
+6.  read write lock
+7.  scheduler
+8.  thread pool
+9.  thread-lcoal storage
 
 
 
