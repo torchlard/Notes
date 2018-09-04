@@ -273,8 +273,39 @@ allow you to just listen for datachannel event and when you receive it, gain acc
 occur in relation to ICE candidate with target
 
 
+# Browser object
+## Navigator
+state and identity of user agent 
+allow script to query and register themselvess to carry on some activities
 
+### usage
+eg. window.navigator.platform
+-> show your OS version "Linux x86_64"
 
+### API
+(appCodeName, appName, connection, ...)
+
+## Window
+opened window in browser, point to DOM document loaded 
+for every frame/iframe created, will create new window for them
+each tab is separate window
+
+### API
+scroll, scrollTo, screen, self, print, prompt, postMessage
+resizeTo, innerHeight: apply to whole window, not specific tab
+
+### window.history
+- go(): go to certain page in history
+- back(): back to previous page
+- forward(): go to next page
+
+### window.location
+include info about current URL
+- hash, host, hostname, href, pathname, port, protocol, search
+
+## Screen
+represent screen, usually one on which current window is being rendered
+`window.screen`
 
 
 
