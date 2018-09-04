@@ -152,4 +152,26 @@ const headAndTail = (head, ...tail) => [head, tail]
 headandTail(1,2,3,4,5) // [1,[2,3,4,5]]
 ```
 
+## Object
+```js
+const foo = 'bar'
+const baz = {foo}
+console.log(baz); // {foo: 'bar'}
+
+const g = (x,y) => {return {x,y}}
+console.log(g(1,2));
+
+
+let obj = {
+  ['h'+'ell'](){
+    return 'hi'
+  }
+}
+console.log(obj.hell()); // 'hi'
+
+```
+
+
+
+
 
