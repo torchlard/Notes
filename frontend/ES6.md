@@ -172,6 +172,108 @@ console.log(obj.hell()); // 'hi'
 ```
 
 
+## Symbol
+when you use object provide by others, and want to add new method
+name of new method may conflict with existing methods
+=> mechanism to ensure unique field name
+
+`Symbol` as primitive data structure, is value not object
+  ~ string
+
+```js
+let mySymbol = Symbol();
+
+let a = {}
+a[mySymbol] = 'Hello'
+
+let a = {
+  [mySymbol]: 'Hello'
+}
+```
+
+## Set
+```js
+const a = new Set()
+[2,3,4,5,2,2].forEach(x => s.add(x))
+// a = Set{2,3,4,5}
+
+// remove redundancy
+[...new Set(array)]
+```
+
+## Map
+js object can only use string as key => many limitations
+Map allow any kind of value and object as key => value--value pair
+better hash architecture
+
+```js
+const m = new Map()
+const o = {p: 'hi'}
+m.set(p, 'content')
+m.get(o) // 'content'
+
+const map = new Map([
+  ['name', 'zhang'], ['title', 'author']
+])
+map.size // 2
+map.get('name') // 'zhang'
+```
+
+## Proxy
+change default operation in language level => program to programming language
+(meta programming)
+- set barrier before access to target
+overloads operator
+
+```js
+let obj = new Proxy({}, {
+  get: function(target, key, receiver){
+    console.log(`getting ${key}!`);
+    return Reflect.get(target, key, receiver)
+  },
+  set: function(target, key, value, receiver){
+    console.log(`setting ${key}!`);
+    return Reflect.set(target, key, value, receiver)
+  }
+})
+
+obj.count = 1
+// setting count!
+++obj.count
+// getting count!
+// setting count!
+```
+
+## Iterator
+js increase Map, Set on top of original Array, Object collections,
+so we need 
+1. unified interface to manage all these different data structure
+2. member list in certain order
+3. iterate by "for...of"
+
+procedure:
+1. create pointer object, point to initial position
+2. call next, point to first member
+3. call next again to 2nd member until last one
+
+
+# good practice
+```js
+const itemsCopy = [...items]
+
+// convert array-like object to array
+const foo = document.querySelectorAll('.foo')
+const nodes = Array.from(foo)
+
+/// replace bind, avoid self/_this/that to bind this
+const boundMethod = (...params) => method.apply(this, params)
+```
+
+when simulate real world object => use Object
+when building key: value structure => use Map (has build in iterator)
+
+
+
 
 
 

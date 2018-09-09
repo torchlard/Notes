@@ -77,10 +77,59 @@ use parallelism if you can, concurrency otherwise
 threaded compile
 `ghc -o Sorting Sorting.hs -threaded; ./sort +RTS -N2`
 
+# type class
+## type class VS OOP classes
+type class ~ interface
+normally don't implement methods themselves, just
+guarentee that actual types that instantiate type class will implement 
+specific methods
 
+type class with default implementation ~ abstract class
 
+```haskell
+class Eq a where
+  (==) :: a -> a -> Bool
+  (/=) :: a -> a -> Bool
+  x /= y = not (x == y)
+```
+```java
+interface Eq<A> {
+  boolean equal(A that);
+  boolean notEqual(A that) {
+    // default, can override
+    return !equal(that)
+  }
+}
+```
 
+## inheritance between interface
+```haskell
+-- include Show, Monad interface in Stream interface
+class (Show s, Monad m s) => Stream m s where
+  sClose :: s -> m ()
 
+f :: (Stream m s) => s -> m String
+show :: (Show s) => s -> String
+f s = return (show s)  
+```
+eg. Number is base class/superclass of OddNum
+there's upcasting, can run function (base class)[Number] from function (subclass) [OddNum]
+downcasting is impossible, cannot get subclass from superclass
+
+## inheritance between instance
+operation of some class can be executed in other class
+```haskell
+class Eq a where
+  (==) :: a -> a -> Bool
+class Cmp a where
+  cmp :: a -> a -> Ordering
+instance (Cmp a) => Eq a where
+  a==b = cmp a b == EQ
+
+cmpDict2EqDict (cmp) = (\a b -> cmp a b == EQ)  
+```
+
+## type class ~ parameterized abstract class
 
 
 
