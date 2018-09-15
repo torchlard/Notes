@@ -63,9 +63,22 @@ Album.prototype.get_owner = function(callback){
 ```
 call and apply allow dynamic function reference, not fixed when run program
 
+## range
+arbitrary part of content of an HTML document
+eg. user text selection
 
-
-
-
+for highlight, store range to server
+startNode -> startContainer(dom element)
+  store DOM as Selection object
+  
+## xpath
+XML path language, use non-XML syntax to address different parts of an XML document
+  
+  
+  
+  
+  
+  
+  
 
 
