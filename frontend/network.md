@@ -14,6 +14,7 @@ cannot different origin for XML, JSON
 - scripts
 
 ## simple requests
+simle request = no custom header, use `GET`
 don't trigger CORS preflight
 - GET, HEAD, POST
 allow manually set:
@@ -22,9 +23,11 @@ only allowed Content-Type:
 - text/plain, multipart/form-data, application/x-www-form-urlencoded
 no ReadableStream used in request
 
-## preflighted requests
-first send HTTP request by OPTIONS method to resource to other domain,
+## preflighted requests (預檢請求)
+first send HTTP request by `OPTIONS` method to resource to other domain,
   to determine whether actual request is safe to send
+-> eg. if want to send delete request to domain, first use preflight to check if allowed
+
 notify server will be sending:
 - Access-Control-Request-Method  
 - Access-Control-Request-Headers  
@@ -62,6 +65,12 @@ by defulat browser will not sent credentials
 specific flag has to be set on `Request` constructor
 eg. `invocation.withCredentials = true`
 
+## CORS setting in DOM
+crossorigin property: allow element get data by CORS request
+- anonymous: not set credential, use-credentials
+default not using CORS, if used, need run cross origin check
+
+
 
 # fetch
 fetch use CORS by default
@@ -83,12 +92,13 @@ URL is to parse, construct, normalise, encode url
 # JSONP
 json with padding
 used to request data from a server residing in a different domain than client
+- use property that `script` is allowed to load freely from any domain
 
 `<script>` allowed to retrieved from foreign origin, but not pure JSON data
 ## implement
 URL request point to src attribute in `<script>`, with js code wrap around it
 ```html
-<script type="appliation/javascript
+<script type="appliation/javascript"
         src="http://server.example.com/Users/1234">
 </script>      
 ```

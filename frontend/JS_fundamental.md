@@ -74,11 +74,25 @@ startNode -> startContainer(dom element)
 ## xpath
 XML path language, use non-XML syntax to address different parts of an XML document
   
-  
-  
-  
-  
-  
-  
+## es6 class vs es5 prototype
+basically the same, one difference is for eg.
+Dog inherit from Animal, and then
+  es5: Dog.prototype.constructor === ?Animal
+  es6: Dog.prototype.constructor === Dog
+
+## Number system
+any radix -> base-10 num
+eg.
+parseInt("11",2) === 3
+parseInt("11",6) === 7
+parseInt("0x11") === 17
+
+base-10 num -> any radix
+eg.
+(17).toString(16) === "11"
+(0b111111).toString(16) = "31"
+
+
+
 
 
