@@ -92,6 +92,10 @@ eg.
 (17).toString(16) === "11"
 (0b111111).toString(16) = "31"
 
+# call by value VS call by reference
+value: create new variable a, let a has same value as input
+ref: let a as alias of x, a & x has same variable
+
 
 
 

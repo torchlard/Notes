@@ -244,6 +244,18 @@ obj.count = 1
 // setting count!
 ```
 
+## Reflect
+```js
+Reflect.get(target,name) === target[name]
+Relect.set(target, name, value) === target[name]=value
+```
+Reflect is used with Proxy
+adv:
+1. more elegant return value (return obj if success, return error if fail)
+2. more reliable apply
+3. 
+
+
 ## Iterator
 js increase Map, Set on top of original Array, Object collections,
 so we need 

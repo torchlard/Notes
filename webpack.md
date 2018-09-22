@@ -1,3 +1,10 @@
+# things to setup
+1. have nodejs, npm installed globally
+2. npm init
+3. npm i webpack webpack-cli
+4. set sth like `"dev": "webpack --mode development"` in package.json
+5. `npm run dev` to try out
+
 # concept
 webpack = static module bundler for JS application
 recursively builds dependency graph that indicate every module needed
@@ -20,6 +27,13 @@ generate an HTML5 file that include all webpack bundles in body using <script> t
 
 # Output
 tells webpack how to write compiled files to disk
+
+# webpack4
+## zero config
+entry point (src/index.js)
+output (dist/main.js)
+mix production and development mode
+
 
 
 
