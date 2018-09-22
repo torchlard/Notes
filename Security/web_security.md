@@ -10,6 +10,9 @@ SQL, NoSQL, OS, LDAP injection as part of command/query
 ## 2. broken authentication
 application function related to authentication and session management implemented incorrectly
 -> attackers compromise password, keys, session tokens
+### prevent
+generate random session ID, should not be URL
+limit login 
 
 ## 3. sensitive data exposure
 no extra protection, eg. encryption
@@ -24,6 +27,8 @@ eg. access other users' account, view sensitive files
 insecure default configuration, incomplete / ad hoc config, open cloud storage
 
 ## 7. cross site scripting
+
+
 ## 8. insecure deserialization
 ## 9. using components with known vulnerabilities
 ## 10. insufficient logging & monitoring
