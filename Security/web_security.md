@@ -11,11 +11,31 @@ SQL, NoSQL, OS, LDAP injection as part of command/query
 application function related to authentication and session management implemented incorrectly
 -> attackers compromise password, keys, session tokens
 ### prevent
-generate random session ID, should not be URL
-limit login 
+1. generate random session ID, should not be URL
+2. limit login 
+3. avoid default credential
+
+### attack method
+1. use list of known passwords to attack
+2. continued use of passwords
+3. improper timeout -> not yet logout
 
 ## 3. sensitive data exposure
-no extra protection, eg. encryption
+1. no extra protection, eg. encryption
+### consideration
+- HTTP, SMTP, FTP -> transfer in clear text
+- old/weak cryptographic algorithm
+- enforced encryption?
+### prevent
+classify data processed, stored
+don't store sentiive data unnecessarily
+encrpyt eg. TLS with PFS ciphers, user HSTS
+store passwords using salted hashing functions
+### attack method
+1. SQL injection when retrieve credit card no. in clear text
+2. site not enforcing TLS -> downgrade to HTTP, replay cookie
+3. db use simple hashes/unsalted to store passwords
+
 ## 4. XML external entities
 poorly configured XML processor evaluate external entity reference within XML document
 
