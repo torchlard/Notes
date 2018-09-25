@@ -6,6 +6,8 @@ when changes in style/change DOM position => change render tree
 browser continuously recalculating style,m layout relations 
   to construct tree
 
+## 
+use requestanimationFrame: sure will stop working if animation not in viewport
   
 
 

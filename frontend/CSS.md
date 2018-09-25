@@ -52,6 +52,45 @@ elem.outputStyleMap.set('transform',
   ]))
 ```
 
+## CSS-in-JS
+### pro
+local namespace, smarter critical CSS extraction,
+dynamic styles, shared style values, manageable API
+### cons
+size/performance overhead
+reinvent toolchain
+
+## external API
+developer customize components -> authors compose with components
+
+## CSS-out-of-JS
+just override by any selector, easy yet fragile
+try to keep markup stable
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
