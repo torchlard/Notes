@@ -21,11 +21,22 @@ reflow = compute layout of page
 only change color, image src -> paint
 scroll webpage, css animation -> composite
 
+# firefox WebRenderer
 
+## style struct sharing
+to save memory and time, computed styles object are just pointers to struct
 
+match selector -> sort declarations by specificity -> compute property values
 
+## parallelism
+servo distribute CSS style computation to different cores
+work stealing to balance workload
+Rust to avoid data reaces
 
-
+## speed up restyles with rule tree
+speed up initial render with style sharing cache
+prove some elements have same style, not compute individually
+CSS engine keep number of branches in tree to min
 
 
 
