@@ -96,10 +96,13 @@ paseudo-elements
 - ::before, ::after
 
 ### level 4
-
-
-
-
+scoped
+relative
+logical: :matches(), :not(), :something(), :has()
+location: :any-line, :local-link, :target, :scope, :target-within
+user-action: :focus, :focus-visible, :focus-within, :drop, :drop()
+time-dimension: :current, :past, :future
+resource-state: :playing, :paused
 
 
 
