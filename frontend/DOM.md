@@ -11,7 +11,7 @@ children node: ordered set of objects
 HTML namespace is: http://www.w3.org/1999/xhtml
 
 # Events
-events are dispatched t objects to signal an occurence (eg. network activity, user interaction)
+events are dispatched to objects to signal an occurence (eg. network activity, user interaction)
 implement EventTarget insterface, add event listener to observe events 
 
 Event: objects, implement Event interface
@@ -56,7 +56,7 @@ form.onsubmit = function(e) {
 two event handler of same event type is registered activated in one element
 
 capturing phase: (discovery)
-check outermost ancestor(html) if it has event handler -> next element inside -> ... -> element clicked
+check outermost ancestor(document) if it has event handler -> next element inside -> ... -> element clicked
 
 target phase:
 - event object arrive at event target, if cannot bubble, terminate
@@ -306,6 +306,60 @@ include info about current URL
 ## Screen
 represent screen, usually one on which current window is being rendered
 `window.screen`
+
+
+# DOM
+JS is event driven async programming model, when file, browser, element has sth happen, browser
+will emit corresponding events => fundamentals of interaction JS <-> DOM
+
+DOM element support various events -> can use listener to add handler
+- can add by means of DOM0 / DOM2
+event name: click, load, mouseover
+
+## constitution
+- core DOM
+- XML DOM
+- HTML DOM
+
+## DOM 0
+early version of js interact with web API
+eg. images, forms
+exist before W3C standard
+
+start with 'on' => onclick, onload ...
+`<input type="button" value="xx" onclick="showMsg()"/>`
+
+delete event:
+`btn.onclick = null;`
+
+## DOM 1
+W3C standard DOM (first version)
+DOM core: structure of XML document
+DOM HTML: extension on top of DOM core (eg. document object)
+xml namespace
+
+## DOM 2
+more interaction, UI event, iteration, CSS support
+
+addEventListener(), removeEventListener()
+`btn.addEventListener("click", showMsg, false);`
+
+- DOM Core
+extend functionality of DOM1 core
+- DOM Views
+programs to dynamically access and update content of representation
+           in document => {AbstractView, DocumentView}
+- DOM Events
+generic event system, with concepts (event flow: capture > target > bubbling, cancellation) 
+- DOM CSS/Style
+program/script to dynamically access and update content of stylesheet
+- DOM traversal and range
+program to dynamically traverse and identify range of content in document
+
+## DOM 3
+DOM load and save
+DOM validation
+DOM style 
 
 
 
