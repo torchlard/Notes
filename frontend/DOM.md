@@ -312,6 +312,8 @@ represent screen, usually one on which current window is being rendered
 JS is event driven async programming model, when file, browser, element has sth happen, browser
 will emit corresponding events => fundamentals of interaction JS <-> DOM
 
+strictly speaking, DOM not belongs to JS
+
 DOM element support various events -> can use listener to add handler
 - can add by means of DOM0 / DOM2
 event name: click, load, mouseover
@@ -324,7 +326,7 @@ event name: click, load, mouseover
 ## DOM 0
 early version of js interact with web API
 eg. images, forms
-exist before W3C standard
+exist before W3C standard, have IE & Netscape versions
 
 start with 'on' => onclick, onload ...
 `<input type="button" value="xx" onclick="showMsg()"/>`
@@ -332,14 +334,15 @@ start with 'on' => onclick, onload ...
 delete event:
 `btn.onclick = null;`
 
-## DOM 1
+## DOM 1 [1998] {full support}
 W3C standard DOM (first version)
 DOM core: structure of XML document
 DOM HTML: extension on top of DOM core (eg. document object)
 xml namespace
 
-## DOM 2
+## DOM 2 [2000] {full support}
 more interaction, UI event, iteration, CSS support
+HTML 4, XHTML 1
 
 addEventListener(), removeEventListener()
 `btn.addEventListener("click", showMsg, false);`
@@ -355,22 +358,64 @@ generic event system, with concepts (event flow: capture > target > bubbling, ca
 program/script to dynamically access and update content of stylesheet
 - DOM traversal and range
 program to dynamically traverse and identify range of content in document
+  {NodeIterator, TreeWalker}
+range: +-/modify/insert range of content in document, DocumentFragment, Attr 
 
-## DOM 3
-DOM load and save
-DOM validation
-DOM style 
+## DOM 3 [2004] {partial support}
+- DOM Core
+extend DOM1,DOM2 core, add {adoptNode(), textContent, baseURI ...}
+- DOM load and save
+programs to dynamically load content of XML document into DOM document
+serialize DOM document to XML document
+- DOM validation
+program to dynamically update content and structure, while ensuring document remains valid
+- DOM event 
+extend DOM2 event, focus on keyboard event, how to handle them
+- DOM3 XPath
+~ functionality access DOM tree using XPath 1.0
+focus on XML document itself, how to locate path of xml node
 
+## DOM 4 [2015 ..] {not yet finalized}
+- parent node
+prepend, append
+- child node
+before(node): add node before
+after(node): add node after
+remove(): remove node itself
+replaceWith(sth): replace node with sth
+- fixes
+toggleAttribute
+DOM Listener: {capture: true, passive: false}: 
+  event.preventDefault(), capture phase 
+normalized KeyboardEvent, MouseEvent
+element.matches(selectorString)
+element.closest(selector): get closest matching ancestor
+classList
+CustomEvent
+requestAnimationFrame, cancelAnimationFrame
 
+# special entity in DOM
+## CDATA
+```html
+<sender>John Smith</sender>
 
+<![CDATA[<sender>John Smith</sender>]]>
+```
+everything inside CDATA treated as text in html
 
+## entity
+reserved characters in HTML must be replaced with character entities
+eg. `<` -> `&lt`
 
+## processing instruction
+embed application specific instructions in XML which can be ignored by other 
+  applications that don't recognize them
 
-
-
-
-
-
+# implementation
+since most API in specification are interface rather than class
+=> only need to expose methods with defined names and specified operations
+=> ordinary constructor in C++ sense cannot be used to create DOM objects
+==> compatible with wide range of language (scripting / programming language)
 
 
 

@@ -5,6 +5,22 @@ faster website rank higher in SEO
 
 =================================================================================
 
+# reason for poor DOM efficiency
+1. DOM engine, JS engine independent
+2. when using DOM api: JS engine must be suspended > activateinit DOM engine 
+    > DOM redraw > activate JS engine
+3. if frequent DOM api calls, and no batch processing => huge cost
+4. if there's forced redraw DOM API, will stop batch processing, redraw and recalc
+
+## solutions
+lower switching frequency, reduce DOM modification scale
+
+- framework: vDOM
+provide abstraction by diff/patch and batch commit changes in DOM
+
+
+=================================================================================
+
 # fps
 browser max 60fps
 frame = 16.67 ms

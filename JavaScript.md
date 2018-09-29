@@ -288,9 +288,14 @@ choose('b')
 # Composition event
 handle input method editor input serial
 
-
-
-
+# CSS
+access css styles by
+1. getComputedStyle(element).width
+get final css style of element
+2. element.style.getPropertyValue('width')
+get inline css style
+3. element.style.width
+can get and set inline css
 
 
 

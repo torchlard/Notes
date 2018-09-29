@@ -67,15 +67,43 @@ developer customize components -> authors compose with components
 just override by any selector, easy yet fragile
 try to keep markup stable
 
+# Versions
+## CSS 1 [1996]
+font, color, text spacing, alignment of text, image, tables
+margin, border, padding, positioning, pseudo classes, cascade
+## CSS 2 [1998]
+z-index, media types, positioning(absolute, relative, fixed)
+box model, selectors, generated content
+## CSS 2.1 [2004 - 2011]
+fix errors in CSS 2, remove poorly supported / not fully interoperable features
+add implemented browser extensions
 
+## CSS 3 [2014 - now]
+- divided into several modules, extend features in CSS 2
+- most modules are level 3: build on things from CSS 2.1
+- new functionality (eg. flexbox) are level 1
+media queries, selector (L3, L4), namespace, color L3, MathML
+background+border, multi column, speech, syntax L3
+flexible layout, basic UI, masking, grid layout
+animation, transition, transforms, paged media
 
+- modules
+background, box, cascade-3, color, content, fonts-3, gcpm, layout, mediaqueries,
+mediaqueries-4, multicol, page, selectors-3, selectors-4, css3-ui
 
+## CSS 4 [ongoing]
+"level4" modules in CSS 3
+- snapshots: collection of modules and parts of other drafts considered stable
+- [2007, 2010, 2015, 2017]
 
-
-
-
-
-
+# Limitation
+1. cannot select parent/ancestor of an element that satisfies certain criteria
+2. cannot declare new scope independently of position
+  eg. z-index finding closest parent with position:absolute have undesired effect
+3. pseudo-class dynamic behavior not controllable
+4. cannot name rules
+5. cannot include styles from rule to another
+6. cannot target specific range of text
 
 
 
