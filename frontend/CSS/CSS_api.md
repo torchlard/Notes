@@ -99,10 +99,114 @@ paseudo-elements
 scoped
 relative
 logical: :matches(), :not(), :something(), :has()
-location: :any-line, :local-link, :target, :scope, :target-within
+linguistic: :dir(), :lang()
+location: :any-link, :local-link, :target, :scope, :target-within
 user-action: :focus, :focus-visible, :focus-within, :drop, :drop()
 time-dimension: :current, :past, :future
 resource-state: :playing, :paused
+input: :enabled, :disabled, :read-only, :read-write, :placeholder-shown, :default
+       :checked, :indeterminate, :valid, :invalid, :in-range, :out-range, 
+       :required, :optional, :user-invalid
+structural: :root, :empty, :blank
+            :nth-child(), :nth-last-child(), :(first,last,only)-child
+            :nth-of-type(), :nth-last-of-type(), :(first,last,only)-of-type
+
+
+## paged media
+differ from continuous media, content split into discrete static display surfaces
+describe how:
+- page break created and avoided
+- size, orientation, margin, border, padding
+- headers, footers
+- contents (eg. page counter) in headers and footers
+- orphans and widows
+### structure
+page sheet
+  non-printable area
+    printable area
+### page model
+page box: page margin > page media > page padding > page area
+###
+page selector: :left, :right, :first, :blank
+page margin box: auto, min-width, max-width
+page size
+page break
+
+
+## multi-column layout
+column-width, column-count, columns
+column-gap, column-rule-(color,style,width)
+break-(before,after,inside)
+column-span, column-fill
+
+## generated content for paged media
+content(). string()
+running(), element()
+target-counter(), target-counters()
+
+## 
+### writing-mode
+1. horizontal direction can have margin overlap
+2. margin: auto for vertical alignment
+
+### module
+1. path must add (/ ./ ../) or absolute path
+2. default defer => async loading, keep order
+3. inline script also defer
+4. support async
+5. module only execute once
+6. always CORS needed
+7. module default no certificate; where convension js loading with certificate
+8. default strict mode
+
+```html
+    <button id="btn">click me</button>
+    <video controls name="media" ></video>
+    <script>
+      const video = document.getElementsByTagName("video")[0];
+      document.getElementById("btn").addEventListener("click",
+        async event => {
+          event.preventDefault()
+          try {
+            const module = await import('./xx.js')
+            module.loadVideo(video)
+          } catch(err) {
+            console.error(err.message)
+          }
+        }
+      )
+    </script>
+```
+```js
+// xx.js
+export const loadVideo = dom => {
+  const source = document.createElement("source");
+  source.setAttribute("src", "./sample_video.mp4")
+  dom.appendChild(source);
+} 
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

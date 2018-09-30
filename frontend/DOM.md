@@ -417,6 +417,23 @@ since most API in specification are interface rather than class
 => ordinary constructor in C++ sense cannot be used to create DOM objects
 ==> compatible with wide range of language (scripting / programming language)
 
+# Shadow DOM
+question: there's only video tag with source tag, where are play/pause button, progress bar come from?
+ans: shadow DOM 
+
+allow document to insert dom tree during rendering, but it is not part of main DOM tree
+- adv: good encapsulation, outer CSS cannot affect DOM inside shadow root
+
+## shadow boundary
+any html and css inside shadow root protected from parent document by shadow boundary
+
+nothing within template is rendered on page until activate it using JS
+
+
+
+
+
+
 
 
 
