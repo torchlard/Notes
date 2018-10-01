@@ -429,8 +429,15 @@ any html and css inside shadow root protected from parent document by shadow bou
 
 nothing within template is rendered on page until activate it using JS
 
+## slot
+browser default only render shadow DOM's shadow tree, not other parts in original shadow DOM
+to keep other parts, need to use `<slot>` element, like container for shadow tree
 
+can use `<slot name="top"></slot>` in DOM
+  to reference to `<ul slot="top"></ul>` in shadow tree
 
+## custom element
+sometimes we do not need to create new element, only need to extend based on existing element
 
 
 
