@@ -430,6 +430,36 @@ any html and css inside shadow root protected from parent document by shadow bou
 nothing within template is rendered on page until activate it using JS
 
 
+# Web component
+convention: for undefined element, treat them same as standard element, 
+without default styles and behaviors
+
+## custom elements
+types
+1. autonomous custom elements (standalone, not inherit from standard HTML elements)
+`document.createElement("popup-info")`
+2. customized built-in elements (inherited)
+`<p is="word-count">, document.createElement("p", {is: "word-count"}`
+
+### autonomous
+```js
+class PopupInfo extends HTMLElement {
+  constructor(){
+    super(); // always call first
+  }
+  // write element functionality here
+}
+```
+
+### lifecycle callbacks
+connectedCallback
+disconnectedCallback
+attributeChangedCallback
+
+### what required?
+1. custom elements initialized by `<custom></custom>, new CustomElement(), document.create...`
+2. can use original method to operate custom elements (eg. document.body.appendChild), can modify by CSS
+3. have lifecycle hooks
 
 
 
