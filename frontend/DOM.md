@@ -429,7 +429,11 @@ any html and css inside shadow root protected from parent document by shadow bou
 
 nothing within template is rendered on page until activate it using JS
 
+## slot
+browser default only render shadow DOM's shadow tree, not other parts in original shadow DOM
+to keep other parts, need to use `<slot>` element, like container for shadow tree
 
+<<<<<<< HEAD
 # Web component
 convention: for undefined element, treat them same as standard element, 
 without default styles and behaviors
@@ -460,7 +464,13 @@ attributeChangedCallback
 1. custom elements initialized by `<custom></custom>, new CustomElement(), document.create...`
 2. can use original method to operate custom elements (eg. document.body.appendChild), can modify by CSS
 3. have lifecycle hooks
+=======
+can use `<slot name="top"></slot>` in DOM
+  to reference to `<ul slot="top"></ul>` in shadow tree
+>>>>>>> 2f40761e08f68a39a42676389daf81a1cc37fca8
 
+## custom element
+sometimes we do not need to create new element, only need to extend based on existing element
 
 
 

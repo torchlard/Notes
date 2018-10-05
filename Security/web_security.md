@@ -86,11 +86,19 @@ document.body.innerHTML = (
 upload flash file to server (eg. fake login frame), then use `<object>/<embed>` to reference flash
 
 
+# CSRF (cross-site request forgery)
+cheat user to access a website that already certified
+since it's certified, website will think it's user's operation 
 
+attacker can embed request url in something, if user click on it, will trigger other unwilling operation
 
+server cannot certify certain operation really from user's will
 
-
-
+## protection
+1. check referer field
+the field can be modified
+2. token for identification
+generate pseudo random number
 
 
 
