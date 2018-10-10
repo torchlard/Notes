@@ -41,6 +41,9 @@ deep copy:
 - jQuery.extend({}, objectIsOld)
 - lodash's _.cloneDeep
 
+only copy attribute value:
+- Object.assign({}, {a: 1})
+
 # call & apply
 call: for multiple arguments
 apply: for single argument (eg. Array, Object..)
@@ -95,6 +98,29 @@ eg.
 # call by value VS call by reference
 value: create new variable a, let a has same value as input
 ref: let a as alias of x, a & x has same variable
+
+# memory
+## stack
+primitive data types has fixed size, so store in stack, system auto allocate memory space
+can access its value directly
+
+## heap
+js's array has variable size, values are obj in heap
+cannot access to cetain position in heap directly
+
+`let b = {m: 20}`
+b store in stack, has value of address to {m: 20}
+{m: 20} store in heap
+
+## lifecycle
+1. allocate memory you need
+2. read / write on allocated memory
+3. when no need, free it
+
+
+
+
+
 
 
 

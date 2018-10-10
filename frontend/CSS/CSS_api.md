@@ -185,9 +185,35 @@ export const loadVideo = dom => {
   dom.appendChild(source);
 } 
 ```
+## CSS selector
+inherit: font-size, font-family, color, ul, li, dd, dl, dt
+not: border, padding, margin, width, height
 
+# CSS 3 new
+## pseudo
+:(first,last,only)-of-type, :only-child, nth-child(2)
+:enabled, :disabled, :checked
 
+## feature
+border-radius, border-shadow, text-shadow, gradient
+transform, scale, translate, skew
+rgba
 
+## center div
+```css
+div {
+  width: 200px;
+  margin: 0 auto;
+}
+
+/* floating element */
+.div {
+  width: 500px; height: 300px;
+  position: relative;
+  left: 50%; 
+  top: 50%;
+}
+```
 
 
 

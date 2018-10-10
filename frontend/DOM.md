@@ -464,17 +464,19 @@ attributeChangedCallback
 1. custom elements initialized by `<custom></custom>, new CustomElement(), document.create...`
 2. can use original method to operate custom elements (eg. document.body.appendChild), can modify by CSS
 3. have lifecycle hooks
-=======
+
 can use `<slot name="top"></slot>` in DOM
   to reference to `<ul slot="top"></ul>` in shadow tree
->>>>>>> 2f40761e08f68a39a42676389daf81a1cc37fca8
 
 ## custom element
 sometimes we do not need to create new element, only need to extend based on existing element
 
 
-
-
+## link VS @import
+link belongs to XHMTL, can load CSS, define RSS,rel
+@import: only can load CSS [CSS 2.1]
+- when page loaded, link also loaded
+- @import loaded after page loaded
 
 
 
