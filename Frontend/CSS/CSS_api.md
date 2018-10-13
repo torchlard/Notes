@@ -215,12 +215,11 @@ div {
 }
 ```
 
-
-
-
-
-
-
+# width/height
+content -> width / height
+padding -> clientWidth / clientHeight
+border_height, padding_width -> scrollWidth / scrollHeight
+margin -> offsetWidth / offsetHeight 
 
 
 
