@@ -37,6 +37,175 @@ E/wpa_supplicant(  677): wlan0: Failed to initialize driver interface
 sudo wpa_supplicant -D nl80211 -i wlp4s0 -c /etc/wpa_supplicant.conf -B
 sudo wpa_cli
 
+# characteristics
+1. self organizing: no central control, decentralised resource search (sometimes server assist -> centralized p2p)
+2. combined client + server functionality, same code
+3. direct interaction between peers (search, data hosting, communication)
+4. relevant resource located at private nodes
+5. heterogeneous capabilities
+6. variable connectivity (churn)
+
+## mobile ad hoc network
+no communication infrastrucutre available
+
+## overlay network
+```graphviz
+graph xx {
+  "peers" [xlabel="Overlay Network"]
+  node[label="TCP/IP"]
+    1; 2; 3;
+  1 [xlabel="Underlay Networks"]
+
+  "peers" -- {1 2 3} 
+}
+```
+P2P network form overlay network
+  over underlying telecom infrastructure
+
+- search / lookup data multicast
+- data storage publish / subscribe
+  
+### P2P overlays
+friend-of-a-friend network
+user-centric networking
+content-centric networking / routing (build application around data)
+
+### non-P2P overlays
+VPN
+IP over ad hoc networks
+application-layer multicast
+TOR
+
+## Cloud computing
+controlled environment: 
+- no malicious provider
+- no churn
+- homogeneous devices
+selective centralized structure:
+- accounting, monitoring
+- single access point
+- centralized updaes
+
+on demand self services
+rapid elasticity
+measured service
+resource pooling
+
+=== VS ===
+
+## P2P computing
+uncontrolled environment:
+- churn, hetero, uncertainty
+
+on demand self services (depend on #users)
+rapid elasticity
+resource pooling
+
+## why we need P2P?
+1. use P2P in cloud backend
+-> data storage, big data
+2. costs
+3. security
+4. locality / offline usage
+
+## examples
+Bittorrent
+eMule
+PPLive
+
+# Unstructured P2P overlay networks
+## Lookup
+given ID, return contact to responsible peer
+- need to maintain address structure
+
+## full text search
+given sequence of word, return contact to peers with all matching resoures
+- no need to know unique name
+- need protocol, hard to be efficient
+
+### unstructured P2P
+objects no special identifier
+location not known 
+each peer only responsible for object it submit
+eg. KaZaA, eDonkey
+- exhaustive search
+#### centralized
+server to find file owner
+eg. centralized DHT
+what: object name, file name, criteria
+where: (IP, port)
+- issue: central server is bottleneck, single point failure
+- best for small and simple application
+#### homogeneous
+equal duty
+##### search mechanism
+{flood}
+breadth-first search (BFS)
+- send msg to all neighbors
+- use system wide max time-to-live
+
+{expanding ring}
+successive floor with increasing TTL
+if objects follow Zipf law popularity distribution
+
+{random walks}
+query to randomly selected neighbor
+- incresed latency
+
+{Rendezvous Point}
+storing node, requesting node
+#### heterogeneous
+different duty
+
+### structured P2P
+peer & object have identifier
+object stored on peer according to their ID
+distributed indexing point to object locations
+eg. Adaptive-Chord
+- guarentee result if target exists
+#### DHT-based
+
+#### Heterogeneous P2P
+
+
+### flat 
+### hierarchical
+several overlays exist, each with dedicated function
+routing in 1 network -> gateway in another network
+
+### Gnutella
+1. peer know at least 1 member node before connection (use host cache)
+2. ping request, pong response
+3. set up HTTP connection
+
+scalability issue:
+- fully decentralized, flooding of messages
+- low bandwidth peer use up bandwidth by forwarding msg
+
+optimization:
+- num of hops
+- super nodes
+- file hashes to identify files
+- choose to be hierarchy
+
+### Bubblecast
+low latency
+reliable
+precise node count
+balanced link load
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

@@ -443,3 +443,386 @@ const pow = (x, n) => {
 console.log(pow(8784379821774892,16));
 
 
+// const data = 'flight_node[1-3,5,7].qunar.com'
+const data = 'flight_[nod]e.qu[1-3,5-8,9,0]nar.com'
+
+// const data = read_line()
+
+const getNames = data => {
+
+  if (!data.match(/\[[0-9,\,,\-]+\]/g)) {
+    console.log(data);
+    // print(data);
+    return;
+  }
+
+  const fstr1 = data.match(/.+\[/g)[0]
+  const fstr = fstr1.substr(0, fstr1.length - 1)
+  const sstr = data.match(/\](.+)$/g)[0].substr(1)
+
+  const brac = data.match(/\[[0-9,\,,\-]+\]/g)[0]
+  const nums = brac.substr(1, brac.length -2).split(',')
+  console.log(fstr1)
+  console.log(sstr)
+
+  let res = []
+  for (let i of nums){
+    if(i.includes('-')){
+      let [a,b] = i.split('-')
+      for(let j = a; j <= b; j++)
+        res.push(j.toString()); 
+    } else {
+      res.push(i)
+    }
+  }
+
+
+  for(let i of res){
+    console.log(fstr + i + sstr)
+    // print( fstr.substr(0, fstr.length-1) + i + sstr )
+  }
+  return;
+}
+
+getNames(data)
+
+
+
+function ListNode(val) {
+  this.val = val;
+  this.next = null;
+}
+
+const numList = [1, 2, 3, 4, 5, 6, 7, 8, 9, 0]
+
+const len = numList.length
+const buildList = (i = 0) => {
+  if (i === len)
+    return null;
+  const n = new ListNode(numList[i])
+  n.next = buildList(i + 1)
+  return n;
+}
+
+const traverse_print = (node) => {
+  let n = node;
+  do {
+    console.log(n.val)
+    n = n.next
+  } while (n !== null)
+}
+
+traverse_print(buildList())
+
+============
+
+const traverse = (head, n) => {
+  let node = head;
+  for(let i=1; i<n; i++){
+    node = node.next;
+  }
+  return node;
+}
+
+const removeNthFromEnd = (head, n) => {
+  let left = head;
+  let right = traverse(head, n);
+
+  if(right.next === null){
+    return head.next;
+  }
+  right = right.next;
+
+  while(right.next !== null){
+    left = left.next;
+    right = right.next;
+  }
+
+  left.next = left.next.next;
+  return head;
+}
+
+traverse_print(removeNthFromEnd(buildList(), 1))
+
+const swapPairs = head => {
+  if(head === null)
+    return null;
+  if(head.next === null)
+    return head;
+
+  let [a1, a2] = [head, head.next]  
+  let n = a2.next;
+  a1.next = n;
+  a2.next = a1;
+  head = a2;
+  let p = a1;
+
+  while(n !== null){
+    a1 = n;
+    a2 = a1.next;
+    if(a2 === null)
+      break;
+    n = a2.next;
+    p.next = a2;
+    a1.next = n;
+    a2.next = a1;
+    p = a1;
+  }
+
+  return head;  
+}
+
+traverse_print(swapPairs(buildList()))
+
+
+
+var swapPairs = function (head) {
+  let dummy = new ListNode();
+  dummy.next = head;
+  let current = head;
+  let previous = dummy;
+  while (current !== null && current.next !== null) {
+    let next = current.next.next;
+    current.next.next = current;
+    previous.next = current.next;
+    current.next = next;
+
+    previous = current;
+    current = current.next;
+  }
+  return dummy.next;
+};
+
+let data = [1, 2,3,4,5,6]
+let data = [3, 2, 1]
+let data = [11, 12, 0, 27, 3, 11, 21, 9, 0, 15, 26, 27, 17, 24, 0, 16, 4, 17, 14, 8, 15, 8, 2, 16, 10, 6, 6, 24, 16, 2, 18, 19, 6, 10, 17, 10, 21, 0, 11, 13, 7, 7, 2, 16, 24, 25, 2, 20, 12, 9, 20, 19]
+
+
+const findNext = (target, nums) => {
+  if(nums.length === 1){
+    return nums.concat([target])
+  }
+  const min = Math.min(...nums.filter(i => i > target))
+  const index = nums.indexOf(min)
+  let res = nums
+  res[index] = target
+  return [min].concat(res.sort((a,b) => a-b))
+}
+
+const nextPermutation = nums => {
+  const len = nums.length;
+  let i = len-1;
+
+  while(i > 0){
+    if(nums[i] > nums[i-1]){
+      const res = findNext(nums[i - 1], nums.slice(i))
+      nums.splice(i-1, len-i+1, ...res)
+      return;
+    }
+    i--;
+  }
+  nums.sort((a,b) => a-b)
+}
+
+nextPermutation(data)
+console.log(data);
+
+const data = [
+  ["8", "3", ".", ".", "7", ".", ".", ".", "."],
+  ["6", ".", ".", "1", "9", "5", ".", ".", "."],
+  [".", "9", "9", ".", ".", ".", ".", "6", "."],
+  ["2", ".", ".", ".", "6", ".", ".", ".", "3"],
+  ["4", ".", ".", "8", ".", "3", ".", ".", "1"],
+  ["7", ".", ".", ".", "2", ".", ".", ".", "6"],
+  [".", "6", ".", ".", ".", ".", "2", "8", "."],
+  [".", ".", ".", "4", "1", "9", ".", ".", "5"],
+  [".", ".", ".", ".", "8", ".", ".", "7", "9"]
+]
+
+let hash = {}
+
+const unique = nums => {
+  hash = {}
+  nums = nums.filter(x => x !== '.')
+  for(let i of nums){
+    if(hash[i])
+      return false;
+    hash[i] = true;
+  }
+  return true;
+}
+
+const row = 9;
+const column = 9;
+
+const isValidSudoku = board => {
+  for(let i=0; i < row; i++){
+    if(! unique(board[i]))
+      return false;
+  }
+  for (let i = 0; i < column; i++) {
+    if (! unique(board.map(x => x[i])) )
+      return false;
+  }
+
+  let tmp = []
+  for(let i=0; i<row; i+=3){
+    for (let j=0; j<column; j+=3){
+      tmp = board.slice(i, i+3).map(x => x.slice(j, j+3)).reduce((i, j) => i.concat(j))
+      if(! unique(tmp))
+        return false;
+    }
+  }
+
+  return true;
+}
+
+console.log( data.slice(0,3).map(x => x.slice(3,6)).reduce((i,j) => i.concat(j) )  )
+
+const isValidSudoku = function (board) {
+
+  const map = {};
+  let row = 0;
+  let column = 0;
+
+  while (row < 9) {
+    let num = board[row][column];
+
+    if (num != '.') {
+      if (map[num]) {
+
+        for (let i = 0; i < map[num].length; i++) {
+          // check if the same value violates the rule
+          if ((Math.floor(map[num][i][0] / 3) == Math.floor(row / 3) 
+          && Math.floor(map[num][i][1] / 3) == Math.floor(column / 3)) 
+          || map[num][i][0] == row || map[num][i][1] == column) {
+            return false
+          }
+        }
+        map[num].push([row, column]);
+
+      } else {
+        map[num] = [[row, column]];
+      }
+
+    }
+
+    column++;
+    if (column == 9) {
+      column = 0;
+      row++;
+    }
+  }
+
+  return true;
+};
+
+console.log(isValidSudoku(data) )
+
+const data = [2,5,2,1,2]
+const target = 5
+
+const unique = (results, target) => {
+  return results.every(i => ! i.every((elem,idx) => elem === target[idx]))
+}
+
+const combinationSum2 = (candidates, target) => {
+
+  candidates.sort((a,b) => a-b)
+
+  const tree = (elemList, candid, sum, result) => {
+    // console.log('elemList', elemList)
+
+    if(sum === target){
+      // console.log('-------->')
+      return result.push(elemList);
+    }
+    else if(sum > target)
+      return;
+
+    for (let i = 0; i < candid.length; i++) {
+      const elem = candid[i]
+      if (elem !== candid[i - 1])
+        tree(elemList.concat([elem]), candid.slice(i+1), sum+elem, result);
+    }
+  }
+
+  const res = []
+  for (let i=0; i < candidates.length; i++) {
+    if( candidates[i] !== candidates[i-1])
+      tree([candidates[i]], candidates.slice(i+1), candidates[i], res)
+  }
+  return res;
+}
+
+console.log( combinationSum(data, target) )
+
+var combinationSum2 = function (c, target) {
+  var res = [];
+  c = c.sort((a, b) => a - b);
+
+  helper(target, [], 0);
+
+  function helper(need, tmp, start) {
+    if (need === 0) {
+      res.push(tmp.slice());
+    } else {
+      for (var i = start; i < c.length; i++) {
+        if (c[i] > need) continue;
+        if (i > start && c[i - 1] == c[i]) continue;
+        tmp.push(c[i]);
+        helper(need - c[i], tmp, i + 1);
+        tmp.pop();
+      }
+    }
+  }
+  return res;
+};
+
+const data = [4, 5, 6, 7, 0, 1, 2]
+// const data = [0,1,2,3,4,5,6,7]
+const target = 5
+
+const search = (nums, target) => {
+  const len = nums.length
+
+  if (nums[0] === target)
+    return 0;
+  if (nums[len-1] === target)
+    return len-1;
+
+  const subSearch = (l,r) => {
+    console.log('lr',l,r)
+
+    if(r-l <= 1) {
+      if (nums[l] === target)
+        return l;
+      else if (nums[r] === target)
+        return r;
+      else 
+        return -1;
+    }
+
+    const mid = Math.floor((r + l) / 2)
+    const midVal = nums[mid]
+
+    if(midVal === target){
+      return mid;
+    } else {
+      if(nums[l] < nums[r]){
+        return (midVal > target) ? subSearch(l, mid) : subSearch(mid, r)
+      } else {
+        if(midVal > nums[l]){
+          if(target > )
+          return subSearch(mid,r)
+        } else {
+          return (midVal > target) ? subSearch(l, mid) : subSearch(mid, r)
+        }
+      }
+    }
+  }
+
+  return subSearch(0 ,len-1)
+}
+
+console.log(search(data, target))

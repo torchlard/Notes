@@ -16,6 +16,8 @@ ssh-add ~/.ssh/xxx  // add key to system
 xclip -sel clip < ~/.ssh/xxx.pub    // copy key content to clipboard
 go to setting > SSH and GPG keys > New SSH key, paste key content
 
+# remove all uncommitted change
+git reset --hard HEAD
 
 
 
