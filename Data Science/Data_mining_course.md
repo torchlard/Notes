@@ -52,12 +52,16 @@ mine sequential association rules
 computing frequent sequences
 data consist of `<s1, s2, ... ,sn>` itemsets (items bought together) in time order
 
+Customer sequence: 
+  all transactions of customer 
+  = seq ordered by increasing transaction time
+
 ## steps
-1. convert database to sequences 
-2. pick frequent itemsets
-3. denote frequent itemsets as other symbols
-4. find desired sequences using {ApioriAll, AprioriSome, DynamicSome}
-5. find max sequences among set of frequent sequences
+1. sort pahse: convert database to sequences 
+2. freq itemset phase: pick frequent itemsets
+3. transformation phase: denote frequent itemsets as other symbols
+4. sequence phase: find desired sequences using {ApioriAll, AprioriSome, DynamicSome}
+5. maximal phase: find max sequences among set of frequent sequences
 
 ## pick frequent itemsets
 ```
@@ -282,6 +286,19 @@ d(i,j) = (b+c) / (a+b+c)
 d(i,j) = (p-m) / p
 
 2. create new binary variable for each M nominal states
+
+### how to choose dissimilarity metric?
+Numeric data:
+1. Euclidean
+2. Squared euclidean distance
+3. Manhattan distance
+4. Bray and Curtis
+
+Categorical data
+- Mismatch value
+
+
+
 
 ## clustering methods
 ### partitioning
