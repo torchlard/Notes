@@ -141,6 +141,9 @@ latency increase with block size
 misleading goal: produce hash with n leading '0's
 actual goal: output hash less than specific binary number (target {in hex representation})
 
+output = 0000066666666666
+target = 00000f8798877878
+
 targets {truncated} <--interchangable--> bits {compact representation}
 
 reason:

@@ -1,3 +1,44 @@
+# Vocubulary
+- an attribute of an object:
+variable, field, characteristic, feature, predictor
+- collection of attributes describing an object:
+record, point, case, sample, entity, entry, instance
+
+## variable type
+1. categorical
+- Ordinal
+>= 2 categories, with clear ordering
+eg. low, medium, high; grades, clothing size
+- Nominal
+>= 2 categories, no intrinsic ordering
+eg. ID number, eye color, zip code
+2. Interval
+temperatire in Celsius
+intervals between values are equally spaced
+eg. $10000, $15000, $20000
+3. Ratio
+eg. temperature in Kelvin, length, time, counts
+
+- Notes:
+average of categorical variable not make sense
+average of educational experience -> nonsense (spacing not even)
+average required to be on interval
+
+## types of data sets
+1. Record
+collection of record, each having fixed set of attribute
+2. Data metrix
+objects with only numeric attributes can be represented by m*n matrix
+points in multi-dimensional space
+3. Document data
+document becomes a "term" vector
+4. Transaction Data
+special type of record data
+5. Graph data
+6. Ordered Data
+eg. genomic sequence data, spatial-temporal data
+
+
 # Association rule mining
 find pattern, association, corelation
 usage:
@@ -297,6 +338,18 @@ Numeric data:
 Categorical data
 - Mismatch value
 
+Similarity = numerical measure how alike 2 data objects are, range [0,1]
+Dissimilarity = numerical measure how different 2 data objects are, 
+  min=0, upper limit varies
+
+| type             | dissimilarity                        | similarity                          |
+|------------------|--------------------------------------|-------------------------------------|
+| Nominal          | d = 0 if p=q                         | s = 1 if p=q                        |
+|                  | d = 1 if p!=q                        | s = 0 if p!=q                       |
+| Ordinal          | d = \|p-q\| /(n-1)                   | s = 1 - \|p-q\|/(n-1)               |
+|                  | [values mapped to integers 0 to n-1] |                                     |
+| Interval / Ratio | d = \|p-q\|                          | s = -d, s = q/(1+d) or              |
+|                  |                                      | s = 1 - (d - min_d)/(max_d - min_d) |
 
 
 
