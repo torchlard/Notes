@@ -49,9 +49,6 @@ when receiving new blocks, first validate correctness and then broadcast to own 
 
 ## transaction
 ### digital signature
-Alice have pair of public and private key
-encrypt msg with private key -> encrpted msg
-publish his encrpted-msg and public key, others can verify belonging of this msg
 - verify author, data & time of signature
 - authenticate msg content
 - verified by 3rd party
@@ -68,6 +65,16 @@ digraph {
 ```
 script contains signature & public key
 
+### verify signature
+for asymmetric key encrption:
+if use public key encrypt -> then use private key decrypt
+if use private key encrypt -> then use public key decrypt
+results both the same
+
+1. owner of hash use his private key to encrpyt hash => create signature
+2. other receiver first calc hash, then use public key of owner published, to decrypt signature, compare 2 hash
+-> if same, then signature valid
+
 ## input & output
 input = ref to output of prev transaction
 ScriptSig = redeem prev transaction output
@@ -82,14 +89,14 @@ stack based
 bitcoin owned = unspent transaction output
 
 ## Double Spending
-forward 1 valid transaction to honest node, mine another transaction secretly
+forward 1 valid transaction to honest node, do another transaction and mine secretly
 success when attacker chain is faster than honest chain (main chain)
 
 P(success) = 1       if p <= q
              (q/p)^z if p > q
 [p = P(hoest node find next block), q = P(attacker node find next node)]
 
-P(success) quite low if using 6 block confirmation
+P(attacker success) quite low if using 6 block confirmation
 
 ## Concensus
 when 2 nodes generate new blocks simultaneously, solve by concensus rules:

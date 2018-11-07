@@ -45,13 +45,13 @@ physical -> link -> network -> transport -> application [destination]
 1. client only has its MAC
 want: gateway ip, local DNS ip
 action: use DHCP request by UDP
-
-client            server
+```
+client          server
  | -- discovery --> 
- | <-- offer ----
- | -- request -->
- | <-- ack -----
-
+ | <-- offer ------ (maybe multiple)
+ | -- request ---->
+ | <-- ack --------
+```
 client may receive multiple DHCP server offers, only confirm 1 offer
 final ACK contain: DNS ip, gateway ip
 
@@ -172,6 +172,9 @@ receiver
 1. compute checksum of received data
 2. compare checksum values
 
+assume data is '4500 0073', each digit has 4 bit
+4500 + 0073 -> 4573 -> 6ABC
+
 
 # reliable data transfer
 unreliable channel under reliable data transfer
@@ -185,6 +188,7 @@ underlying channel perfectly reliable, no error/loss
 ## rdt 2.0
 with bit error, use checksum to detect error
 
+```python
 sender rdt_send(data)
 udt_send(sndpkt)
 wait for reply
@@ -197,13 +201,14 @@ if sender receive NAK:
   wait for reply
 else:
   receive msg, done
-
+```
 ## rdt 2.1
 add sequence number to each package
 sender retransmit current package if ACK/NAK corrupted
 receiver discard duplicate package
 
 - sender
+```python
 rdt_send(data)
 make_pkt(0)
 udt_send(sndpkt)
@@ -219,8 +224,10 @@ make_pkt(1)
 udt_send(sndpkt)
 'wait for ACK/NAK 1'
 ...
-
+```
 - receiver
+
+```python
 'wait for 0'
 if received && not_corrupt && seq==0:
   extract data, deliver
@@ -229,23 +236,25 @@ if received && not_corrupt && seq==0:
 elif received && corrupted:
   send NAK
 elif received && not_corrupt && seq==1:
-  send ACK
+  send ACK [buffer]
   go back 'wait for 0'
 
 'wait for 1'
 if received && corrupt:
   send NAK
 elif received && not_corrupt && seq==0:
-  send ACK
-  go 'wait for 1'
+  send ACK [buffer]
+  go back 'wait for 1'
 elif received && not_corrupt && seq==1:
   extract, deliver data
   send ACK
   go for new 'wait for 0'
+```
 
 ## rdt 2.2
 do not use NAK, just use seq num
-- sender
+```python
+"<sender>"
 'wait for 0'
 rdt_send(data)
 
@@ -255,7 +264,8 @@ if received && (corrupt || ACK1):
 elif received && not_corrupt && ACK0:
   go to next
 
-- receiver
+"<receiver>"
+'wait for 1'
 if received && notcorrupt && seq==1:
   extract data
   send ACK1
@@ -265,13 +275,17 @@ if received && notcorrupt && seq==1:
 if received && (corrupt || seq==1):
   udt_send(pkg)
   'wait for 0'
-
+```
 ## rdt 3.0 
 channel with error and loss packets (data, ACK)
 sender wait for reasonable amount of time for ACK
 retransmit if no ACK
 
+only has packet 0,1, send 0,1 iteractively
+use stop-and-wait mechanism, wait packet 1 by 1
+
 - sender
+```python
 rdt_send(data)
 
 'wait for ACK0'
@@ -283,7 +297,7 @@ elif timeout:
 elif received && not_corrupt && ACK0:
   stop timer
   'wait for 1'
-
+```
 disadv: time consuming to stop and wait for reply
 
 ## rdt pipeline
@@ -292,27 +306,29 @@ sender allows multiple packets sent at same time
 
 range of seq num increase
 buffer at sender and/or receiver
+
 ### go-Back-N
 - sender
 sender have up to N un-ACKed packets in pipeline
 sender has timer for oldest un-ACKed packet
 when time expires, resend all packets starting from oldest un-ACKed packet in window
+
 ```python
  sent,not ACKed  usable,not sent
-|-------------|----------------|
-base         nextSeqNum
+|--------------|----------------|
+base       nextSeqNum
 <----------window size(N)------->
 
 if nextSeqNum < base+N:
   send(packet[nextSeqNum])
   if base == nextSeqNum:
-    start_timer
+    start_timer()
   nextSeqNum++
 else:
   refuse_data
 
 if timeout:
-  start_timer
+  restart_timer()
   send(packet[base, ..., nextSeqNum-1])
 elif received && corrupt:
   do nothing
@@ -323,9 +339,9 @@ elif received && not_corrupt:
   else:
     base = getACKnum(packet)+1
     if base == nextSeqNum:
-      stop_timer
+      stop_timer()
     else:
-      start_timer
+      start_timer()
 
 
 if receive req num Rn > Sb:
@@ -444,7 +460,7 @@ sender assume loss if 3 duplicate ACK
 
 ## TCP RENO
 ### 3 dup ACK
-window = window/2
+window = window/2 (eg. 5/2 = 2)
 ssthresh = window
 "fast retransmit"
 => fast recovery
@@ -458,7 +474,85 @@ window = 1
 
 avg throughput = 3/4 * W/RTT
 
+# TCP transmission
+```
+--seq=92, 8B data-->
+--seq=100, 20B data-->
+<--ack=100--
+<--ack=120--
+```
 
+# TCP flow control
+receiver control sender, so sender won't overflow receiver's buffer by sending too much, too fast
+
+```
+remove data from TCP socket buffer,
+<application>
+--------
+<OS>
+[TCP socket, receiver buffer]
+{TCP code}
+{IP code}
+packet from sender [up]
+```
+
+```
+{to application process}
+buffer data              ---
+----                   [RcvBuffer]
+free buffer space [rwnd] ---
+{TCP segment payloads}
+```
+rwnd in TCP header
+OS autoadjust RcvBuffer
+
+sender limit amount of un-ACKed data to receiver's rwnd value
+
+## flow control VS congestion control
+flow control act on restrict sender's sending speed
+congestion control apply on network
+
+
+# handshake
+## 2-way handshake
+x             server
+  --req_conn(x)-->
+  <--acc_conn(x)--
+
+variable delays
+may have message loss, need retransmission
+
+failed when:
+after req_conn(x), client resent req_conn(x)
+=> half open connection (no client)
+OR
+=> resend data from client
+
+## TCP 3-way handshake
+entry table: transmission control block
+contain info about endpoints, connection status, running data of packets,
+buffer of send,receive data
+
+num of session only limited by memory
+#### establishment
+```
+       -- SYNbit=1, seq=x -->
+ESTAB  <-- SYNbit=1, ACKbit=1, seq=y, ack=x+1 --
+       -- ACKbit=1, ack=y+1 -->  ESTAB
+```
+
+#### close
+after x sending FIN, x cannot send data anymore, but still can receive data
+```
+-- FINbit=1, seq=x -->
+<-- ACKbit=1, ack=x+1--
+
+<-- FINbit=1, seq=y --
+-- ACKbit=1, ack=y+1 -->
+```
+if x first init FIN:
+x can close connection only after waiting for 2*max segment lifetime
+server clse connection once receive final ACK 
 
 
 

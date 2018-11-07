@@ -194,9 +194,69 @@ reliable
 precise node count
 balanced link load
 
+# BTsync
+can be used either in local area network / public network
+
+## tracker server
+- BTsync client have several traker server IP address
+OR 
+- BTsync client first connect to company's website, then get certain configuration file: include ip address and port number
+
+## DHT network
+compensate shortcoming of DHT network
+need first connect to certain node, then discover other nodes
+
+### difficulty previously
+no center
+massive data
+node dynamic join/leave
+efficient query to route
+
+###
+assign unique ID to nodes
+let node ID = data key
+
+balance: 
+- larger route table, less jump needed
+- smaller route table, more jump needed
+
+distance algorithm
+
+### locate data
+function: put(key,value), get(key)
+- save data
+when node get new data, 
+a = distance(key, myself)
+b = distance(key, all known nodes)
+if a is minimum:
+  keep data itself
+else:
+  send data to min(b)
+
+- receive data
+node receive query to key
+dist = distance(key, myself)
+other = distance(key, known nodes)
+if dist is min:
+  search value of key locally
+else:
+  forward to min(other)
 
 
+### bootstrap
+connect to tracker server, pass throught server to get certain DHT node
+predefined host: add (ip, port) in client
 
+### GFW blocking DHT difficulty
+1. dynamic nodes 
+2. fake BTsync can only detect portion of nodes, not all
+3. GFW cannot block data flow within the wall
+
+if machine not connect to DHT network for long time, then node info stored locally will be outdated => need bootstrap again
+
+### keep connection
+1. buy VPS, host on non-blocked address VPS and run for long time
+2. ask for fixed DHT node
 
 
 
