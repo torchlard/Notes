@@ -283,6 +283,24 @@ Decision tree -> Regression tree
 Bayesian classifier -> Bayesian regressor
 ...
 
+## association-based classification
+mine high support and high ocnfidence rule in form of "cond_set => y"
+
+## Instance-based classification
+store training sample until new instance must be classified
+- k-nearest neighbor
+- case based reasoning
+
+## lazy evaluation VS eager evaluation
+lazy evaluation: 
+evaluate new record only when need to
+spend less time training
+need to store previous instance for comparison 
+
+eager evaluation:
+consider all records at first, has chosen global assumption
+spend more time training
+eg. Decision tree
 
 
 # Clustering
@@ -387,16 +405,46 @@ CLARA: deal with larger data sets than PAM
 
 ## hierarchical clustering
 ### single-linkage clustering
+nearest neighbour technique
+distance = closest pair
 grouping clusters in bottom up fashion, each step combine 2 clusters contain closest pair of element
 
 1. group closest 2+ elements
 2. recalc distance from group to other nodes (take min)
 3. back to step 1, repeat
 
+### Complete Linkage Method
+furthest neighbor technique
+distance = most distant pair
+
+### Group average
+distance = average of all pairs of individuals
+
+### Centroid clustering
+groups = mean values computed for each attribute (mean vector)
+distance = distance between 2 mean vector
 
 
+## Naive Bayesian classification
+use Bayes theorem 
+P(C|X) = P(X|C) x P(C) / P(X)
 
+since P(X|C) cannot be calculated, 
+assume attribute independence {P(x1|C), P(x2|C) ...}
+=> P(X|C) = P(x1|C) x P(x2|C) ... x P(xn|C)
 
+categorical: relateive frequency 
+continuous: gaussian density function
+
+### example
+P(p) = 9/14
+P(rain|p)=3/9, P(hot|p)=2/9, P(high|p)=3/9, P(false|p)=6/9
+=> 
+X = {rain, hot, high, false} condition
+P(X|p) = P(rain|p) x P(hot|p) x P(high|p) x P(false|p)
+
+P(X|p) x P(p) = 0.0105  VS  P(X|n) x P(n) = 0.0183
+so sample X classified as class 'n'
 
 
 

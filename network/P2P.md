@@ -242,6 +242,17 @@ if dist is min:
 else:
   forward to min(other)
 
+### basic routing
+check if key in local, if not, pass to successor  
+time = O(N)  
+
+### finger table
+finger table = list, at most m items
+if current ID = n, i_th term = (n+2^i) mod 2^m
+
+when receive key query, redirect to item that is max and less than key
+time = O(log N)
+
 
 ### bootstrap
 connect to tracker server, pass throught server to get certain DHT node
@@ -259,11 +270,81 @@ if machine not connect to DHT network for long time, then node info stored local
 2. ask for fixed DHT node
 
 
+## Kademlia
+### preprocessing
+1. algorithm to map key -> binary tree, key are leaves on tree
+2. key shown in binary format
+3. shorten key as shortest unique prefix
+
+Kad use 160 bit algorithm (eg. SHA1) -> full key has 160 bits
+
+### mapping
+```
+   1       0
+ 1   0   1   0
+1 0 1 0 1 0 
+```
+111, 110, 101, ..., 00
+each leave represent a key
+
+### distance
+use XOR to calculate distance among keys
+properties:
+A XOR B == B XOR A
+A XOR A == 0
+A XOR B > 0
+
+### routing
+start from root, exclude subtree tha is not include in itself
+recursively go deep until leaf
+
+### K-bucket
+knowing 1 node not enough considering robustness of system, need to
+record K (max K, can be smaller) nodes in each subtree
+- eg. BT use K=8
+K-bucket = routing table
+
+#### K-bucket refresh mechanism
+1. active query nodes in K-bucket
+2. passively receive request from others, add to K-bucket
+3. probe whether certain ID online
+
+K-bucket support concurrency, every node in K-bucket is equal, no coupling
+
+### join network
+1. any newcoming node (A) need to connect to any existing node (B) in Kad
+2. A randomly generate ID
+3. A query B, request ID = A
+4. B add A's ID in B's K bucket, send K nearest node to A
+5. A init K-bucket using the K IDs
+6. A send request to these K IDs (recursive) until init detailed enough route table
+
+### leave network
+no need to notify anyone, unlike Chord
+
+## Pastry
+each node assigned 128 bit ID
+assume N nodes, route keyword to nearest nodeID
+ID and keyword represented with base=2b
+
+when node receive keyword, need to pass to node with ID 
+1. longer common prefix
+OR 
+2. same prefix length, but closer value
+
+### table maintain
+leaf set
+routing table
+neighborhood set
+
+if b=2, then all numbers quaternary system
+
+### join and leave
+new nodes need to init state table, inform other node joined network
+O(log_2b N)
 
 
-
-
-
+## Tapestry
 
 
 

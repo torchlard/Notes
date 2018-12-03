@@ -1,3 +1,93 @@
+# keywords
+distributed computing (3 features)
+application
+distributed system (definition)
+  - nodes, link (network structure)
+  - network structure
+usage of distributed computing
+pervasive computing
+
+physical, architectural, fundamental model
+- example of physical model
+- early, internet-scale, contemporary
+
+architectural model: goal, definition
+communicating entities (IDL, OOP, interface)
+
+inter-process communication
+remote invocation 
+  remote procedure call (steps)
+  remote method invocation
+
+Indirect communication
+  Group communication
+  Publish-subscribe systems
+
+Data Structure
+  Message queue
+  tuple space
+  distributed shared memory
+  
+
+
+
+
+
+
+
+
+  
+  
+  
+  
+  
+  
+  
+========================================================================
+
+# network
+## UTM
+Unified threat management
+- include firewall, VPN, ID&P, gateway antivirus
+different from intrusion detection and provention (ID&P)
+
+## Core Switch
+high capacity switch positioned within backbone or physical core of network
+
+## Internet Tier
+Level 1: Point of presense (within city, same provider)
+Level 2: Across city, same provider
+Level 3: Internext Exchange Point (IXP), across provider
+Level 4: Global Internet
+
+Tier 1: transit free network using only peer
+
+### Internet transit
+allow network traffic to cross / transit computer network
+connect ISP to Internet
+- advertise customer router to other ISP
+- advertise other ISP's router in form of default route / full set of routes to all destination
+
+> traffic between 2 ISPs and downstream customer exchanged, neither ISP see upstream routes over peering connection
+
+### comparison
+Transit: network operator pay to another network operator for Internet access
+Peer: 2 network exchange traffic between users freely
+Customer: network pay another network money to get Internet access
+
+# Data Structure
+## tuple space
+implementation of associative memory (content-addressable memory)
+=> a form of distributed shared memory
+- compare input search data against table of stored data
+group of processes produce data:
+  post data as tuple in space
+group of processes use data:
+  get data from space that match certain pattern
+
+
+
+
 # clock synchronization
 ## global average
 each node broadcast local clock time (T0 + iR)
