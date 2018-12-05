@@ -1,4 +1,5 @@
 # keywords
+## Introduction
 distributed computing (3 features)
 application
 distributed system (definition)
@@ -7,9 +8,10 @@ distributed system (definition)
 usage of distributed computing
 pervasive computing
 
+## System network models
 physical, architectural, fundamental model
-- example of physical model
-- early, internet-scale, contemporary
+  example of physical model
+  early, internet-scale, contemporary
 
 architectural model: goal, definition
 communicating entities (IDL, OOP, interface)
@@ -28,6 +30,84 @@ Data Structure
   tuple space
   distributed shared memory
   
+Role and responsibilities
+  client-server
+  peer-to-peer
+
+Placement (consider what?)
+  service, server mapping
+  Caching
+    Web cache
+      user cache
+      shared cache
+      gateway cache
+  Java applet    
+
+Architectural model
+  layering
+  tiered architecture
+  function decomposition of app
+    presentation logic
+    application (business) logic
+    data logic
+  Two-tier solution
+  Three-tier solution
+  n-tier solution
+  Web interaction
+  Thin client
+
+Fundamental model
+  Interaction model
+    performance
+    clocks, timing event
+    synchronous distributed system
+    asynchronous distributed system
+    event ordering
+  Failure model
+    omission failure
+      how to process failure
+      send-omission failure
+      receive-omission failure
+      channel omission failure
+    arbitrary failure
+    timing failure
+    handling failure
+      reliability of 1-to-1 communication
+        validity, integrity
+        threats
+  Security model
+    attacker
+
+Networking model
+  Latency
+  Data transafer rate
+  Packet loss rate
+  security
+  reliability
+  mobility
+  multicast      
+  Quality of service (example)
+
+Network principles
+  packet transmission
+  switching
+    broadcast
+    circuit switching
+    packet switching
+  Protocol
+    definition
+    protocol layers
+    packet assembly
+    addressing
+    ports
+    internetworking
+
+## Interprocess communication
+Process
+  definition, types
+  how OS manage process
+  
+Layering
 
 
 
@@ -36,6 +116,34 @@ Data Structure
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
   
   
   
@@ -85,6 +193,8 @@ group of processes produce data:
 group of processes use data:
   get data from space that match certain pattern
 
+### Object space
+virtual repository
 
 
 

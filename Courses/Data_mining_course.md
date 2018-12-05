@@ -27,7 +27,7 @@ average required to be on interval
 ## types of data sets
 1. Record
 collection of record, each having fixed set of attribute
-2. Data metrix
+2. Data matrix
 objects with only numeric attributes can be represented by m*n matrix
 points in multi-dimensional space
 3. Document data
@@ -69,7 +69,7 @@ age(x, "30..39") ^ income(x, "42.48K") => ...
 any subset of frequent item set must be frequent
 
 ## Algorithm
-1. apply apriori principle, iteratively find frequent itemsets with carinality from 1->k
+1. apply apriori principle, iteratively find frequent itemsets with cardinality from 1->k
 2. use itesets found, repeat previous step
 3. if R satisfies min confidence, then R is strong association rule => output
 
@@ -447,18 +447,251 @@ P(X|p) x P(p) = 0.0105  VS  P(X|n) x P(n) = 0.0183
 so sample X classified as class 'n'
 
 
+# Data Preprocessing
+## why
+dirty data
+- incomplete, noisy, inconsistent
+quality data => quality minging result
+
+## Data quality
+criteria
+- accuracy, consistency, completeness
+- timeliness(time data capture - time event captured)
+- believability (property of being worthy of being believed by rational and informed user)
+- value added
+- interpretability
+- accessibility
+
+category
+- intrinsic
+- contextual
+- representational
+- accessibility
+
+## Process
+### Data cleaning
+fill missing, smooth noisy data, remove outlier, resolve inconsistency
+#### handle missing data
+1. ignore tuple, not good for attribute value
+2. global constant (eg. unknown, new class)
+3. attribute mean 
+4. attribute mean of same class
+5. most probable value inferred by Bayesian / decision tree
+#### nosiy data
+random error
+handle:
+1. Binning method
+   - sort, partition into bins
+   - smooth by bin means/median/boundaries (change num to closer min/max value)
+     > sort by equal width/depth
+2. clustering
+   - remove outlier
+3. combined computer and human inspection
+4. regression
+   - fit data into regression function
+
+### Data integration
+integrate multiple database, files
+detect and resolve conflict (eg. different scales, representations)
+remove redundant data
+
+### Data transformation
+- smoothing
+remove noise
+- aggregation
+construct data cube
+- generalization
+concept hierarchy climbing (different level of abstraction on data n-dimensional cube)
+- normalization
+min-max, z-score([v-mean]/stddev), decimal scaling
+- attribute/feature construction
+
+### Data reduction
+obtain reduced representation in volume, produce similar analytical result
+#### dimensionality reduction
+- feature selection
+min set of feature st. probability distribution of classes ~ original distribution
+reduce # patterns
+- heuristic method
+decision-tree: choose attributes for decision
+- parametric method
+assume data fit some regression model, estimate model parameter, discard data
+- non-parametric method
+not assume model 
+> histogram
+eg. divide data into buckets, store avg/sum for each bucket
+use dynamic programming
+> clustering
+partition data into cluster, store cluster representation only
+> sampling
+choose representative subset of data
+stratified sampling: approx percentage of each class
+
+### Data discretization
+part of data reduction, for numerical data
+- discretization
+replace actual data with interval labels
+- concept hierarchies
+replace low level concept(numeric age) with high level one(young, middle-aged...)
 
 
+# Data warehouse
+## why
+information gap by:
+systems designed for transaction processing, not query analysis
+unified access to data, collect info, provide unifom UI
 
+## what
+decision support database, separate from operational database
+support information processing
+### subject-oriented
+around major subjects
+model, analyse data 
+exclude not useful data
+### integrated
+integrate multiple different data source (db, file, records)
+data converted, processed
 
+### time-variant
+time horizon significantly longer, eg. 5-10 years
 
+### non-volatile
+no operational update, no need concurrency control
+only need initial data loading, data access
 
+## Data warehouse VS DBMS
+- DBMS, OLTP (online transaction processing)
+wrapper
+when query posed to client, dict used to translate query -> appropriate queries
+traditional DBMS, day-to-day operation
+up to date, RW
+application oriented
+- data warehouse, OLAP (online analytical processing)
+information integrated in advance
+decision making
 
+## Data Cubes
+base cuboid: n-D
+top most 0-D cuboid: apex cuboid
+lattice form data cube
+- different combination of attributes (1/2/3/4.. num of attributes together)
 
+## schema
+- star schema
+simple db design, good for ad-hoc query
 
+item table: item_key, item_name, ...
+location table: location_key, street ...
+sales fact table: item_key, location_key, units_sold ...
 
+fact table: factual/quantitative data (measure)
+dimension table: descriptive data about business [many records]
 
+- galaxy schema
+multiple fact tables
+diferent fact tables for each levels of aggregation
 
+- snowflake schema
+expanded version of star schema that tables are fully normalized
+sub-dimension table under higher dimension table
+
++ distributive 
+count, sum, min, max
++ algebraic
+avg, min_N
++ holistic
+median, mode, rank
+
+## OLAP operations
+roll up
+drill down
+slice, dice
+pivot
+drill across
+drill through
+
+## data warehouse application
+information processing
+analytical processing
+data mining
+
+## OLAM (online analytical mining)
+mining with drilling, dicing, pivoting
+
+## design
+- top-down view
+select relevant info for data warehouse
+- data source view
+expose info being captured, stored, managed
+- data warehouse view
+contain fact table, dimension table
+- business query view
+from end-user view
+
+## design process
+1. choose business process to model
+2. grain of process
+3. dimension apply to each fact table
+4. measure populate each fact table
+
+## warehouse model
+- enterprise warehouse
+enterpreise wide data
+multiple subject area
+multiple data source
+large memory needed
+- data mart
+to specific group of user
+department wide
+single subject
+limited data source
+occupy limited memory
+- virtual warehouse
+views over operational DB
+
+ROLAP (Relational) 
+MOLAP (Multi-dimensional) [Array based]
+HOLAP (Hybrid)
+SQL server
+
+## view materialization
+allow fast answer
+materialized view / snapshot = cache query result
+DW = materialized view of operational DB and external data source
+
+materialize small, carefully chosen set of views that can evaluate majority of important queries
+view refreshing = make view consistent with DW base table
+
+view update: immediate / deferred
+aggregates:
+- distributive 
+refresh without any problem
+- algebraic
+easily refreshed if contain all other necessary data
+- holistic
+hard to refresh
+
+## data extraction
+through gateway (ODBC, OLE, JDBC)
+## data cleaning
+## data loading
+sorting, summarization, aggregation, building indexes, materialized views
+full
+incremental loading during refresh
+## data refreshing
+frequency
+procedure
+- data shipping
+- transaction shipping
+
+## Cube computation
+data cube = lattice of cuboids, from 0-L to n-L
+can materialize every cuboid, none, some
+new operation `cube by` SQL like, generate all possible attribute combination by selection
+
+1. drill, roll -> SQL and/or1.  OLAP operations
+2. determine which materialized cuboid operation apply
+3. index, compressed VS dense array 
 
 
 
