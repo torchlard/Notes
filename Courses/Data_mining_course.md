@@ -178,6 +178,7 @@ what is a transaction? 1 image
 what is an item? 1 image feature(color)
 what is a customer (seq)? sequence of fashion design images 
 
+=========================================================================================
 
 # Classification
 ## definition
@@ -214,7 +215,7 @@ attribute are categorical / discrete set of continuous-valued
 selected on basis of heuristic(啟發法) / statistical measure
 - stop partitioning:
 all samples for given node belong to same class
-no remaining attribute for further partitioning [each time only use one, do not use again?]
+no remaining attribute for further partitioning
 no samples left
 
 ### attribute selection measure
@@ -222,12 +223,14 @@ no samples left
 attributes assumed to be categorical (can modify to continuous)
 
 p elements in class P, n elements in class N
-I(p,n) = -p/(p+n)*log(p/(p+n)) - n/(p+n)*log(n/(p+n))
+I(p,n) = -p/(p+n)*log(p/(p+n)) - n/(p+n)*log(n/(p+n))  <-- log of base 2
+- count all p,n with this attribute as decision
 - amount of information needed to decide if arbitrary example belong to P/N
 - lowest when either class has 0 element, highest(1) when equal distribution
 
 entropy of p_i of P and n_i of N:
 E(A) = sum(v; i=1){ (p_i + n_i)/(p + n) * I(p_i, n_i) }
+- count by portion of sample it contain for this attr value
 - higher purity of data less information to describe
 - entropy = 0 when all data identical, entropy=1 when data half different 
 
@@ -302,6 +305,31 @@ consider all records at first, has chosen global assumption
 spend more time training
 eg. Decision tree
 
+## Naive Bayesian classification
+use Bayes theorem 
+P(C|X) = P(X|C) x P(C) / P(X)
+
+since P(X|C) cannot be calculated, 
+assume attribute independence {P(x1|C), P(x2|C) ...}
+=> P(X|C) = P(x1|C) x P(x2|C) ... x P(xn|C)
+
+categorical: relateive frequency 
+continuous: gaussian density function
+
+### example
+there's class (p,n)
+
+P(p) = 9/14
+P(rain|p)=3/9, P(hot|p)=2/9, P(high|p)=3/9, P(false|p)=6/9
+=> 
+X = {rain, hot, high, false} condition
+P(X|p) = P(rain|p) x P(hot|p) x P(high|p) x P(false|p)
+
+P(X|p) x P(p) = 0.0105  VS  P(X|n) x P(n) = 0.0183
+so sample X classified as class 'n'
+ignore P(X)
+
+====================================================================================
 
 # Clustering
 collection of data objects
@@ -370,7 +398,6 @@ Dissimilarity = numerical measure how different 2 data objects are,
 |                  |                                      | s = 1 - (d - min_d)/(max_d - min_d) |
 
 
-
 ## clustering methods
 ### partitioning
 construct various partitions, evaluate them by some criteria
@@ -402,20 +429,17 @@ works effectively for small data sets, not large
 
 CLARA: deal with larger data sets than PAM
 
-
 ## hierarchical clustering
 ### single-linkage clustering
-nearest neighbour technique
-distance = closest pair
+nearest neighbour technique: distance = closest pair
 grouping clusters in bottom up fashion, each step combine 2 clusters contain closest pair of element
-
 1. group closest 2+ elements
 2. recalc distance from group to other nodes (take min)
 3. back to step 1, repeat
 
 ### Complete Linkage Method
-furthest neighbor technique
-distance = most distant pair
+furthest neighbor technique: distance = most distant pair
+other same as single-linkage
 
 ### Group average
 distance = average of all pairs of individuals
@@ -424,27 +448,7 @@ distance = average of all pairs of individuals
 groups = mean values computed for each attribute (mean vector)
 distance = distance between 2 mean vector
 
-
-## Naive Bayesian classification
-use Bayes theorem 
-P(C|X) = P(X|C) x P(C) / P(X)
-
-since P(X|C) cannot be calculated, 
-assume attribute independence {P(x1|C), P(x2|C) ...}
-=> P(X|C) = P(x1|C) x P(x2|C) ... x P(xn|C)
-
-categorical: relateive frequency 
-continuous: gaussian density function
-
-### example
-P(p) = 9/14
-P(rain|p)=3/9, P(hot|p)=2/9, P(high|p)=3/9, P(false|p)=6/9
-=> 
-X = {rain, hot, high, false} condition
-P(X|p) = P(rain|p) x P(hot|p) x P(high|p) x P(false|p)
-
-P(X|p) x P(p) = 0.0105  VS  P(X|n) x P(n) = 0.0183
-so sample X classified as class 'n'
+=============================================================================================
 
 
 # Data Preprocessing
