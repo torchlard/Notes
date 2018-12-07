@@ -274,12 +274,26 @@ difference:
 - impurity = sum of squared deviation
 - performance = RMSE
 
+#### process
+1. start from single node, calc RMSE
+2. search all possible binary split, calc RMSE; if decrease, then partition
+3. for each partition, back to 1
+
+randomly split data into training and testing set
+q = min num of points per node, sigma = min decrease in S
+apply tree-growing algoritm to training data only, q=1, sigma=0 => grow largest tree
+use cross-validation to prune tree -> at each pair of leaf, evaluate error on testing data
+- if error decrease by removing 2 nodes, make it a leaf
+
+#### alternatives
+first grow the prune, then exchange role of train and test set
+prune tree to fit 2nd half, then prune again on 1st half
+
 coefficient of variation = SD/average(x)
 SDR(T,X) = S(T) - S(T,X)
 => then select attribute with largest SDR
 
-a good if-then partition encourage higher SD in population 
-  and slower SD in individual group
+good partition: higher SD in population, lower SD in individual group
 
 many classfication model have regression/prediction variant:
 Decision tree -> Regression tree
@@ -287,7 +301,7 @@ Bayesian classifier -> Bayesian regressor
 ...
 
 ## association-based classification
-mine high support and high ocnfidence rule in form of "cond_set => y"
+mine high support and high confidence rule in form of "cond_set => y"
 
 ## Instance-based classification
 store training sample until new instance must be classified
@@ -296,14 +310,14 @@ store training sample until new instance must be classified
 
 ## lazy evaluation VS eager evaluation
 lazy evaluation: 
-evaluate new record only when need to
-spend less time training
-need to store previous instance for comparison 
+- evaluate new record only when need to
+- spend less time training
+- need to store previous instance for comparison 
 
 eager evaluation:
-consider all records at first, has chosen global assumption
-spend more time training
-eg. Decision tree
+- consider all records at first, has chosen global assumption
+- spend more time training
+- eg. Decision tree
 
 ## Naive Bayesian classification
 use Bayes theorem 
