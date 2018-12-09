@@ -314,7 +314,28 @@ election
 resource
   preemptible resource
   non-preemptible resource
-  
+
+communication deadlock
+resource deadlock
+
+Coffman condition
+deadlock modeling
+  resource allocation graph
+  wait-for graph
+
+handling deadlock
+  ostrich
+  deadlock avoidance
+    problem
+  deadlock prevention  
+    collective request
+    ordered request
+    pre-emption
+  deadlock detection
+    centralized control
+    hierarchical control
+    distributed control
+  recovery
   
   
   

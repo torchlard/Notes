@@ -58,7 +58,7 @@ usage:
 - visualize genetic distance and relatedness between populations
 - simplest true eigenvector-based multivariate analyses
 - get lower-dimensional picture, projection with most informative viewpoint
-
+ 
 ## Singular value decomposition
 M = m x n real/complex matrix
 U = m x r real/complex unitary matrix, where U*U = UU* =I
@@ -93,7 +93,7 @@ PCA algorithm:
 1. subtract mean, scale dimensions by variance
 2. compute covariance matrix
 
-covariance matrix is expensive to compute when dimension is large => use SVD instead
+covariance matrix expensive to compute when dimension is large => use SVD instead
 for E = r x r, reduce dimension number from m -> r, then obtain r-dimensional hyper-plane, value of E gives you amount of variance retained by this reduction
 - eg. 1st PC get 37% of variance, next quickly drops
 - better to find PCs that explain 80-90% variance of data
@@ -155,7 +155,6 @@ Bayes' theorem: how much you can trust evidence
 assume all variables independent
 
 pros: very fast, can do real time analysis; perform better on independent variables
-
 cons: real world not likely independent
 
 ## decision tree
@@ -175,7 +174,6 @@ some other algorithm (eg. NN) aim to produce single strong model
 
 after combine several models, should be better than any smaller model
 
-
 - not easy to have overfit
 algorithm:
 1. N = training sample, M = #feature
@@ -187,7 +185,7 @@ algorithm:
 ## AdaBoost
 1. init x1...xn , yn samples, max iteration num
 2. use weak classifier, get error
-3. update weighting distribution
+3. update weighting distribution by error
 
 
 # Regression
@@ -218,7 +216,8 @@ time series data, only Y data:
 - vector autoregression model
 
 ## bagging (bootstrap aggregating)
-
+classifier randomly pick sample from all and put back
+group all subclassifier, use majority voting
 
 
 
@@ -259,8 +258,163 @@ parameterization simple
 quite robust to overfitting
 perform well for large amount of data
 time consuming, take lot of memory
+-> sample distribution of each classifier ~ last learning result
 
-## SVM
+# GBDT (Gradient boosting decision tree)
+residuals = x_i - mean(x) 
+
+1. iterate many times, each time get weak classifier
+2. each classifier train on basis of residual, low variance, high bias
+3. totalfinal classifier = weighted sum of all weak classifiers
+usually choose CART as weak classifier, shallow tree
+
+size of regression tree control how multiple parameter affect prediction (interaction)
+first-order derivative
+when negative loss, GBM stop splitting => may miss positive gain in lower level tree
+
+# XGBoost (Extreme gradient boosting)
+basically same as GBDT 
+second-order derivative
+
+try to add a split, change of objective after adding split:
+Gain = score_left_child + score_right_child - score_no_split - complexity_cost
+
+only when gain > threshold => allow node split
+complexity_cost = threshold
+
+objective function also do pre-pruning by threshold
+in score_no_split, lambda coeff as L2 norm => avoid overfitting
+
+## Booster
+booster could be gbtree, gblinear, dart
+dart introduce dropout to regression tree
+in m training round, k trees dropped
+
+## advantage
+1.
+conventional iterating all attributes -> inefficient
+XGBoost use approx:
+- list a few possible split point, find best split point
+- XGBoost split until max_depth, then pruning => if node not positive value, remove split
+
+2. has norm
+3. considered sparse matrix, can have default for missing value => inc efficiency
+4. column sampling => avoid overfitting, less computation
+5. sorted features store in memory as block, can reuse => can parallel processing each features
+6. when calculate by row, make memory inconsistent => store data in buffer
+7. when data large, use multi-threading, data compression, data shreding
+
+## API
+### learning
+xgboost.train
+xgboost.cv
+
+### callback
+print_evaluation
+record_evaluation
+reset_learning_rate
+early_stop
+
+## parameter
+### tree model
+eta: learning rate, (0,1]
+gamma: threshold attain to split
+min_child_weight: min #instance weight needed in child. for linear regression = #instance. if large, avoid model learn special sample; if too high, underfitting
+subsample: portion of random sampling; if too low => underfitting
+colsample_bytree / colsample_bylevel: portion of column number for each tree / each level split
+reg_lambda: parameters in L2
+reg_alpha: param in L1
+tree_method: algorithm to generate tree
+
+### dart additional parameter
+sample_type: sampling algorithm
+normalize_type: normalization algorithm
+
+### linear model
+lambda->L2, alpha->L1
+lambda_bias: L2 bias
+
+### learning
+objective: objective function to minimize loss
+
+
+# LightGBM
+fast, distributed, high performance Boosting framework
+algorithm based on histogram, continuous floating point value -> k integers, discretized
+
+support category feature, no need 0,1 expansion
+leaf-wise
+
+# Parameter tuning
+1. define model_cv
+specify early_stopping_round=stop if no improvement for n rounds,
+   cv_folds=number of cross-validation
+2. start from larger learning rate, then let GridSearchCV auto adjust param
+3. first try max_depth, min_child_weight; start from larger region, then converge it
+4. then try gamma, and others such as subsample, colsample_bytree, scale_pos_weight, reg_alpha, reg_lambda
+5. after all these adjustment, reduce learning rate to try again
+
+RandomizedSearchCV (coarse adjust) -> GridSearchCV (fine adjust)
+
+# Tree ensemble method
+simply adding up values generated by different tree model
+very widely use
+
+#
+## Objective function
+Obj = Loss + regularization
+loss: square loss, logistic loss
+regularization: L1 (lasso), L2 
+
+Ridge regression = linear model, square loss, L2
+Lasso = linear model, square loss, L1
+Logistic regression = linear model, logistic loss, L2
+ElasticNet = (weighted) Lasso + Ridge
+
+Separate (model, parameter, objective)
+for tree model, regularizatioin -> #nodes,depth,L2 norm of leaf weights...
+
+## Objective VS heuristic
+information gain -> training loss
+pruning -> reg. by #nodes
+max depth -> reg. on function space
+smooth leaf value -> L2 reg.
+
+## Boosting
+boosting = additive training
+y0 = 0
+y1 = y0 + f1(x)
+y2 = y1 + f2(x)
+...
+
+(y0 = 1st model, y1 = 2nd model, ...)
+
+## definition of tree
+by Talor expansion,
+f_t(x) = w_q(x), w = leaf weight, q = structure of tree
+
+sigma(f_t) = gT + (1/2)g*sum(w_j^2)
+T = #leaves, w_j = leaf weight
+
+y_t = y_(t-1) + e*f_t(x)
+not do full optimization in each step, reserve chance for future round => X overfitting
+
+
+
+
+
+
+n_estimator: #boosted tree to fit
+max_depth, min_child_weight
+gamma
+subsample, colsample_bytree
+reg_lambda, reg_alpha
+
+
+
+
+
+
 
 
 
