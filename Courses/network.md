@@ -555,6 +555,214 @@ x can close connection only after waiting for 2*max segment lifetime
 server clse connection once receive final ACK 
 
 
+# IP
+
+## IP addressing
+CIDR: classless inter domain routing
+- subnet portion of addr arbtrary length
+eg. 200.23.16.0/23
+
+class A: 0, network 8
+class B: 10, network 16
+class C: 110, network 24
+class D: 1110, broadcast, undefined
+class E: 1111, reserved
+
+## reserved private IP
+A: 10.0.0.0 - 10.255.255.255
+B: 172.16.0.0 - 172.31.255.255
+C: 192.168.0.0 - 192.168.255.255
+
+## DHCP (Dynamic host configuration protocol)
+dynamically obtain IP address
+1. DHCP discover
+2. DHCP offer
+3. DHCP request
+4. DHCP ack
+
+extra: 
+- address of first-hop router for client
+- name,IP of DNS
+- network mask
+
+get network subnet part from ISP's address space
+
+## hierarchical addressing
+Fly-By-Night-ISP
+ISPs-R-U
+
+ICANN (Internet Corporation for Assigned Names and Numbers)
+- ISP get block of address from ICANN
+- allocate address, manage DNS, assign domain names
+
+## NAT (network address translation)
+all datagram leaving local network -> same single NAT IP, different source port 
+can change address of devices in local network
+device inside local net not explicitly addressable
+
+- outgoing datagram: replace (sourceIP, port#) -> (NAT IP, new port#)
+- remember in NAT translation table (sourceIP, port# <-> NAT IP, new port#)
+- incoming datagram: replace (NAT IP, new port#) -> (sourceIP, port#)
+
+16 bit port = 60,000 simultaneous connection
+violate end-to-end argument
+
+### traversal problem
+client want to connect to server in local network
+
+client (otuside) -- [138.76.29.7]NAT router[10.0.0.4] -- server[10.0.0.1]
+
+1. statically config NAT forward at given port to server 
+eg. 138.76.29.7,2500 -> 10.0.0.1,25000
+
+2. universal plug and play (UPnP), Internet Gateway Device (IGD) protocol
+learn public IP (138.76.29.7), add/remove port mapping
+
+3. relay server
+NATed client establish connection to relay
+external client connects to relay
+relay bridge packets
+
+#### UPnP
+allows end-to-end connection among PC
+can use in telephone line, electric wire (PLC), ethernet, IrDA, wireless
+based on IP,TCP,UDP,HTTP,XML
+support zero config, auto detection, invisible network
+
+## Internet Control Message Protocol (ICMP)
+hosts, routers to communicate network info
+type, code, description
+MAC > IP Header > ICMP header > ICMP data
+
+### traceout
+source send series of UDP segment to dest
+1st TTL=1, 2nd time TTL=2, ...
+after arrive to nth router, discard datagram, send source ICMP msg
+include router name, IP address
+
+when ICMP msg arrive => record RTT
+stop when arrive dest
+
+
+# Routing Protocol
+routing algorithm = algorithm find least cost path between 2 nodes
+
+global: all routers have complete topology, link cost info
+decentralized: router only know physically-connected neighbors cost
+static: router change slowly over time
+dynamic: router change more quickly
+
+## link state, Dijkstra's algorithm
+compute least cost path from 1 node (source) to all other node
+after k iterations, know least cost path to k dest
+
+need to check all nodes, O(n^2) comparisons
+
+## Distance vector algorithm
+Bellman-Ford equation (dynamic programming)
+
+cost of least-cost path x->y
+= d_x(y)
+= min taken over all neighbors v of x(
+  cost -> neighbor v + cost neighbor v -> destination y
+)
+
+each node:
+1. wait for change{by recalc/outside changes} in local link cost / msg from neighbor
+2. recompute estimate
+x receive new DV => update own DV using BF equation
+D_x(y) = min_v{ c(x,v) + D_v(y) } for each node y in N
+3. if DV to any dest change, notify neighbor
+
+good news travels fast
+bad news travals slow -> count to infinity problem
+
+### split horizon
+if Z through Y to X, then Z will
+- not advertize route to X via Y
+- advertise route to X with infinite cost to Y
+
+## LS VS DV
+LS: 
+n nodes, E links -> O(nE)
+may have oscillation
+can advertise incorrect link cost
+
+DV: 
+exchange among neighbor only, converge with time
+may be routing loops, count to inf
+can advertise incorrect path cost
+
+## hierarchical routing
+aggregate routers into reions => autonomous system (AS)
+within same AS run same routing protocol
+
+gateway router: link to router in another AS
+forwarding table configured by intra- and inter-AS routing algorithm
+
+AS1 learn (from inter-AS protocol) subnet x reachble via AS3 (gateway 1c)
+router 1d determine least-cost path to 1c via interface I
+=> forwarding table entry (x,I)
+
+### hot potato routing
+choose gateway with least cost
+determine from forwarding table interface to least-cost gateway
+
+
+# Internet routing
+intra-AS routing = interior gateway protocols (IGP)
+
+## RIP (routing information protocol)
+distance metric: #hops (max=15), each link has cost 1
+use distance vector algorithm, exchange every 30s, each list up to 25 destination subnets (advertisement)
+
+if no advertisement heard after 180s => neighbor/link dead
+routes via neighbor invalidated
+new advertisement sent to neighbors
+
+RIP routing table => application-level process: route-d
+advertise sent in UDP packets
+
+## OSPF (Open shortest path first)
+use link state algorithm, topology map at each node
+route compute => Dijkstra's algorithm
+
+advertise 1 entry/neighbor
+advertisement flood to entire AS directly over IP
+
+all OSPF msg authenticated
+multiple same-cost path allowed
+unicast, multicast support
+
+hierarchical OSPF in large domains: boundary -> backbone -> area border -> internal
+2-level hierarchy: local area, backbone
+node know shortest path to area border router
+
+maintain 
+- neighbor table: all neighboring routers
+- topology table: all possible route to all network within area
+- routing table: best route
+
+## BGP (Border Gateway protocol)
+de facto inter-domain routing protocol
+eBGP: get subnet reachability info from neighboring AS
+iBGP: propagate reachability info to all AS internal routers
+
+BGP session: router exchange BGP msg
+send prefix reachability, create entry for prefix in forwarding table
+
+prefix + attributes = "route"
+AS-PATH: eg. AS 67, AS 17
+NEXT-HOP: router interface that begins AS-PATH
+
+### route selection
+1. local preference 
+2. shortest AS-PATH
+3. closest NEXT-HOP (hot potato routing)
+4. additional criteria
+
+inter-AS: policy may dominate over performance
+intra-AS: can focus on performance
 
 
 
