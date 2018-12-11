@@ -1,3 +1,10 @@
+# Service model
+degree of control: Iaas > Paas > Saas
+Saas: only use application, no any control
+Paas: deploy own application, control app
+Iaas: deploy software+OS, control OS,storage,app, limited networking
+
+
 # network
 ## UTM
 Unified threat management
@@ -27,6 +34,17 @@ connect ISP to Internet
 Transit: network operator pay to another network operator for Internet access
 Peer: 2 network exchange traffic between users freely
 Customer: network pay another network money to get Internet access
+
+# Model
+concrete ---- abstract
+different concern point
+physical model: device, hardware, interconnectivity
+architectural model: structure in terms of component and relation
+fundamental model: abstract perspeactive, describe issues in distributed computing
+
+## example
+mobile computing, pervasive computing, cloud computing
+
 
 # Data Structure
 ## tuple space
@@ -298,8 +316,97 @@ if msg go back to original => cycle exist, deadlock
 3. rollback process to where resource not allocated to deadlock process / process checkpointed periodically
 
 
+# Crowdsourcing
+job traditionally performed by designated agent 
+-> outsource to large group of people in form of open call
 
- 
+## Application
+reCAPTCHA: anti-bot service that digitize books
+Wikipedia, SETI@home
+Foldit: predict structure of protein -> people play to fold best protein
+Amazon mechanical Turk
+indoor navigation
+
+Original challenges: high computational power
+
+Wifi figerprint: <Mac Address, Signal Strength>
+client measures WiFi fingerprint, sent back to server for localization services
+server looks up database, find location WiFi fingerprint match client's one
+
+## Benefits
+explore problems little cost
+payment by results
+turn customers into designers and marketers
+
+## Problems
+quality assessment
+intellectual property leakage
+no time constraint
+no much control over development
+
+
+# Big Data
+## what is 5V
+high volume, velocity, variety, 
+high veracity: accuracy, cleaning
+high value
+
+## challenges
+transfer, store, search, analyze, visualize
+data center, distributed FS, parallel processing
+
+## opportunity
+traditioinal application -> real-time proessing, faster & more accurate result
+discover new knowledge form different source
+new applicaitons only solvable with big volume of data
+  eg. Google Trends (USA election, Flu Trends)
+      algorithm trading
+
+### critics
+big data hubris: data may not be valid or reliable for scientific analysis
+=> re-trained google flu trends to improve prediction accuracy
+
+waste of money and talent -> profitable, but socially pointless
+
+## Application
+1. understand and targeting customer
+browser log, social media data
+2. personal quantification
+life-time sleep quality monitoring
+3. healthcare
+DNA decode
+4. smart transportation
+
+## parallel algorithm
+### monte carlo
+randomized algorithm with deterministic running time -> almost correct answer
+eg. calculate pi
+
+### probabilistic 
+Bloom filter
+- test whether element is in set
+- routing packets in data center switch
+- test subscription
+
+return "possibly in set" / "definitely not in set"
+elements can be added to set, not removed
+need impractically large memory if require error-free hasing
+time & space efficient algorithm
+
+hash each element to k positions in bit array (1/0)
+initially empty Bloom filter = m bits array of 0s
+k different hash functions defined, where k << m
+
+### parallel processing
+use MPI, data and work partitioned among processes
+all MPI process execute same program
+
+data source:
+eg. Public Sector Information (PSI)
+
+
+
+
 
 
 

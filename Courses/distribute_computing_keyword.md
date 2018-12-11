@@ -2,22 +2,39 @@
 distributed computing (3 features)
 application
 distributed system (definition)
-  - nodes, link (network structure)
-  - network structure
-usage of distributed computing
-pervasive computing
+  nodes, link (network structure)
+  network structure
+why need distributed computing? [4]
 
-# System network models
+pervasive computing
+  3 properties
+
+cloud computing
+  -definition
+  characteristics [5]
+  service models
+    SaaS
+    IaaS
+    PaaS
+challenges [5]
+
+# System, network models
+how can we describe distributed system using models?
+
 physical, architectural, fundamental model
+  comparison
   example of physical model
   early, internet-scale, contemporary
-
-architectural model: goal, definition
-communicating entities (IDL, OOP, interface)
+architectural model
+  goal
+communicating entities 
+  basic entity
+  IDL, interface
+  OOP abstraction
 
 inter-process communication
 remote invocation 
-  remote procedure call (steps)
+  remote procedure call [steps]
   remote method invocation
 
 Indirect communication
@@ -33,7 +50,8 @@ Role and responsibilities
   client-server
   peer-to-peer
 
-Placement (consider what?)
+Placement (entity --> infrastructure)
+  considerations for mapping
   service, server mapping
   Caching
     Web cache
@@ -43,7 +61,9 @@ Placement (consider what?)
   Java applet    
 
 Architectural model
-  layering
+  layering [4 layers]
+    middleware
+    platform
   tiered architecture
   function decomposition of app
     presentation logic
@@ -58,6 +78,7 @@ Architectural model
 Fundamental model
   Interaction model
     performance
+      Latency, bandwidth, jitter
     clocks, timing event
     synchronous distributed system
     asynchronous distributed system
@@ -85,7 +106,7 @@ Networking model
   reliability
   mobility
   multicast      
-  Quality of service (example)
+  Quality of service [example]
 
 Network principles
   packet transmission
@@ -99,7 +120,7 @@ Network principles
     packet assembly
     addressing
     ports
-    internetworking
+    inter-networking
 
 # Interprocess communication  
 Layering
@@ -337,7 +358,23 @@ handling deadlock
     distributed control
   recovery
   
-  
+# Crowdsourcing
+objective
+applications
+benefits
+problem
+
+# Big Data
+5V
+challenges
+opportunity
+applications
+critics
+
+parallel algorithm
+  monte carlo
+  bloom filter
+  MPI
   
   
   
