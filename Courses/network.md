@@ -872,6 +872,11 @@ some generals are traitors
 1 Commander, rest are subordinates
 
 ### objective
+good plan: >= 6 attack/retreat
+bad plan: <= 5 attack, >=1 retreat
+
+### process
+default = 'retreat'
 
 
 
