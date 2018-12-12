@@ -151,7 +151,7 @@ Message passing
   operation detail
     sender - server -- server - receiver
   message format
-    header
+    header [4]
   synchronization
     polling
     interrupt
@@ -162,11 +162,13 @@ Message passing
 
 Message Buffering
   Null buffer
+    -implementation
   Single message buffer
     async: assume infinite
   Multiple-message buffer
     Unsuccessful communication indication
     flow-controlled technique
+  Infinite-capacity buffer
   failure handling
     msg loss
     reliable IPC protocol
@@ -201,21 +203,20 @@ MPI (Message passing inerface)
   communicator
   ranks
   tags
-  data types
-  
-Collective communication
-  synchronization
-  collective computation
-  Data movement
-    broadcast
-    scatter
-    gather
+  data types    
+  Collective communication
+    collective operation types
+      synchronization
+      collective computation (reduction)
+    Data movement
+      broadcast
+      scatter
+      gather
 
 Group communication
   -classfication
   unicast
-  many-to-one      
-  multicast
+  many-to-one, multicast [inverse]
   broadcast
 
 IP multicast
@@ -227,7 +228,7 @@ IP multicast
   
 # Remote Invocation
 -definition
-remote procedure calls
+Remote Procedure Calls
   -definition
   -steps / layers
   basic RPC operations
@@ -251,7 +252,7 @@ Client-server binding
     at link time
     at call time
 
-Remtoe Method invocation
+Remote Method invocation
   distributed object      
     local, remote invocation
   -process

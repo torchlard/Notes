@@ -59,6 +59,40 @@ group of processes use data:
 ### Object space
 virtual repository
 
+# MPI
+group = ordered set of process identifier (rank)
+communicator 
+= encapsulation all communication among set of process
+= group + context identifier (name alias to group of process)
+
+## communicator
+talk to all processes in communicator at once
+- from 1 process using MPI_Scatter / MPI_Reduce
+MPI_COMM_WORLD
+
+`MPI_Comm_split( MPI_Comm comm, int color, int key, MPI_Comm* newcomm )`
+create new communicators by splitting communicator into group of sub-communicators
+- based on color, key values
+- original communicator not go away
+key: determine ordering (rank) within each new communicator
+
+```c
+MPI_Comm_rank(MPI_COMM_WORLD, &wrold_rank);
+MPI_Comm_size(MPI_COMM_WORLD, &world_size);
+
+int color = world_rank/4;
+MPI_Comm_split(MPI_COMM_WORLD, color, world_rank, &row_comm);
+
+int row_rank, row_size;
+MPI_Comm_rank(row_comm, &row_rank);
+MPI_Comm_size(row_comm, &row_size);
+```
+
+# compile C
+1. pre-pocessing
+2. compilation
+3. assembly
+4. Linking function calls with definitions
 
 
 # clock synchronization
@@ -69,7 +103,7 @@ time server process = I
 T_new = T_server + (T1-T0-I)/2
 accuracy = +-((T1-T0)/2 - T)
 
-## active time
+## active time (Berkeley algorithm)
 server broadcast clock
 1. send server click to clients
 2. clients calc time diff, send back to server
@@ -97,7 +131,7 @@ T1  -------> T2
 T4  <------- T3
 
 round trip delay = (T4-T1) - (T3-T2) {diff of time passed in 2 sides}
-offset = (T1+T4)/2 - (T2+T3)/2  {offset of mid points}
+offset = (T2+T3)/2 - (T1+T4)/2 {offset of mid points}
 
 ### event ordering
 a->b: a happen before b
@@ -106,6 +140,13 @@ a->b: a happen before b
 - a=sending, b=receive => a->b
 
 a,b concurrent if neither a->b / b->a
+
+#### ordering
+total order
+- every pair of events can be placed in some order
+causal order / partial order
+- some events has no possible casual relation (not A->B / B->A)
+
 
 ## logical clock
 event order is more important than true time
@@ -126,18 +167,20 @@ for a:(a1,a2,a3) compare to b:(b1,b2,b3) vector clock,
 a1<=b1, a2<=b2, a3<=b3, at least one < ==> a happen before b
 
 # Distributed snapshot
-record all local states, messages
 only includ msg sent before snapshot in snapshot
 ## assumption
 process connected each other
 no failure, all msg arrive
-communication chnnel FIFO, unidirectional
+communication channel FIFO, unidirectional
 snapshot run concurrently
 process record local state + incoming channel state
 
 ## process
-take snapshot in both sides at different time
-total value conserved all the snapshots
+eg. A <-> B
+1. take snapshot in one sides, set current A, mark all incoming=0
+2. snapshot msg transfer to another side B, set current B, all incoming=0
+3. A receive back marker, set incoming Cba, keep states unchange
+=> total value in global state conserved all the snapshots
 
 # Mutual exclusion
 critical section
@@ -158,8 +201,8 @@ operation: request, grant, release
 master grants request in some order (FIFO, random ...)
 
 ## distributed algorithm
-broadcast msg: critical section want to enter, PID, current time
-
+### Ricart-Agrawala algorithm
+broadcast msg: critical section want to enter, msg:(PID, current time)
 1. 2 process enter CS at same moment
 process with lowest TS wins
 if process done, sends OK; other can come in
@@ -177,6 +220,7 @@ if msg lost, sender timeout & retry
 ## Token ring
 form ring, can allocated in numerical order
 start from process 0 get token => token circulate around ring
+only process get token can enter CS
 
 ## Election
 1. identify process with highest priority, assign it as coordinator
@@ -199,16 +243,29 @@ step
 3. if none receive within certain time, declare itself as coordinator
 4. else if receive reply, accept it as new coordinator
 
+#### safety 
+leader election non-faulty process either elect process/elect none
+if not, 2 process declare victory (coordinator msg broadcast) => conflict
+
+#### liveness
+in sync, crash-recovery model
+one of them become leader eventually
+
+#### complexity
+process send N-1 election msg,
+next higher-id send N-2 msg ...
+=> O(N^2) election msg, O(N^2) alive msg, O(N) coordinator msg
+
 ### ring election
 1st stage
 1. initially all = non-participant
 2. a process start election, send msg clockwise to neighbor
 3. when process get msg, itself = participant
-4. if larger ID => forward msg
-5. if smaller ID => replace with its own ID, forward msg
-6. if same ID => become leader
+4. if msg's ID larger => forward msg
+5. if msg's ID smaller => replace with its own ID, forward msg
+6. if msg's ID same => become leader
 
-2nd stage
+2nd stage (reset conditions)
 1. leader marked itself = non-participant, send elected msg to neighbor
 2. get elected msg => itself = non-participant, record elected ID, forward msg
 3. msg reach leader => discard msg, election ends
@@ -304,7 +361,7 @@ lowest level controller find cycle in WFG -> take action
 if WFG has cycle => never pass to higher level
 #### distributed control
 when process wait some resource => sent probe msg 
-(process being blocked, process sending msg, process receiving msg)
+msg: (process being blocked, process sending msg, process receiving msg)
 
 msg arrive => receive check if waiting any process
 if waiting => update 2nd,3rd field => sent to process holding needed resource
