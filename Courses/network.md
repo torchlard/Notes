@@ -554,6 +554,58 @@ if x first init FIN:
 x can close connection only after waiting for 2*max segment lifetime
 server clse connection once receive final ACK 
 
+# Network layer
+transport segment from sender to receiver
+encapsulate segments into datagrams
+## functions
+1. forwarding
+2. routing
+
+in some architecture (ATM, X.25)
+3. two end host and router establish virtual connection
+
+## service
+network: between 2 host (maybe with routers for virtual connection)
+transport: between 2 processes
+
+datagram network: connectionless
+virtual-circuit network: connection 
+
+## Virtual circuits
+call setup, teardown before data flow
+each packet has VC identifier (not dest attr)
+router maintain state for each passing connection
+link, router resource allocate to VC
+
+### detail
+1. path
+2. VC number
+3. entries in forwarding tables
+incoming interface  incoming VC#  outgoing interface  outgoing VC#
+ [maintain state]
+
+### process
+    Sender             Receiver
+1.init call         2.incoming call
+4.call connected    3.accept call
+5.begin data flow   6.receive data
+
+## Datagram
+router don't keep state 
+forwarding table list range of address (too many ip)
+
+use longest address prefix that match dest addr
+
+## Network service model
+define characteristics of end-to-end transport of packets
+individual datagram
+- guarentee delivery, <40 ms delay
+flow of datagram
+- in order delivery, min bandwidth
+
+Internet: best effort, no (bandwidth, loss, order, timing, congestion feedback[by loss])
+ATM: const/guarenteed rate, guarentee (loss, order, timing), no congestion
+
 
 # IP
 ## IP addressing
