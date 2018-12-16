@@ -556,7 +556,6 @@ server clse connection once receive final ACK
 
 
 # IP
-
 ## IP addressing
 CIDR: classless inter domain routing
 - subnet portion of addr arbtrary length
@@ -588,8 +587,9 @@ extra:
 get network subnet part from ISP's address space
 
 ## hierarchical addressing
+- broadcast larger ip range
 Fly-By-Night-ISP
-ISPs-R-U
+ISPs-R-U (more specific root)
 
 ICANN (Internet Corporation for Assigned Names and Numbers)
 - ISP get block of address from ICANN
@@ -613,7 +613,7 @@ client want to connect to server in local network
 client (otuside) -- [138.76.29.7]NAT router[10.0.0.4] -- server[10.0.0.1]
 
 1. statically config NAT forward at given port to server 
-eg. 138.76.29.7,2500 -> 10.0.0.1,25000
+eg. 138.76.29.7, 2500 -> 10.0.0.1, 25000
 
 2. universal plug and play (UPnP), Internet Gateway Device (IGD) protocol
 learn public IP (138.76.29.7), add/remove port mapping
@@ -694,13 +694,13 @@ may be routing loops, count to inf
 can advertise incorrect path cost
 
 ## hierarchical routing
-aggregate routers into reions => autonomous system (AS)
+aggregate routers into regions => autonomous system (AS)
 within same AS run same routing protocol
 
 gateway router: link to router in another AS
 forwarding table configured by intra- and inter-AS routing algorithm
 
-AS1 learn (from inter-AS protocol) subnet x reachble via AS3 (gateway 1c)
+AS1 learn (from inter-AS protocol) subnet x reachable via AS3 (gateway 1c)
 router 1d determine least-cost path to 1c via interface I
 => forwarding table entry (x,I)
 
@@ -713,7 +713,7 @@ determine from forwarding table interface to least-cost gateway
 intra-AS routing = interior gateway protocols (IGP)
 
 ## RIP (routing information protocol)
-distance metric: #hops (max=15), each link has cost 1
+distance metric: #hops (max=15), link cost = 1
 use distance vector algorithm, exchange every 30s, each list up to 25 destination subnets (advertisement)
 
 if no advertisement heard after 180s => neighbor/link dead
@@ -722,6 +722,11 @@ new advertisement sent to neighbors
 
 RIP routing table => application-level process: route-d
 advertise sent in UDP packets
+### format
+'dest' 'next' '#hop'
+  w      A      2
+  x     ---     1
+  y      B      2
 
 ## OSPF (Open shortest path first)
 use link state algorithm, topology map at each node
@@ -877,6 +882,30 @@ bad plan: <= 5 attack, >=1 retreat
 
 ### process
 default = 'retreat'
+
+corollary 1: if 3 process, cannot deal with 1 faulty
+corollary 2: no solution < 3m+1, m = #traitor
+
+assumption:
+1. every msg sent delivered correctly
+2. receiver of msg knows who sent it
+3. absence of msg can be detected
+
+### Oral msg algorithm
+OM(0)
+- commander sent value to every lieutenant
+- every lieutenant use the value
+
+OM(m), m>0
+- commander sent value to each lieutenant
+- for each i, vi = value lieutenant i get from commander 
+- send vi to n-2 other lieutenants [OM(m-1)]
+- vj = value lieutenant i get from other lieutenant j [OM(m-1)]
+- lieutenant i use majority voting
+
+O(n^m) expensive
+
+
 
 
 
