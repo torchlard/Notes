@@ -55,10 +55,10 @@ client          server
 client may receive multiple DHCP server offers, only confirm 1 offer
 final ACK contain: DNS ip, gateway ip
 
-2. client get assigned ip, DNS ip, gateway ip
+2. client get assigned IP, DNS ip, gateway ip
 ARP query: client broadcast, router receive, give MAC address based on ip
 
-3. client get assigned IP address, get router MAC,ip, get DNS ip
+3. client get assigned IP, DNS ip, gateway ip, router MAC
 client want "google.com" ip
 -> ask its ip from DNS server [DNS query]
 ip datagram forward to outer network, routed by RIP/OSPF/BGP 
@@ -252,7 +252,7 @@ elif received && not_corrupt && seq==1:
 ```
 
 ## rdt 2.2
-do not use NAK, just use seq num
+do not use NAK, just use seq num,ACK
 ```python
 "<sender>"
 'wait for 0'
@@ -386,7 +386,8 @@ if otherwise(corrupted):
   ignore
 ```
 - receiver
-send individual ACK for each packet
+send individual ACK for each packet, no need consequential
+if pkt 3,4 ACKed, but pkt 2 unACK => wait for pkt 2 ACK, deliver all
 
 ```python
 if packet n in [base, base+N-1]:
@@ -483,37 +484,15 @@ avg throughput = 3/4 * W/RTT
 ```
 
 # TCP flow control
-receiver control sender, so sender won't overflow receiver's buffer by sending too much, too fast
-
-```
-remove data from TCP socket buffer,
-<application>
---------
-<OS>
-[TCP socket, receiver buffer]
-{TCP code}
-{IP code}
-packet from sender [up]
-```
-
-```
-{to application process}
-buffer data              ---
-----                   [RcvBuffer]
-free buffer space [rwnd] ---
-{TCP segment payloads}
-```
-rwnd in TCP header
-OS autoadjust RcvBuffer
-
-sender limit amount of un-ACKed data to receiver's rwnd value
+receiver control sender, tell sender buffer size => not use up all buffer
+sender limit amount of un-ACKed data to receiver's rwnd value (buffer size)
 
 ## flow control VS congestion control
-flow control act on restrict sender's sending speed
-congestion control apply on network
+flow control: restrict sender's sending speed, receiver related
+congestion control: on network
 
 
-# handshake
+# TCP handshake
 ## 2-way handshake
 x             server
   --req_conn(x)-->
@@ -608,6 +587,12 @@ ATM: const/guarenteed rate, guarentee (loss, order, timing), no congestion
 
 
 # IP
+subnet
+- higher order bit
+- can reach each other without router, isolated network
+host
+- 
+
 ## IP addressing
 CIDR: classless inter domain routing
 - subnet portion of addr arbtrary length
@@ -682,6 +667,11 @@ based on IP,TCP,UDP,HTTP,XML
 support zero config, auto detection, invisible network
 
 ## Internet Control Message Protocol (ICMP)
+function
+- error reporting
+- echo request / reply
+like network layer above IP
+
 hosts, routers to communicate network info
 type, code, description
 MAC > IP Header > ICMP header > ICMP data
@@ -951,7 +941,7 @@ OM(0)
 OM(m), m>0
 - commander sent value to each lieutenant
 - for each i, vi = value lieutenant i get from commander 
-- send vi to n-2 other lieutenants [OM(m-1)]
+- lieutenant i as commander, send vi to n-2 other lieutenants [OM(m-1)]
 - vj = value lieutenant i get from other lieutenant j [OM(m-1)]
 - lieutenant i use majority voting
 
