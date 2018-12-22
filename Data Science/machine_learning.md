@@ -265,7 +265,7 @@ residuals = x_i - mean(x)
 
 1. iterate many times, each time get weak classifier
 2. each classifier train on basis of residual, low variance, high bias
-3. totalfinal classifier = weighted sum of all weak classifiers
+3. total final classifier = weighted sum of all weak classifiers
 usually choose CART as weak classifier, shallow tree
 
 size of regression tree control how multiple parameter affect prediction (interaction)
