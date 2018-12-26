@@ -14,25 +14,7 @@ gradle -q build; gradle -q run
 # compile order
 need to compile other java file first if depends on them (import)
 
-## this()
-this reference to certain constructor signature
 
-```java
-public class Rectangle {
-  private int x,y;
-  private int width,height;
-
-  public Rectangle(){
-    this(0,0,1,1);
-  }
-  public Rectangle(int width, int height){
-    this(0,0,width, height);
-  }
-  public Rectangle(int x,int y,int width, int height){
-    this(x,y,width,height);
-  }
-}
-```
 
 ##
 ```java
@@ -46,6 +28,33 @@ sudo update-alternatives --install "/usr/bin/java" "java" "/usr/lib/jvm/java_11_
 sudo update-alternatives --install "/usr/bin/javac" "javac" "/usr/lib/jvm/java_11_openjdk_amd64/bin/javac" 1
 sudo update-alternatives --config java
 sudo update-alternatives --config javac
+
+# file format
+
+## JAR (Java Archive)
+zip format file
+collection of Java class file, metadata, resources (text, image)
+for distributing java software / library
+
+## WAR (Web application archive)
+jar fiel for distributing JSP, java servlet, java class, xml, tag lib, html
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
