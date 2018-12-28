@@ -228,16 +228,43 @@ IntroductionAdvisor
 Before: preprocessing before method executes
 After-Returning: after method invocation at joinpoint, returned value
 After: advised method completes normally
-Around: 
-Throws
-Introduction
+after throwing: when throw exception
+aroung
+
+-------------------
+
+Advice
+  BeforeAdvice
+    MethodBeforeAdvice
+  AfterAdvice
+    ThrowsAdvice
+    AfterRunningAdvice
+  Interceptor
+    MethodInterceptor
 
 
+## AspectJ
+joinPoint: what target function can be captured
+pointcut(target method): method in joinPoint need to be cut into
+Advice: action need to be done at pointcut
+aspect: advice apply to what pointcut
+weaving: process to apply pointcut to target function
 
+### theory
+#### JDK proxy
+use JDK dynamic proxy, target obj need implement interface, callback
+new proxy obj has all method in interface, rewrite invoke method
 
+#### CGLIB
+not require target object has interface
+by inheritance, implement method interceptor, rewrite intercept()
 
+## declarative options
+1. use ProxyFactoryBean
+2. Spring AOP namespace (XML)
+3. @AspectJ-style annotations
 
-
+## example
 
 
 
