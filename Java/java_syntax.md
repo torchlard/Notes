@@ -17,6 +17,197 @@ public class Rectangle {
   }
 }
 ```
+# lambda
+functional interface = interface contains only one abstract method
+
+```java
+interface CheckPerson {
+  boolean test(Person p);
+}
+// using java.util.function simplify to 
+interface Predicate<Person> {
+  boolean test(Person t);
+}
+```
+
+Consumer<T> interface has method `void accept(T t)`
+
+## compile
+.class -> normal class
+$xx.class -> inner class
+```java
+class C {}
+class A {
+  class B {}
+  public void f2(){
+    C c = new C(){};
+  }
+  public void f1(){
+    B c = new B(){};
+  }
+}
+```
+C.class, A.class, A$B.class, A$1.class, A$2.class
+
+using lambda can avoid creating '.class' file
+not new object, but put code in memory, ~ call function
+
+## only write method name
+```java
+interface B {
+  public void doStringWork(String s);
+}
+interface C {
+  public double doCompWork(float x, float y);
+}
+
+public class A {
+  public A(){
+    B b = this::printOnce;
+    b.doStringWork("hwllo");
+  }
+  public static void main(String[] args){
+    B b = A::printTwice;
+    b.doStringWork("hi");
+    new A();
+  }
+  public static void printTwice(String s){
+    System.out.print(s);
+    System.out.println(s);
+  }
+  public void printOnce(String s){
+    System.out.println(s);
+  }
+}
+```
+
+# Null checking
+```java
+Stream.of("a","c",null,"d")
+      .filter(Objects::nonNull)
+      .forEach(System.out::println);
+
+```
+## Optional
+```java
+public String getUserName(User user){
+  Optional<String> userName = Optional.ofNullable(user).map(User::getName);
+  return userName.orElse(null);
+}
+```
+get: unsafe
+orElse: default value for null
+orElseGet: delayed version of orElse
+orElseThrow: ~get, custom Exception
+ifPresent
+
+# Thread
+```java
+I: Runnable  void run()
+I: Callable<T>  T call()
+
+ExecutorService:
+<T> Future<T> submit(Callable<T> task)
+Future<T> submit(Runnable task)
+<T> Future<T> submit(Runnable task, T result)
+
+I: Future<T>
+C: FutureTask<T> implements RunnableFuture<T>
+I: RunnableFuture<T> extends Runnable, Future<T>
+
+
+```
+Future: cancel, query Runnable, Callable tasks, get result
+- determine if task finished
+- can interrupt task
+- get result of task
+
+boolean: cancel, isCancelled, isDone
+Type: get(), get(timeout, unit)
+
+# IO
+based on stream, flow of data from writer to reader
+abstract class: 
+- InputStream, OutputStream
+- lowest-level byte streaming
+
+Reader, Writer: abstract class, deal with character, correctly handle unicode chars
+System.in, System.out, System.err
+
+InputStreamReader, OutputStreamWriter
+`InputStreamReader reader = new InputStreamReader(System.in, "UTF-8")`
+
+## Stream wrapper
+BufferedInputStream: filter stream reads ahread and buffer certain amount of data
+DataInputStream: eg. read double value [readDouble()]
+
+PrintWriter: println
+
+## resource path
+1. simply open file and read bytes
+2. construct URL pointing to location in filesystem or network
+
+`URL reousrce = MyApp.class.getResource("/config/config.xml"); `
+resource located relative to given class file / system classpath
+
+## serialization
+can serialize object, including any object reference
+capture entire graph of interconnected objects
+
+# NIO
+non-blocking IO
+Linux: epoll, Mac: kqueue
+based on channel, built around ByteBuffer
+
+in non-blocking mode, read/write does only as much work as can done immediately
+-> fill/empty buffer, then return
+- allow single-threaded application to continuously service many channels efficiently
+
+main thread selects a stream that is ready
+-> works with it until it blocks
+-> move on to another
+
+NIO support direct buffers: buffer maintain memory outside JVM in host OS
+
+## extra features
+memory-mapped file
+file locking: shared lock, exclusive lock
+
+## channel
+channel = endpoint for communication
+not specify how communication happen, only has notion of open,close
+- implement for file, network socket, arbitrary devices
+
+FileChannel, AsynchronousFilechannel
+Pipe.SinkChannel
+SocketChannel, ServerSocketChannel, AsynchronousSocketChannel
+
+## buffer
+formalize usage patterns for buffered data
+provide additional API for working with raw data, representing primitive types
+abstract underlying storage of data, allow special optimizations
+
+getting from and putting to Buffer changes position marker
+- Buffer keep track of its content like stream
+mark <= position <= limit <= capacity
+
+mark = lower bound
+position = where next element is read/written
+limit = soft limit to extend of read/write (upper bound)
+capactiy = physical extent of buffer space
+
+type: ByteBuffer, CharBuffer, IntBuffer ...
+
+you can control how much data is read and written by
+- setting buffer position and limit markers
+- use another form of read/write take start pos, length
+
+operation tries to read/write to limit of buffer
+operation is guarenteed to block only until at least 1 byte has been processed
+
+## concurrent access
+FileChannels are safe for use by multiple threads
+guarantee data 'viewed' by them consistent across channel in same VM
 
 
 
