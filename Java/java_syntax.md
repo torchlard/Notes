@@ -210,6 +210,64 @@ FileChannels are safe for use by multiple threads
 guarantee data 'viewed' by them consistent across channel in same VM
 
 
+# java.net
+## socket
+Sockets (TCP), DatagramSockets (UDP)
+MulticastSockets: variant of DatagramSocket
+
+# Reactive programming
+better than Future API
+Java reactive stream: earliest implementation is RxJava
+Reactive Stream Specification, define Publisher/Subscriber/Subscription
+
+combine observer pattern and iterator pattern
+
+## api
+Publisher<T> {
+  subscribe(Subscriber<? super T> s): add given Subscriber if possible
+}
+Subscriber<T> {
+  onSubscribe(Subscription): async send subscription
+  onNext(T t): invoke with subscription's next item
+  onError: when Publisher/Subscriber has error
+  onComplete: finish sending data, and no error to cease subscription
+}
+Subscription {
+  request(long n): subscriber request some item
+  cancel: subscriber cancel request
+}
+Processor<T,R> extends Subscriber<T>, Publisher<R>:
+  for data conversion among Subscriber and Publisher
+
+default implementation
+- SubmissionPublisher, ConsumerSubscriber
+
+## Flow
+establish flow-controlled components in which Publishers produce tiems consumed by >=1 Subscribers, each managed by Subscription
+- reactive-streams specification
+
+publisher ----------- subscriber
+    <-- subscribe [call Publisher's subscribe]
+[call Subscriber's onSubscribe] send subscription -->
+    <-- request n items [call subscription's request]
+[call Subscriber's onNext] send <= N items --> 
+[call Subscriber's onComplete] send end of stream notification -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
