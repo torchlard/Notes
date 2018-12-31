@@ -75,6 +75,15 @@ tiered compilation
 class data sharing
 
 
+# IO
+synchronous not equal to blocking
+sync = do nothing before client send data to here
+blocking = whenther thread sleep for calling function
+
+
+
+
+
 
 
 

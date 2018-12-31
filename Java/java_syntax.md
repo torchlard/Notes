@@ -182,6 +182,54 @@ FileChannel, AsynchronousFilechannel
 Pipe.SinkChannel
 SocketChannel, ServerSocketChannel, AsynchronousSocketChannel
 
+## api
+implement SelectableChannel interface -> efficient polling
+primary implementation:
+- SocketChannel, ServerSocketChannel
+
+register >= 1 channels with selector, pool it
+1. Selector operates on SelectionKey obj, SelectionKey created implicitly when register
+2. encapsulate selectable channel in interset set
+3. SelectionKey return result of select operation [select(), selectedKeys()]
+4 states: connect, accept, read, write
+
+`int readyCount = selector.select()`
+method blocks 
+- until at least 1 channel ready for some operation
+- until Selector's wakeup() called
+- select(): take timeout wait for ready channel, return #channel ready
+- selectNow(): return immediately
+
+wakeUp(): wake up blocked thread running select()
+- use select() and wakeup() somewhat like wait() and notify()
+- get set of ready channels from Selector
+
+```java
+Set readySet = selector.selectedKeys();
+for(Iterator it=readySet,iterator(); it.hasNext();){
+  var key = (SelectionKey) it.next();
+  it.remove();
+}
+```
+return data = {
+  interest set: channel state we interested
+  ready set: ready channel [isAcceptable(), isReadable() ...]
+  channel [selectionKey.channel()]
+  selector [selectionKey.selector()]
+  attached object (optional): extra info of channel [selectionKey.attachment()]
+}
+
+
+### selection key
+created when channel registered with selector
+valid until cancelled / channel closed / selector closed
+key added to selector's cancelled-key set when cancelled
+1. interest set
+initialized with value given when key is created
+2. ready set
+updated during selection operation
+
+
 ## buffer
 formalize usage patterns for buffered data
 provide additional API for working with raw data, representing primitive types
