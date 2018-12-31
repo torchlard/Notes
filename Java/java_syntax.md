@@ -197,6 +197,7 @@ limit = soft limit to extend of read/write (upper bound)
 capactiy = physical extent of buffer space
 
 type: ByteBuffer, CharBuffer, IntBuffer ...
+flip(): set limit to position, reset position = 0
 
 you can control how much data is read and written by
 - setting buffer position and limit markers
@@ -254,15 +255,29 @@ publisher ----------- subscriber
 [call Subscriber's onComplete] send end of stream notification -->
 
 
+# static
+normal method and variable within class, need to instantiate class before use
+static variable and method allocated memory in first place, no need instantiate before use
 
+meaning: avoid creating new object each time
+eg. call Math.sin(x)
 
+static is in fact global function
 
+# final
+functionality
+1. const for variable
+2. cannot inherit for class and method -> destination
 
+# == VS equals
+== : compare if same object
+equal: compare if values equal
 
+literals is not object, so cannot directly access object's method
 
-
-
-
+# switch
+if no break, then matching key is entry point, 
+run until break;
 
 
 
