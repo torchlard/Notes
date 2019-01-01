@@ -1,3 +1,19 @@
+# historic tools
+## ant
+defined init, compile, build, test, clean
+`ant test` test whole thing
+- no dependency management
+
+## maven
+raise concept of repository, easy manage hundreds of jar files
+- not use 'target' in ant
+too restricted in lifecycle, not encourage you to self-define task
+
+## gradle
+include task in ant, use all resource from maven
+replace xml with groovy, much simplified
+
+
 # start new project
 gradle init
 

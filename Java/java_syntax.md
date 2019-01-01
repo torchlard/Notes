@@ -328,6 +328,10 @@ if no break, then matching key is entry point,
 run until break;
 
 
+# Collection
+Base: Collection
+Interface: List, Queue, Deque
+Class: ArrayList, LinkedList, ArrayDeque
 
 
 
