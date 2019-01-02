@@ -131,6 +131,19 @@ virtual reference: same as no reference, will get system notification when colle
 +1 when more ref, -1 when lose ref, 0 -> garbage
 if 2 objs mutual ref, counter never be 0, cannot collect
 
+### GC in Python interpreter
+```python
+a = 1000.0
+a = 2000.0
+```
+in 1st sentence, create PyFloatObject, ob_fval = 1000.0 (value), ob_refcnt = 1 (ref count)
+in 2nd sentence, counter-1 -> 0, so collect garbage a; 
+  create new PyFloatObject, value=2000.0
+
+- avoid circular reference in python, use single directional ref
+- when obj is useless, set ref to other obj -> null
+
+
 ## GC root
 choose some objects as GC root, search from root downward
 if obj not accessible -> garbage
@@ -184,11 +197,13 @@ if old generation full, start major GC
 ## type
 ### serial collector
 single thread
+
 ### concurrent collector
 GC along with application
 not wait old generation to be full, stop wworld only during mark/re-mark
 - need more memory, mroe CPU
 - short pauses => responsible
+
 ### parallel collector
 multiple CPU to run GC, multi-thread do mark/sweep
 start when heap nearly full
@@ -243,6 +258,17 @@ pause relocate start: scan thread stacks
 
 pause time < 10 ms
 
+# GC performance
+1. throughput
+size of memory collected in unit time
+2. pause time
+3. allocation speed
+4. Heap usage efficiency
+reduce fragmented memory space
+
+
+
+
 # JIT (just in time compilation)
 methods get compiled
 compilation is expensive
@@ -280,6 +306,11 @@ tiered compilation
 class data sharing
 
 
+# JVM command
+jinfo: configuration info
+jmap: memory map
+jhat: java heap analysis tool
+jstat: JVM statistics monitoring tool, watch GC
 
 
 

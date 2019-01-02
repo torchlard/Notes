@@ -333,6 +333,29 @@ Base: Collection
 Interface: List, Queue, Deque
 Class: ArrayList, LinkedList, ArrayDeque
 
+# Set
+HashSet: use hash to store data, no certain order
+LinkedHashSet: order by insertion order, allow iterate inserted element
+TreeSet: use tree structure to store elements, ascending order, fast access and iteration
+
+# byte overflow
+when calculation of byte number exceed limit 127, result = n - 256
+
+periodic:
+0 to 127 -> -128 to -1 -> 0 to 127 -> ...
+
+# StringBuilder
+StringBuffer: thread-save, less efficient
+StringBuilder: not thread-save, ~StringBuffer, most efficient
++: normal string concat, order of magnitude least efficient
+
+
+
+
+
+
+
+
 
 
 

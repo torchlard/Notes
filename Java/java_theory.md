@@ -108,10 +108,26 @@ interface Addable<T> {
 }
 ```
 
+# OOP principle
+1. Single-responsibility principle
+1 class only has 1 responsibility and function
+2. Open-close principle
+open to extension, close to modification
+3. Liskov substitution principle
+subclass can substitute superclass anywhere
+4. Interface segregation principle
+use interface to separate modules, not strong coupling by class
+5. Dependency Inversion principle
+depend on abstraction, not concrete class
+6. Composition over inheritance
 
+# Multi-threading
+each thread has its own stack
+reason for inconsistent order among threads:
+- switching mechanism of JVM
 
-
-
+# Mutator
+change ref relation among objects
 
 
 
