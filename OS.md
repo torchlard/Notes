@@ -1,4 +1,3 @@
-
 # process
 ## history
 early only 1 program executed at a time => full control of system
@@ -69,7 +68,8 @@ eg. auditd -> auditd.service
 
 [
 Systemd Utilities: systemctl, notify, cgls ...
-Systemd Daemons: systemd,journald,networkd     Systemd Targets: bootmode, multi-user, graphical, user-session
+Systemd Daemons: systemd,journald,networkd     
+Systemd Targets: bootmode, multi-user, graphical, user-session
 Ssytemd Core: unit, login, namespace, cgroup
 Systemd Libraries: dbus-1, libpam, libcap, libaudit ..
 Linux kernel: cgroups, autofs, kdbus
@@ -96,13 +96,13 @@ emergency : emergency shell
 ### priority level
 emergency, alert, critical, error, warning, notice, informational, debug
 
-
 ## D-Bus
 software bus for inter-process communication and remote procedure call
 inefficient and reliable to communicate one-to-one for all
 - process can connect any number of buses
 - as framework to integrate different components of user application
 - information sharing, modularity, privilege separation
+  
 ### bus model
 unique bus name, immutable, cannot be reused
 use well-known names to refer to service using prearranged bus name
@@ -110,7 +110,7 @@ use well-known names to refer to service using prearranged bus name
 ### object model
 want to replace component-oriented communication system
 - process offer service exposing object, client connected to bus interact with object using method
-- client can listen to signals object emit when state changes(underlying service, eg.USB, network )
+- client can listen to signals object emit when state changes (underlying service, eg.USB, network )
 - to use certain service, indicate object path and bus name
 - interface = set of declaration of methods and signals
 - administrative bus operation defined by org.freedesktop.DBus
@@ -206,7 +206,7 @@ automatic / explicit buffering
 1. small messages (256B): port message queue for storage, msg copied between process
 2. larger msg: passed through section object (region of shared memory with channel)
 3. section object: API allow server direct read/write to address space of client
-   
+
 ##### socket
 endpoint for communication: communication over network use pair of socket, one per process
 identified by IP address with port number
@@ -226,11 +226,20 @@ RPC process: client req port, server send port, client send RPC via port, server
 if transfer wole file, may use several requests
 
 ##### pipe
-1. bidirectional / unidirectional communication
-2. if two-way, half duplex / full duplex?
-3. must have relationship (eg. parent-child)?
-4. pipe over network? same machine?
+connection between 2 processes
+
+ordinary pipe: only allow process with common ancestor to communicate
+named pipe: any process
+1. communication based on byte stream
+2. pipe in form of file, mutual exclusive, unidirectional data transfer
+3. when process ends, pipe released
+4. when pipe created, new buffer created with read and write ends -> pipefd[0]=read, fpipefd[1]=write
+
+when fork any process, file descriptor remain open in parent and child
+  if fork after creating pipe => share same pipe
+
 ##### ordinary pipe
+special file in memory
 communicate in producer-consumer fashion: one-way
 ```
 fd(0): read file descriptor, fd(1): write file descriptor
@@ -238,7 +247,11 @@ fd(0): read file descriptor, fd(1): write file descriptor
 child fd(0)  ->|================|<-- parent fd(1)
 parent fd(0) ->|================|<-- child fd(1)
 ```
-in windows, termed anonymous pipe => unidirectional, parent-child relation
+in windows (anonymous pipe) => unidirectional, parent-child relation
+
+##### named pipe (FIFO)
+stored as device file
+any process can communicate as long as can access that file
 
 
 ### performance
