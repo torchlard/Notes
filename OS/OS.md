@@ -286,7 +286,7 @@ renderer run in sandbox, restrict access to disk, network IO
 ```
 ## thread-safe
 not thead-safe: 
-  if use multiple threads, then may cause error
+- if use multiple threads, then may cause error
 
 ## multi-thread
 ```
@@ -306,13 +306,13 @@ for condition 2, also condsider thread code whether share same global variable
 
 program block can be class/function
 each thread has its own stack, auto(local) level variable don't have sharing problem.
-  because they store variables inside memories of each thread
+- because they store variables inside memories of each thread
 
 ## hyperthreading
 since in each CPU, amount of ALU,FPU is fixed
 goal: when 1 thread only use part of resource in one CPU, start another thread to consume rest of resource in same CPU
 - but if a thread already computational expensive, add thread will fight over resource, inefficient
-- normally for home CPU 1C2T is optimal in computation-power/$
+- normally for home CPU 1C-2T is optimal in computation-power/$
 
 ## methods
 1. locking mechanism (mutex, critical section, event, semaphore)
@@ -321,12 +321,12 @@ goal: when 1 thread only use part of resource in one CPU, start another thread t
 
 ## benefits
 responsiveness
-  allow program to run even part of it blocked
+- allow program to run even part of it blocked
 resource sharing
-  process only share resource explicitly arranged by programmer
-  threads default share memory and resources > multi threads within same addres space
+- process only share resource explicitly arranged by programmer
+- threads default share memory and resources > multi threads within same addres space
 economy
-  lower cost to create, context-switch threads
+- lower cost to create, context-switch threads
 scalability
 
 ### multiprocessor VS multicore
@@ -364,15 +364,15 @@ creating user thread requires creating corresponding kernel thread => overhead (
 ### many-to-many model
 multiplexes many user thread -> smaller /equal kernel threads
 developer can create as many user threads as necessary, can run in parallel
-tow-level model: allow a user thread bound to a kernel thread
+two-level model: allow a user thread bound to a kernel thread
 
 ## thread library
 1. entirely user space library
 2. kernel-level library
 main lib: 
-  POSIX Pthreads(user/kernel,global), 
-  Windows(kernel,global), 
-  Java(rely on host system API, accss to shared data explicitly arranged between threads)
+- POSIX Pthreads(user/kernel,global), 
+- Windows(kernel,global), 
+- Java(rely on host system API, accss to shared data explicitly arranged between threads)
 
 ### async threading
 once parent creates child thread, parent resume execution => parent,child execute concurrently
@@ -381,7 +381,7 @@ fork-join: parent thread wait for all child to terminate before resume
 
 ### Java thread
 all Java program comprise at least single thread of control
-extend from Trhead class / implement Runnable interface
+extend from Thread class / implement Runnable interface
 call start() method create new thread
   - allocate memory, init thread in JVM
   - call run() method
@@ -438,7 +438,8 @@ each thread own copy of certain data, ~static data
 
 ## scheduler activation
 lightweight process: two level model as intermediate data structure, ~virtual processor
-scheduler activation: kernel provide application with set of virtual processor, appliction schedule suer threads to available virtual processor
+scheduler activation: kernel provide application with set of virtual processor, 
+  application schedule user threads to available virtual processor
 upcall = kernel inform application certain event
 upcall handler = upcall handled by thread library
 
@@ -529,18 +530,16 @@ global lock is init to 0, first process invokes compare_and_swap() set lock to 1
 ```c
 do {
   waiting[i] = true;
-  // enter critical only when waiting=false/key=false
-  while (waiting[i] && test_and_set(&lock))
-    // after first process make key=false, all others must wait
-    // other process must wait for any process to leave critical
-    ;
+  // enter critical only when waiting=false
+  // other process must wait for any process to leave critical
+  while (waiting[i] && test_and_set(&lock)) ;
   waiting[i] = false;
 
   /* critical */
   j = (i+1)%n;
   // scan all waiting process, choose next one
   // ensure chosen one is waiting
-  while((j != i) && !waiting[j])
+  while( (j != i) && !waiting[j] )
     j = (j+1) % n;
 
   if (j==i) // same process
@@ -574,7 +573,7 @@ disadv: need busy waiting
 adv: no context switch
 
 ## semaphore
-wait(), signa()
+wait(), signal()
 when S>0, no process in critical; S<=0, some process in critical
 ```c
 wait(S) {
@@ -600,9 +599,9 @@ counting semaphore: range over unrestricted domain (finite instances)
 binary semaphore: range between 0 and 1
 
 ### solve busy waiting
-when process execute wait() and find semaphroe value not positive, process block itself
-  block operation place process into waiting queue, process switch to waiting state
-  control transferred to CPU scheduler
+when process execute wait() and find semaphore value not positive, process block itself
+- block operation place process into waiting queue, process switch to waiting state
+- control transferred to CPU scheduler
 
 ```c
 typedef struct {
@@ -633,7 +632,7 @@ priority inversion: >2 priorities,
   suddenly M also use resource, H wait longer
 
 priority-inheritance protocol:
-- all process access resource needed by higher priority process inherit higher priority until finished with resource
+- all process access resource needed by higher priority process -> inherit higher priority until finished with resource
   in example, L inherit H first, so M cannot use resource
 
 ## problems
@@ -651,6 +650,7 @@ semaphore mutex = 1;
 semaphore empty = n;  // num of empty buffer
 semaphore full = 0;   // num full buffer
 
+// consumer
 do {
   wait(full);
   wait(mutex);
@@ -663,6 +663,7 @@ do {
 
 ### readers-writers problem
 process as reader and writers
+multiple reader can read at same time, only 1 writer write at same time
 1. no reader kept waiting unless writer has permission to use shared object
 2. once writer ready, writer perform write as soon as possible
 
@@ -671,14 +672,14 @@ semaphore rw_mutex = 1; // common to both writer and reader
 semaphore mutex = 1;    // mutex when variable read_count updated
 int read_count = 0;     // keep track how many process reading object
 
-/* writer process */
+// writer process 
 do {
   wait(rw_mutex);
   // writing performed
   signal(rw_mutex);
 } while(true);
 
-/* RW lock in reader process */
+// RW lock in reader process
 do {
   wait(mutex);  // ensure atomic read_count update
   read_count++;
@@ -727,6 +728,24 @@ possible solutions:
 
 abstract data type: encapsulate data with set of functions operate on data
 monitor construct ensure only 1 process active at a time
+- mutiple thread that share resource
+- multiple resource related variable
+- mutex lock
+- invariant for avoiding racing condition
+
+process
+- process take mutex lock before running 
+- -> until finish / waiting for certain condition release lock
+- if all theads confirm invariant always true, then no racing
+
+wait c: waiting for c to be satisfied to resume
+signal/notify c: called by some thread to assert c is true
+=> blocking / non-blocking condition variable
+
+#### blocking condition variable
+
+
+#### non-blocking condition variable
 
 still get starvation problem:
 ```c
@@ -879,7 +898,7 @@ when schedule?
     used by old OS
   preemptive: schduling in others
 
-disable interrup at entry, reenable interrupt at exit
+disable interrup at entry, re-enable interrupt at exit
 dispatcher:
   module let CPU control process selected by short-term scheduler
   switch context, switch to user mode, jump to proper location in user program to restart
@@ -899,7 +918,7 @@ for interactive system, min variance in response time, better than min average
 ### first come, first serve
 not good when P1=24, P2=3, P3=3
 average waiting time = (0+24+27)/3
-- since nonpreemptive, once CPU allocated, run til end
+- since non-preemptive, once CPU allocated, run til end
 
 ### shortest-job-first
 min average waiting time
@@ -937,13 +956,13 @@ scheduling among queues: ususally fixed-priority preemptive scheduling
 2. interactive process
 3. interactive editing process
 4. batch process
-5. student process  [lowest priority]
+5. student process [lowest priority]
 
 ### multilevel feedback queue scheduling
 allow process to move between queues
 eg. there are 3 queues, must finish all in queue 0 before do queue 1, and then queue 2
   give highest priority to process CPU burst < 8ms, such process quickly get CPU
-  go oofto next IO. process 24>t>8 serve quickly, though lower priority
+  go after next IO. process 24>t>8 serve quickly, though lower priority
 
 ## thread scheduling
 lightweight process (LWP): 
@@ -961,9 +980,9 @@ PTHREAD_SCOPE_SYSTEM: schedle policy will create and bind LWP for each user thre
 ## multiple processor scheduling
 assume homogeneous processors
 1. asymmetric multiprocessing
-   all scheduling decision, IO processing, system activities handled by single processor
+all scheduling decision, IO processing, system activities handled by single processor
 2. symmetric multiprocessing
-   each processor is self-scheduling, maybe in common ready queue/ have their own private queue for ready process
+each processor is self-scheduling, maybe in common ready queue/ have their own private queue for ready process
 
 processor affinity: 
   since invalidate & rebuild cache memory in processors is high cost, process has affinity for processor currently running
@@ -984,7 +1003,7 @@ for system with common run queue, load balance not necessary
 specific task periodically check loads on each processor, move processes to evenly distribute load
 ### pull migration
 idle processor pull waiting tasks from busy processor
-oftern push and pull migration implemented in parallel
+often push and pull migration implemented in parallel
 
 ## multicore processor
 memory stall: processor spend significant amount of time accessing memory for data
@@ -1104,10 +1123,9 @@ when user request a set of resource, system must determine whethre allocatio wil
 
 
 # Main Memory
-first fetch instruction from memory, then decode, cause operands to be fetched from memory. After instruction
-  executed on operands, result stored back to memory
-  we can ignore how program generates memory address, interested only in sequence of memory address generated by running program
-
+first fetch instruction from memory, then decode, cause operands to be fetched from memory. 
+  After instruction executed on operands, result stored back to memory
+  -> sequence of memory address generated by running program
 any instrucitons in execution and data used by instruction, must be in direct-access storage devices
 register: accessible in one CPU cycle
 
@@ -1124,15 +1142,15 @@ compare every address generated in user mode with registers
 ## address binding
 process may move between disk and memory during execution
 binding instructions and data to memory address:
-  1. compile time
-     if you know where process reside in memory, absolute code can be generated
-     if later starting location changes, need to recompile code
-  2. load time
-     if not known position, compiler must generate relocatable code
-     final binding is delayed until load time
-  3. execution time*
-     if process can be moved between memory segment, binding must be delayed until runtime
-     most OS use this method
+1. compile time
+   if you know where process reside in memory, absolute code can be generated
+   if later starting location changes, need to recompile code
+2. load time
+   if not known position, compiler must generate relocatable code
+   final binding is delayed until load time
+3. execution time*
+   if process can be moved between memory segment, binding must be delayed until runtime
+   most OS use this method
 
 object file in C: 
   real output from comilation phase. mostly machine code, has info that allow linker to see what 
@@ -1176,7 +1194,7 @@ shared library: more than 1 version of libaray can load into memory, each progra
 dynamic linking and shared library need help from OS
 
 ## swapping
-process can be swapped temporarily out of memory to backing store and brought back into memory for continued execution
+process can be swapped temporarily out of memory to backing store, brought back into memory for continued execution
 ### standard swap
 when CPU scheduler decide to execute process, call dispatcher -> 
   dispatcher check to see if next process in queue is in memory;

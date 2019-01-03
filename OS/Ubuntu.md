@@ -26,5 +26,8 @@ DISTRIB_RELEASE=10.04
 DISTRIB_CODENAME=karmic
 DISTRIB_DESCRIPTION="Ubuntu Karmic Koala"
 
+# inspect GTK+ application
+gsettings set org.gtk.Settings.Debug enable-inspector-keybinding true
 
+press ctrl+shift+d
 

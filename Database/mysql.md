@@ -4,3 +4,10 @@
 3. grant all privileges on *.* to '<user>'@'<host>' with grant option;
 
 
+
+
+
+
+
+
+
