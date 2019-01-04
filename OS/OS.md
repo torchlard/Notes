@@ -1244,7 +1244,7 @@ logical address: `<segment-number, offset>`
 
 when program is compiled, compiler auto construct segment reflecting input program
 eg. C compiler create separate segment for
-  code, global variable, heap(memory located), stack, C lib
+- code, global variable, heap(memory located), stack, C lib
 loader will take all segments and assign them segment numbers
 
 segment table: map 2D user-defined address to 1D physical address
@@ -1253,8 +1253,8 @@ use segment-number as offset in segment table to find entry
   when offset in logical address < segment limit => legal address
 
 ## paging
-frames: break physical memory into fixed sized blocks
-pages: break logical memory into blocks of same size, size=power of 2 (512B - 1GB / page)
+frames: break **physical** memory into fixed sized blocks
+pages: break **logical** memory into blocks of same size, size=power of 2 (512B - 1GB / page)
 
 logical address space totally separated from physical address space, 
   can have logical 64-bit when system < 2^64 B physical memory
@@ -1262,7 +1262,7 @@ logical address space totally separated from physical address space,
 address by CPU: page number(index), page offset
 page table: base address of each page in physical memory
 frame table: table keep info which frames allocated, which available, total frames are
-
+```
     (logical address)
           ------------- 
           |           |
@@ -1279,7 +1279,7 @@ CPU -> [p d]       [f d] (physical address)
     miss    ...
             ...
           (page table) 
-
+```
 if 2^m logical address space size, 2^n page size => m-n bit page number, n bit page offset
 
 smaller page size -> less internal fragmentation, but higher overhead (more page table entry), less IO efficient
@@ -1329,11 +1329,12 @@ each process has its own data page
 ## hierarchical paging
 two level paging algorithm
 32bit logical address space, page size=4KB -> 20 bit page number + 12 bits page offset
+```
   page number -> 10 bit page number + 10 bit offset
                    10   10    12
 final structure: [ p1 | p2  | d ]
                  page number|page offset
-
+```
 forward-mapped page table:
 logical address -> outer page table -> page of page table -> memory
 
@@ -1349,7 +1350,7 @@ clustered page table: ~hash table, except each entry refer to several pages, not
   good for sparse address space
 
 ## inverted page table
-
+```
              -----------
  (logical)   |         |
   [pid | p | d]   [i | d]----> physical
@@ -1361,7 +1362,7 @@ clustered page table: ~hash table, except each entry refer to several pages, not
            .....
            .....
     (inverted page table)
-
+```
 1 entry for each real page/frame of memory
 entry: virtual address of page in real memory location
   `<process-id, page-number, offset>`
@@ -1398,7 +1399,7 @@ page fault: access to page marked invalid
 
 process access page not in memory:
 1. check internal table (in PCB) to see if reference was valid or invalid
-2. if invalid, end process. if valid, page it
+2. if invalid, end process; if valid, page it
 3. find free frame
 4. bring desired page into newly allocated frame
 5. modify internal table, page table indicate page now in memory
@@ -1421,7 +1422,7 @@ over-allocating memory: when increase degree of multiprogramming
   source: buffer IO
   result: page fault occurs
 
-when over-allocating  memory
+when over-allocating memory
 1. terminate user process
 2. swap out process
 3. page replacement
@@ -1513,7 +1514,7 @@ allocation < total #frame available (unless page sharing)
 at least 1 frame -> instruction, 1 frame -> memory reference
 worst case scenario: allow multiple level of indirection (eg. 16 bit word contain 15-bit address, 1-bit indirect indicator)
   load instruction -> indirect address -> indirect address -> indirect address -> ... -> until every virtual memory touched
-=> must limit max #moery reference per instruction to 17
+=> must limit max #memory reference per instruction to 17
 
 #### allocation
 equal allocation
@@ -1569,7 +1570,7 @@ convenient for serial and parallel port to connect modems and printers to comput
 ## kernel memory
 kernel memory often allocated from free memory pool
 1. kernel request memory for data structure of varying sizes, so should min waste
-2. pages allocated to suer process no need contiguous physical memory
+2. pages allocated to super process no need contiguous physical memory
    certain hardware device interact directly with physical memory need contiguous page
 
 ### buddy system
@@ -1595,6 +1596,7 @@ prepaging: prevent high level of initial paging, bring into memory at one time a
 page size: medium
 TLB Reach
 IO interlock: prevent low priority IO to be replaced by high priority IO
+
 
 # mass storage device
 ## magnetic disk
