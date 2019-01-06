@@ -195,9 +195,22 @@ goal: write result
 method: aggregate, summarize, filter, transform
 
 <key,value> pair -> <result>
-split1 -> map -> reduce
-split2 -> map -> reduce
-split3 -> map -> reduce
+
+      (assign map)                    (assign reduce)
+split1 -> worker ----> [] --->|-> worker -> output file 0
+split2 -> worker ----> [] --->|-> worker -> output file 1
+split3 -> worker ----> [] --->| 
+        ^   (local write)     |
+        |           (remote read,sort)
+  transfer throught network
+  or read from local disk
+
+## implementation
+no need to handlemulti-threaded code
+deterministic, mapper/reducers run separate JVM
+
+problem: slow workers -> spawn backup copies of task
+the one first finish wins
 
 ## characteristics
 very large scale data
