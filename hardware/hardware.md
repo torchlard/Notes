@@ -1,3 +1,6 @@
+# Sound
+ALSA
+
 # UFS
 use 2 lane, 2.1, bandwidth 1200MB/s
 serial transfer, full duplex
