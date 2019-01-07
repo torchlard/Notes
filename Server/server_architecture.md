@@ -77,9 +77,11 @@ small scale: dual machine
 Large scale: L7 load balance
 many nodes, DBs, file operations
 
+### partition
+vertical: split by business types
+horizontal: separate core, public business; provider independent package, decoupling
+
 ## 2nd generation
-SOA middleware: ESB, RPC, BPM
-RPC framework based on Java NIO (Netty), serialization
 new demand
 - dependency management: want universal service registration
 - transparent routing: timeout, flow control 
@@ -90,6 +92,7 @@ solution [custom RPC framework]
 2. dependency decoupling -> configuration based development
 3. clustering
 
+RPC framework based on Java NIO (Netty), serialization
 ### RPC framework
 RPC hide TCP/UDP, serialize method(XML/JSON/binary), communication details
 1. provider give interface definition, data structure, service definition file (IDL, WSDL)
@@ -116,6 +119,8 @@ complex URL configuration, high pressure to load balancer
 dependency: which service start first?
 how many nodes needed for particular service?
 
+## 3rd generation
+SOA middleware: ESB, RPC, BPM
 ### SOA
 principle
 - service reusable
@@ -146,7 +151,42 @@ principle
 7. Debug
 8. Security
 
-## 3rd generation
+#### Dubbo
+SOA framework
+1. init Spring context, by XML file publish service by protocol
+2. provider register in registry and publish provider info
+3. consumer subscribe according to XML config, get routing info
+4. register give service address to consumer
+5. consumer call remote service, choose a provider by local cache
+  
+connectivity
+- registry only provide directory service, no message relay
+- long connection among registry, provider, consumer
+  - if provider is down, inform consumer immediately
+- registry and monitor are optional, consumer can direct link to provider
+
+robustness
+- if one stateless provider down, no effect
+- if one registry down, switch
+- if database down, registry still access by cache, but no new service
+
+scalability
+- can dynamically scale provider and registry
+
+extensibility
+- micro kernel + plugin
+- pipeline design: ~ AOP
+
+#### HSF
+features
+- configurable development
+- extension system: classLoader separate platform and application, internal use OSGi
+- NIO
+- multi protocol: WebService, ProtoBuf, Hession
+
+
+
+## 4th generation
 Micro-service
 Docker
 ### Micro service
