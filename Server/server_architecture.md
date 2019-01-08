@@ -465,9 +465,128 @@ service registry cluster
 suply CRUD iterface
 - change data in registry
 
+## ZooKeeper
+```
+Service(ZK client)    ZK server cluster           Consumer (ZK client)
+------------------------------------------------------------------------
+connect to server ------>
+register service  ------>
+                                    <----- create connection
+                                    <-- get service addr list
+                                    <-- listen to addr list
+register new service --->
+
+                                provide new server addr list -->
+cancel existing service --->
+                              get cancelled server addr list -->
+heart_beat -------------->
+                              get cancelled server addr list -->
+```
+for 2n+1 server, if n+1 server usable, then cluster usable
+when server cluster init, choose 1 as leader, other as follower
+- for read request, follower return result
+- for write request, leader init voting, return concensus result (over half)
+
+when leader sync with most follower, enter broadcast mode
+when new server join, after sync, join broadcast
+when leader down / lost support of most follower -> recovery mode -> vote new leader
+
+after voting leader
+1. leader wait server connect
+2. follower connect leader, send largest zxid to leader
+3. leader confirm sync point by zxid
+4. after sync, infrom follower to uptodate mode
+5. follower receive uptodate, resume handle client request
 
 
+# service publishing
+```
+serviceConfig     Proxy     Exporter   Remoting    service registry
+------------------------------------------------------------------
+platform init, -->
+read service 
+info list
+              wrap local
+              service by
+              proxy
 
+              create publish -->
+              tools
+                        validation &
+                        init
+
+                        convert to  --->
+                        protocol by
+                        config
+                                      init protocol
+                                      server, start
+                                      listen, create
+                                      cache URL addr
+
+                        send URL  -------------------->
+                        registration
+                        
+             <----------- return result
+```
+way to publish
+1. XML config (best, popular choice)
+2. annotation (need recompile if change)
+3. API call (code invasion, coupling, need recompile)
+
+registry structure
+- by host address
+- by service name
+- URL
+
+## remote service invocation
+```
+                                              (immediate return)
+consumer --invoke()> service API -> serviceProxy --wait()> remote(client)
+         <--response--           <-            <--notify()--
+  ------------------- channel ------------------
+-> remtoe(server) -> serviceProxy --reflection-> service implementation
+<-                <-              <-------------
+```
+## optimization
+lazy loading
+async loading
+
+
+# parameter transfer
+need to pass extra data beside business logic, eg. provider's IP, msg chasing ID
+- cannot be passed by service interface
+## service internal parameter transfer
+call local API
+1. thread context
+2. BPM flow engine
+
+A1.method() ->
+    ThreadLocal.get("A") ->
+    A2.method()
+        ThreadLocal.get("B") ->
+        A3.method()
+            ThreadLocal.set("A", new value)
+            ThreadLocal.set("B", new value)
+
+business work flow --abstract--> Handler
+```java
+public void initHandlerChain(
+  executeEngine.add("authHandler");
+  executeEngine.add("logHandler");
+  executeEngine.add("billHandler");
+)
+```
+since thread not change in provider, use thread context pass param
+```java
+RPCContext.setParam("CallingIP", "10.139.123.11");
+Object value = serviceImpl.invoke(method, args);
+String callingIP = RPCContext.getParam("callingIP");
+```
+## communication protocol support
+extra field
+
+
+# SOA 
 
 
 
