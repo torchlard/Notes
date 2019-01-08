@@ -114,10 +114,19 @@ gRPC
 - high efficiency, based on HTTP/2
 - ProtoBuf (smaller)
 
+### common framework
+1. RPC layer
+remote abstraction, restful, NIO framework, HTTP base protocol, transport
+2. Filter Chain
+load balance, timeout, finish inform
+3. Service
+dynamic proxy(Java/cglib, javassit), custom service interface (Java bean)
+
 #### problems
 complex URL configuration, high pressure to load balancer
 dependency: which service start first?
 how many nodes needed for particular service?
+
 
 ## 3rd generation
 SOA middleware: ESB, RPC, BPM
@@ -183,7 +192,6 @@ features
 - extension system: classLoader separate platform and application, internal use OSGi
 - NIO
 - multi protocol: WebService, ProtoBuf, Hession
-
 
 
 ## 4th generation
