@@ -21,12 +21,15 @@ error to say `new Thing()` without having particular `Hello` instance
 solution:
 change inner class to static
 
+# No class found exception
+reason: if use gradle, runtime classpath not included
+solution: add `runtimeClasspath` in dependencies
 
+# javax.net.ssl.SSLException: closing inbound beforereceiving peer's close_notify
+reason: ssl 
 
-
-
-
-
+# javax.net.ssl.SSLException MESSAGE: closing inbound before receiving peer's close_notify
+useSSL=false&allowPublicKeyRetrieval=true
 
 
 
