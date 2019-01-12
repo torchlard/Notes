@@ -160,7 +160,9 @@ x = y // error
 
 ```
 
-
+# generate type file for plain js library
+1. npm i lib
+2. dts-gen -m lib
 
 
 

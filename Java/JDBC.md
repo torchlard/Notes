@@ -36,7 +36,41 @@ direct call to verdor-specific database protocol
 - drivers are database specific
 
 
-# 
+# interface
+Connection, Statement, PreparedStatement, ResultSet, CallableStatement
+DriverManager (class)
+
+## process
+1. register and load driver
+2. init connection
+3. build SQL sentence
+4. create statement, send sql
+5. execute sql
+6. handle sql result set
+7. close statement and connection
+
+when call Class.forName()
+-> class will call registerDriver()
+-> put Driver information in Vector of drivers
+-> driver's class implement java.sql.connection
+
+# DAO
+data access object: 
+- data accessor pattern: separate data access and business logic
+- active domain pattern: service data -> object
+
+components
+1. DAO interface
+2. DAO implementation class
+3. DTO (data transfer object): Value object/domain
+
+
+
+
+
+
+
+
 
 
 
