@@ -216,6 +216,48 @@ use routerLink map to url in router
 
 routerLink = selector for RouterLink directive
 
+##
+routed angular application has 1 singleton instance of Router service
+- no route until configured
+
+Router outlet: directive act as placeholder mark spot in template
+
+## active router links
+RouterLinkActive toggle css class for active RouterLink binding
+
+## router state
+at end of successful navigation lifecycle, build tree of ActivatedRotue object
+can access current RouterState anywhere
+
+## keyword
+Router
+RouterModule
+Routes
+ActivatedRoute: service provided to each route component contain route specific info
+- eg. route param, static data, resolve data, global query param, global fragment  
+
+## secondary route
+named outlets: target of secondary routes
+~ primary routes, some different:
+- independent of each other
+- work in combination with other route
+- displayed in named outlets
+
+## guard
+return value:
+- true: navigation continue
+- false: navigation stop, user stays put
+- UrlTree: current navigation cancels, new navigation init to UrlTree returned
+### interface
+canActivate: nav to route
+canActivateChild: mediate navigation to child route
+CanDeactivate: away from current route
+Resolve: route data retrieval before activation
+CanLoad: to feature module loaded asynchronously
+
+CanDeactivate -> CanActivateChild -> CanActivate -> CanLoad
+
+
 
 # HTTP
 use InMemoryDbService to mimic real HTTP server database servie
@@ -374,6 +416,8 @@ angular compiler won't bind to properties of different component unless Input/Ou
 - never bind private property
 Input: receive data value
 Output: expose event producers, eg. EventEmitter
+
+
 
 
 
