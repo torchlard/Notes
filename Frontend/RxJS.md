@@ -3,6 +3,7 @@ stream of data
 
 # Reactive
 developer only need to concern how input converted to output, not timing details
+
 ## proactive VS reactive
 ```js
 let obj ={
@@ -42,5 +43,35 @@ not require you to do in reactive way
 
 FRP:
 Enumerator Pattern + Observer Pattern
+
+# Subject
+since direct subscription to observer will start from beginning every tiem
+if want to restart from last status, need middleman to save state
+=> Subject
+- is both Observable and Observer
+- multicast to internal observers list
+  
+
+## Subject
+normal observable
+
+## BehaviorSubject
+set state when initialized
+for any subscription, send current state, not first state
+
+## ReplaySubject
+resend last few elements
+
+## AsyncSubject
+send last value after subject complete
+
+
+
+
+
+
+
+
+
 
 

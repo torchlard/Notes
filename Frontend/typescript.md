@@ -8,6 +8,12 @@ if --strictNullChecks flag, null & undefined only to void, not all types
 ## const
 variable use const, properties use readonly
 
+## enum
+```ts
+enum Color {Red, Green, Blue}
+let c: Color = Color.Green;
+```
+
 ## interface
 support both string & number for index signatures
 index with 100 === index with "100"
@@ -22,6 +28,7 @@ function printLabel(labelledObj: {label: string}){
 let myObj = {size: 10, label: "Size 10 obj"}
 printLabel(myObj)
 
+
 /** string index signature */
 // use propName deal with extra field
 interface LabelledValue {
@@ -33,6 +40,7 @@ function printLabel(labelledObj: LabelledValue){
   console.log(labelledObj['size'])
 }
 printLabel({size: 10, label: 'size 19 obj'})
+
 
 /** index interface */
 interface CloudDictionary {
@@ -48,6 +56,7 @@ clouds['azure'] = 1
 
 console.log(clouds[0])  // aws
 console.log(clouds['aws'])  // aws
+
 
 /** class interface */
 // interface can only declare public parts in class
@@ -87,6 +96,7 @@ function createClock(ctor: ClockConstructor, hour:number, minute:number): ClockI
 let clock = createClock(Clock, 12, 17)
 clock.tick()
 
+
 /** function interface */
 // in OOP, class interface: describe public property method
 // in FP, specify what signature in function
@@ -102,6 +112,7 @@ class ShippingService {
 
 const shippingService = new ShippingService()
 const fee = shippingService.calcFee(10, weight => 100*weight + 10) // 1010
+
 
 /** Hybrid Interface */
 // contain both function and object features
