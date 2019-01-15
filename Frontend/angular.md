@@ -377,4 +377,22 @@ Output: expose event producers, eg. EventEmitter
 
 
 
+# Authentication (OpenID)
+use implicit flow, where all token pass via browser
+- becoz application cannot be trusted with features such as long lived token, refresh token / client secret
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
