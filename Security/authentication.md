@@ -42,7 +42,7 @@ payload = {
 }
 header = {
   "typ": "JWT",   // type
-  "alg": "HS256"  // HS256 algorithm to sign
+  "alg": "HS256"  // HS256 algorithm to sign {RS256, HS256}
 }
 ```
 JSON --base64--> JWT payload, JWT header
@@ -50,6 +50,13 @@ JWT_header+"."+JWT_payload --HS256--> signature
 JWT = JWT_header+"."+JWT_payload+"."+signature
 
 request = "http://your.awesome-app.com/make-frd/?jwt=xxxx.xxxx.xxxxx"
+
+### HS256 VS RS256
+HS256 default for client, RS256 default for API
+HS256: symmertic MAC
+- must share secret with any client/API that want to verify JWT
+RS256: asymmetric signature
+- private key sign JWT, different public key verify signature
 
 
 ## problem
@@ -63,7 +70,7 @@ since token stored in client side
 3. if access token failed, use refresh token to apply new access token
 4. if refresh token not exipred, return new Access token
 
-## cookie VS JWT
+## session VS JWT
 ### scalability
 1. need separate central sessio nstorage system to access
 2. sticky session
@@ -88,6 +95,28 @@ authentication state introduce side effect, break stateless restful principle
 ### performance
 if lot of data encoded with JWT, significant amount of overhead for every HTTP request
 with session, only session ID needed
+
+
+# JWKS (json web key set)
+json based standard for publishing public keys in REST endpoint
+
+## structure
+alg: algorithm of key
+kty: key type
+use: how key is used
+x5c: x509 certificate chain
+e: exponent for standard pem
+n: modulus for standard pem
+kid: unique identifier for key
+x5t: thumbprint of x.509 cert
+
+## steps
+1. retrieve JWKS and filter for potential signing keys
+2. extract JWT from request's authorization header
+3. decode JWT and grab kid property from header
+4. find signing key in filtered JWKS with matching kid property
+5. use x5c property build certificate which vertify JWT signature
+
 
 
 # OAth
