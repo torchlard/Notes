@@ -297,6 +297,20 @@ get inline css style
 3. element.style.width
 can get and set inline css
 
+# semicolon issue
+avoid begin new line with ( [ `
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
