@@ -350,6 +350,17 @@ StringBuilder: not thread-save, ~StringBuffer, most efficient
 +: normal string concat, order of magnitude least efficient
 
 
+# stream
+## intermediate
+map, filter, distinct, sorted, pek, limit
+skip, parallel, sequential, unordered
+## terminal
+forEach, forEachOrdered, toArray, reduce
+collect, min, max, count, anyMatc, allMatch, noneMatch
+findFirst, findAny, iterator
+## short-circuiting
+anyMatch, allMatch, noneMatch, findFirst
+
 
 
 

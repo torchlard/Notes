@@ -39,7 +39,7 @@ BeanFactory: manage container, include dependency, life cycle
 each bean assigned an ID, name
 anonymous bean / inner bean
 
-give bean mroe than one name for variety of aliases
+give bean more than one name for variety of aliases
 
 ## Tags
 Autowired
