@@ -586,8 +586,13 @@ String callingIP = RPCContext.getParam("callingIP");
 extra field
 
 
-# SOA 
 
+
+# scale theory
+3 axis:
+1. x-axis: horizontal duplication
+2. y-axis: functional decomposition (scal by splitting different things)
+3. z-axis: data partitioning (scal by splitting similar things)
 
 
 

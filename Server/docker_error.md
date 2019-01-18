@@ -10,8 +10,12 @@ reason: no -v in binary file
 solution: add -v xxx at the end
 printf '\x2D\x76\x31\x38\x2E\x30\x39\x2E\x30\x20' | dd of=boot2docker.iso bs=1 seek=32819 count=10 conv=notrunc 
 
-
-
+# got permission denied while trying to connect to the Docker daemon socket
+reason: current user has no privilege to read/write file
+solution: add user to docker group
+$ sudo gpasswd -a ${USER} docker
+$ sudo service docker restart
+$ newgrp - docker
 
 
 

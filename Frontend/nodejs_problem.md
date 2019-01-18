@@ -7,3 +7,6 @@ sudo npm cache clean -f
 sudo npm install -g n
 sudo n stable
 
+# The engine "node" is incompatible with this module
+change node engine version
+

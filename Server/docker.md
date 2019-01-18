@@ -39,6 +39,9 @@ docker container ls --all
 // show images
 docker image ls
 
+// delete none images
+docker rmi $(docker images -f "dangling=true" -q)
+
 # open container initiative
 established in 2015 
 Runtime specification: how to run 'filesystem bundle' that is unpacked on disk
