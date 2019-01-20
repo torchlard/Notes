@@ -436,6 +436,131 @@ Availability <-----> Consistency
 
 reloading state
 
+=================================================
+
+# Entity
+identified by identifier, not attributes
+ensure uniqueness of object
+1. continuous life cycle
+2. various states not determined by its attributes
+- can be persistence, contain domain logic
+
+## problem
+if everything in system traced by ID, will be very inefficient
+
+# Value object
+describe object without identifier
+after value object instantiated -> represent some design element
+- immutable
+- can reference to entity (eg. route is value, ref to 2 cities and 1 road)
+- no identifier
+
+## feature
+relation among value objects is meaningless
+- just as temp object to pass parameter / complement to entity
+
+## problem
+if value change too frequently, should make value object mutable
+
+# Service
+service emphasize relation with other objects
+abstract, well-defined actions
+1. not natural part of entity / value object
+2. interface defined by others elements in domain model
+3. action is stateless
+
+## application level service
+notification
+
+## domain level service
+cehck boundary
+
+
+# Module
+high internal coupling, low extenal coupling
+evolve with domain model
+
+
+# Aggregate
+in real world relation amon objects are very complex, difficult to restrict
+abstract model -> reference -> collection of related objects
+- each aggregate has 1 root, 1 boundary
+
+1. root entity has global identifier -> check rules
+2. within boundary entity has local identifier -> only unique within aggregate
+3. external object from aggregate can only ref to root entity, not internal objects
+4. external obj can temporarily keep ref to internal objs
+5. only aggregate root can access DB
+
+put entity & value obj separately in aggregate, define each aggregate's boundary
+in each aggregate, choose an entity as root
+- control access by root entity
+
+
+# Factory
+when creation of object or whole aggregate very complex / expose too much internal structure
+-> use Factory to package
+- manage start of lifecycle
+
+responsibility of domain level to create complex objects
+many design pattern:
+- factory method, abstract factory, builder ...
+
+1. every creation method = atomic method
+2. can add optional elements after construction
+3. abstract class, not create concrete class
+
+## entity factory, value object factory
+
+
+# repository
+for all persistent object, part of them must be accessible based on object attributes
+use repository to package solution, turn focus back to model
+- manage middle & end of lifecycle
+
+adv
+1. provide simple model to get persistent object, manage lifecycle
+2. decouple domain design and persistence technology
+3. object access design
+
+
+# Bounded context
+same meaning within boundary
+
+# Context map
+mapping between systems
+## shared kernel
+common system among 2 groups of people
+
+## customer/supplier
+one system depend on another system
+
+### conformist
+if upper system not cooperate, then lower system has to chase upper system
+
+## anti-corruption layer
+if upper system not friendly, but lower system has to depend on it
+-> use transport + resolver (anti-corrupt)
+- lower effect of upper system
+
+## open host service
+open service for public access
+
+## separate way
+mutual independent
+
+micro-service = anti-corruption + open host service (RESTful)
+
+
+
+
+
+
+
+
+
+
+
 
 
 

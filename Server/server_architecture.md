@@ -585,8 +585,7 @@ String callingIP = RPCContext.getParam("callingIP");
 ## communication protocol support
 extra field
 
-
-
+===========================================
 
 # scale theory
 3 axis:
@@ -594,11 +593,29 @@ extra field
 2. y-axis: functional decomposition (scal by splitting different things)
 3. z-axis: data partitioning (scal by splitting similar things)
 
+# new architecture design
+## MVC (old)
+presentation, business logic, data access -> intrastructure
 
+### problem
+1. assume only interact with UI and database,
+ignore other possible external system, eg. msg queue, multiple DB, filesystemm, 3rd party
+2. persistence layer let external API pollute domain logic
+eg. JDBC, SQL, ORM
+3. if DB is missing, difficult to do unit test 
 
+## Domain-driven-design N-layered architecture
+presentation -> distributed service -> application layer -> Domain layer <- data persistence layer
+Cross-cutting infrastructure
 
+## hexagonal / ports and adapters
+all domain object on table
+chairs around table aer adapter
+behind chairs are external system / services
 
-
+## onion architecture
+application around domain model
+internal define interface, external implement interface
 
 
 
