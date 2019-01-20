@@ -29,7 +29,7 @@ shouldn't always place setter for dep in business interface
 Configuration VS Dependency
 still need dependency lookup to access dependent object
 
-Spring BeanFactory Container --IoD--> Dependent object
+Spring BeanFactory Container --DI--> Dependent object
 IoC container can act as adapter between DI container and external dependency lookup container
 
 ## Bean
@@ -41,8 +41,35 @@ anonymous bean / inner bean
 
 give bean more than one name for variety of aliases
 
+## meaning
+all properties private
+default constructor
+provide getter, setter
+implement serializable
+
+=> at beginning: standard for getting and setting value of object
+
+## types
+persistent object: for DB, cache
+Value object: for frontend display
+data transfer object: for interface to call each other, return value, data transfer, msg queue
+
+## keyword
+POJO: plain ordinary Java Object
+- only has part of setter/getter method
+- not follow any specific Java object model / framework (eg. EJB)
+
+theoretically any Java Class can be Bean
+-> normally Java Bean created by container (eg. Tomcat)
+- should have parameterless constructor
+
+Java Bean cannot accessed across process
+component technology => reusable
+
+EJB: very complicated kind of bean with many requirement
+
 ## Tags
-Autowired
+Autowired: auto link bean from one bean (~ require)
 Inject
 Resource
 
@@ -65,7 +92,7 @@ Prototype: new instance per request
 Request: per HTTP request
 Session: per HTTP session
 Global session: shared among all portlets within same app
-Threead: per new thread
+Thread: per new thread
 Custom: implement interface, register custom scope in config
 
 # Autowire

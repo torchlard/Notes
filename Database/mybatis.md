@@ -73,20 +73,97 @@ noRollbackForClassName
 only external method call will trigger AOP capture, so inner class call no use
 
 ### annotation
-CacheNamespace
-CacheNamespaceRef
-ConstructorArgs
-Arg
-TypeDiscriminator
-Case
-Results
-Result
-One
-Many
-Options
+CacheNamespace, CacheNamespaceRef
+ConstructorArgs, Arg
+TypeDiscriminator, Case: criminator
+
+Results, Result
+One, Many
+Options, SelectKey
 Insert, Update, Delete
 InsertProvider, UpdateProvider, DeleteProvider, SelectProvider
 Param
+
+## ConstructorArgs, Arg
+for concrete class without no-arg constructor (for return object)
+
+## map sql to db fields
+1. use sql sentense nickname
+2. mapUnderscoreToCamelCase
+3. resultMap
+each element has Java annotation @Results
+```java
+@Results(id="userResultMap", value={
+  @Result(property="id", column="id", id=true),
+  @Result(property="userName", column="user_name"),
+  @Result(property="userPassword", column="user_password"),
+  @Result(property="headImg", column="head_img", jdbcType=JdbcType.BLOB)
+})
+@Select("select * from sys_user where id=#{id}")
+public SysUser selectedById(long id);
+
+// other methods
+@ResultMap("userResultMap")
+@Select({"select * from sys_user"})
+public List<SysUser> selectAll();
+
+```
+
+## auto_inc key
+```java
+@Options(useGeneratedKeys=true, keyProperty="id")
+```
+
+## non auto_inc key
+```java
+@SelectKey(statement="SELECT LAST_INSERT_ID()", keyPRoperty="id",resultType=Long.class, before=false)
+```
+
+## relation mapping
+1 Author has multiple Article, 1 Article only 1 Author
+
+```java
+// author table
+id, name
+// article table
+id, title, content, author_id
+
+// class definition
+public class Article {
+  private Integer id;
+  private String title;
+  private String content;
+  private Author author;
+}
+
+public class Author {
+  private Integer id;
+  private String name;
+  private List<Article> articles;
+}
+
+// link field 'author' in Article to another method
+@Select("select * from article where id=#{articleId}")
+@Result(property="author", column="author_id",
+  one = @One(select="xxx.AuthorMapper.findAuthorByAuthorId"))
+public Article findAritcleWithAuthorByArticleId(@Param("articleId") int articleId);
+
+/** in AuthorMapper */
+@Select("SELECT id, name from author where id=#{authorId}")
+Author findAuthorByAuthorId(int authorId);
+
+// when execuing @Many in select sentence, let id in author input as argument
+@Result(property="articles", column="id",
+  many = @Many(select="xxx.ArticleMapper.findArticleByAuthorId"))
+Author findAuthorWithArticlesByAuthorId(int authorId);
+
+```
+
+
+
+
+
+
 
 
 
