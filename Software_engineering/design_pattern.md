@@ -1,3 +1,8 @@
+# meaning
+- reusable solution to commonly occuring problem within given context in software design
+- only template for how to solve problem
+- intermediate between programming paradigem and concrete algorithm
+
 # types
 ## creational pattern
 create objects while hiding creation logic, rather than instantiating object using new

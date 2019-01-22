@@ -523,6 +523,19 @@ adv
 2. decouple domain design and persistence technology
 3. object access design
 
+## why not DAO?
+DAO has loosely defined interface
+people continuously add method to DAO interface => huge DAO
+
+## repository pattern
+think of repository as collection of things
+use `query()` method, pass criterion to repository, let repository to find this obj/objs 
+  that satisfy my criteria in its own way
+- repo may generate sql against DB if it's backed by DB table
+- 
+### specification pattern
+simple predicate that take domain object, return boolean
+
 
 # Bounded context
 same meaning within boundary

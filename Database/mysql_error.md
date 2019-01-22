@@ -26,5 +26,29 @@ FLUSH PRIVILEGES;
 
 ALTER USER 'root'@'localhost' IDENTIFIED BY 'MyNewPass';
 
+# not allow insert local file data
+reason: not enabled
+solution: 
+add `loose-local-infile=1`
+`set GLOBAL local_infile =1;` in DB
+
+
+# mysql public key retrieval is not allowed
+
+
+# where is my.cnf
+locate my.cnf
+
+
+
+
+
+
+
+
+
+
+
+
 
 

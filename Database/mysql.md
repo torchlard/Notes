@@ -104,6 +104,9 @@ hour, minute, second
 to days, from days
 curdate(), curtime(), now()
 
+===========================
+# import file
+`mysql -u <user> -p<password> <dbname> < /path/to/file.sql`
 
 
 
