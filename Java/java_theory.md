@@ -175,6 +175,38 @@ byte -> short ->
 
 `subGeneric.getClass() == superGeneric.getClass()`
 
+compatibile to:
+ArrayList<Integer> -> List<?> OR <T> ... List<T>
+Integer[] -> <T> ... T[]
+```java
+// compatible to class >= SubType
+Generic<? super SubType> gb;
+// compatible to class <= SubType
+Generic<? extends SubType> gb;
+
+```
+## call
+call is covariant concerning signature
+
+declaration (interface) <- definition class
+    |                           |
+    ----- call (body) ----------
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

@@ -9,6 +9,21 @@ parital application:
 if only call f x y, then got partially-applied function
 * takes >= 2 inputs (fn, x1 ...)
 
+# definitions
+functor :: (a -> b) -> f a -> f b
+applicative :: f (a -> b) -> f a -> f b
+monad :: m a -> (a -> m b) -> m b
+
+
+
+
+
+
+
+
+
+
+
 
 
 

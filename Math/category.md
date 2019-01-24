@@ -2,7 +2,8 @@
 algebraic structure on set A = collection of finitary operations on A
 **algebra** = set A with this structure
 eg. group,ring,field,lattice
-more complex structures defined by introducing mltiple operations, different underlying sets, or altering defining axioms; eg. vector space, modules, algebras
+more complex structures defined by introducing multiple operations, 
+  different underlying sets, or altering defining axioms; eg. vector space, modules, algebras
 
 
 # Group like structure
@@ -18,11 +19,13 @@ loop          | y        |               | y        | y             |
 semigroup     | y        | y             |          |               |
 monoid        | y        | y             | y        |               |
 group         | y        | y             | y        | y             |
+abelian group | y        | y             | y        | y             | y
 
 # category
 algebraic structure ~group without inverse/closure
-ability to compose arrow associatively & existence of idntity arrow for each object
-eg. category of set: object=set, arrow=function
+ability to compose arrow associatively & existence of identity arrow for each object
+eg. category of set: object = set, arrow = function
+eg. category of type: object = type, arrow = type1->type2
 
 ## category theory
 seek to generalize all mathematics in terms of category, independent of what objects and arrows represent
@@ -37,7 +40,7 @@ class hom(C) of morphisms/arrows/maps between objects
   f: a->b, "f is morphism from a to b"
   hom(a,b)
 compositon of morphism: hom(a,b) x hom(b,c) -> hom(a,c)
-  eg. f:a->b, g:b->c =>  g∘f 
+  eg. f:a->b, g:b->c =>  g∘f: a->c
 
 such that following axioms hold:
 associativity: 
@@ -45,7 +48,6 @@ associativity:
 identity:
   for every object x, there exists morphism id_x: x->x ; "identity morphism for x"
   f:a->x, g:x->b => id_x∘f=f, g∘id_x=g
-abelian group | y        | y             | y        | y             | y
 
 # partial function
 parital function X to Y: function f:X'->Y for some proper subset X' of X 
@@ -82,6 +84,11 @@ function: mapping among proper types
   eg. Int => String ; List[T] => Set[T]
 
 functor: mapping among category (can treat category as higher kind type )
+
+# definitions
+functor :: (a -> b) -> f a -> f b
+applicative :: f (a -> b) -> f a -> f b
+monad :: m a -> (a -> m b) -> m b
 
 
 
