@@ -88,6 +88,7 @@ Stream.of("a","c",null,"d")
       .forEach(System.out::println);
 
 ```
+
 ## Optional
 ```java
 public String getUserName(User user){
@@ -362,8 +363,54 @@ findFirst, findAny, iterator
 anyMatch, allMatch, noneMatch, findFirst
 
 
+# simulate default paramter
+1. method overloading
+2. Varargs
+3. Nulls
+4. Optional class
+5. Builder pattern
+```java
+class Foo {
+  private final String a;
+  private final Integer b;
+
+  Foo(String a, Integer b){
+    this.a = a;
+    this.b = b;
+  }
+  // ...
+}
+class FooBuilder {
+  private String a = "";
+  private Integer b = 0;
+  FooBuilder setA(String a){
+    this.a = a;
+    return this;
+  }
+  FooBuilder setB(Integer b){
+    this.b = b;
+    return this;
+  }
+  Foo build(){
+    return new Foo(a,b);
+  }
+}
+
+Foo foo = new FooBuilder().setA("a").build();
+```
+6. Maps
 
 
+# annotation
+auxiliary object, itself has effect
+its effect depedns on object that annotation rely on 
+
+at compile time, compiler check elements of annotation
+eg. @Override, @Deprecated, @SuppressWarnings
+
+## 
+@SuppressWarnings("unchecked")
+- tell compiler that we are doing sth legal about generic
 
 
 

@@ -131,6 +131,52 @@ change ref relation among objects
 
 
 
+# type compatibility
+compatible if possible to transfer data from type T1 -> T2
+eg. short -> int , but boolean --x-> int
+Integer -> Number, becoz Number is (abstract) superclass of Integer
+
+`short_variable = (short) int_variable`
+
+`integer_var = (Integer) number_variable`
+Integer `implicitly` compatible to Number
+Number `explicitly` compatible to Integer
+
+## dependency
+array type `int[]` depends on primitive type `int`
+`ArrayList<Customer>` dependent on `Customer`
+`void increment(Integer i)` depends on type `Integer`
+
+## covariance, contravariance
+variance: directed relation
+covariance: different in same direction
+T1 -> T2 => A(T1) -> A(T2)    { => : implies, -> : compatible to }
+eg. Integer -> Number => Integer[] -> Number[]
+- implicit covariant: numberArray = integerArray
+- explicit covariant: integerArray = (Integer[]) numberArray
+
+contravariance: diferent in opposite direction
+T1 -> T2 => A(T2) -> A(T1)
+
+##
+in Java, array types, parameterized types are type-dependent elements
+
+dependent elements
+- methods
+- types
+  - array types
+  - generic types
+
+Java compiler allow implicit compatibility if
+- no danger of losing information & no loss in precision
+
+        char --> int -> long -> float -> double
+byte -> short -> 
+
+`subGeneric.getClass() == superGeneric.getClass()`
+
+
+
 
 
 

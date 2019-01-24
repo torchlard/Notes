@@ -9,8 +9,10 @@ create objects while hiding creation logic, rather than instantiating object usi
 
 1. Abstract factory
 class requests object created from factory object
+- abstract relation among objects, say clothes and weapon are independent, but realated by person
 2. Factory
 centralize object creation of specific type by choosing one of several implementation
+- focus on how to create an objet
 3. Builder
 same construction process create different representation
 4. Dependency Injection
@@ -23,6 +25,18 @@ avoid expensive acquisition and release of resource by recycling object not in u
 object type determined by prototypical instance, clone to produce new object
 8. Singleton
 restrict instance of class to one object
+- provide unified method of accessing that object
+- avoid wasting much resource
+
+### builder VS Abstract factory
+Builder: focus on constructing complex object step by step
+- oftern build composite
+- wrapper obj around all possible paramter might want to pass
+Abstract factory: family of product objects (simple/complex)
+- wrapper around constructor
+
+Builder -> Abstract Factory / Prototype / Builder
+
 
 ## Structural pattern
 concern class and object composition. use inheritance to compose interface, define ways to
