@@ -71,6 +71,9 @@ construct category Hask, take example of List, we get
 `List[A], List[List[A]], List[List[List[A]]] ...`
 the results of these mapping are also Hask category, so it's endofunctor
 
+## dual
+for every category C you can create opposite category C_op
+- by doing all same thing but reversing all arrows
 
 ## monad
 monad in X is just monoid of endofunctors of X
@@ -89,6 +92,29 @@ functor: mapping among category (can treat category as higher kind type )
 functor :: (a -> b) -> f a -> f b
 applicative :: f (a -> b) -> f a -> f b
 monad :: m a -> (a -> m b) -> m b
+
+## no Cofunctor in haskell
+class Functor f where
+    fmap :: (a -> b) -> (f a -> f b)
+
+class Cofunctor f where
+    cofmap :: (b -> a) -> (f b -> f a)
+
+## comonad
+class Functor w => Comonad w where
+  extract :: w a -> a
+  duplicate :: w a -> w (w a)    
+  extend :: (w a -> b) -> w a -> w b
+
+
+
+
+
+
+
+
+
+
 
 
 

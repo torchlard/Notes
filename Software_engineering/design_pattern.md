@@ -73,7 +73,10 @@ class functioning as interface to another thing
 
 
 ## Behavioral pattern
-concern with communication between objects, increase flexibility carrying out communication
+concern with communication between objects
+increase flexibility carrying out communication
+- how to assign responsibilities between objects 
+- to manage complex control flow that is difficult to follow at runtime
 
 1. chain of responsibility
 command object handled / passed on to other objects 
@@ -107,6 +110,19 @@ algorithm selected on fly using composition
 algorithm selected on fly using inheritance
 16. visitor
 separate algorithm from an object
+
+### choice
+1. use inheritance to distribute behavior
+template probide abstract definition; Interpreter represent grammar as class hierarchy
+2. use composition
+Mediator(adapter) avoid strong coupling among objects
+Chain of Responsibility even looser coupling, send request to object implicitly throught chain of candidate objs
+3. state change
+Observer define and maintain dependency between objects, eg. MVC
+4. encapsulate behavior in object, delegate request
+Strategy encapsulate algorithm; Command encapsulate request
+State encapsulate state of object
+Visitor encapsulate behavior distributed across class
 
 ## concurrency pattern
 design pattern deal with multi-threaded environment
