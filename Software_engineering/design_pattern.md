@@ -82,8 +82,11 @@ increase flexibility carrying out communication
 command object handled / passed on to other objects 
 2. command
 command object encapsulate action and its parameter
+- command implementation choose method to invoke on receiveer obj
+- change Command implementation without changing clien code
 3. interpreter
 implement specialized computer language to solve specific problems
+- ~ DSL
 4. iterator
 iterators used to access elements of an aggregate object sequentially without exposing its representation
 5. mediator
@@ -104,12 +107,14 @@ optimize implementation of visitor allocated, used only once and then deleted
 recombine business logic in boolean fashion
 13. state
 for object to change its type at runtime
+- change state and do action based on state
 14. strategy
 algorithm selected on fly using composition
 15. template method
 algorithm selected on fly using inheritance
 16. visitor
-separate algorithm from an object
+- perform operation on group of similar kind of Objects
+- move operational logic from an object to another class
 
 ### choice
 1. use inheritance to distribute behavior
@@ -178,6 +183,7 @@ runtime redirection
 # Observer pattern
 3 actor class: Subject, Observer, Client
 Subject: object having methods to attach / detach observers to a client object
+Observer: method to set object to watch, another method used by subject to notify them 
 
 
 
