@@ -29,18 +29,21 @@ ALTER USER 'root'@'localhost' IDENTIFIED BY 'MyNewPass';
 # not allow insert local file data
 reason: not enabled
 solution: 
-add `loose-local-infile=1`
-`set GLOBAL local_infile =1;` in DB
+add `loose-local-infile=1` in mysql.cnf
+restart mysql service
+`SET GLOBAL local_infile = 'ON';` in DB
+for DBeaver, add in driver url config
 
 
 # mysql public key retrieval is not allowed
-
+change db setting
 
 # where is my.cnf
 locate my.cnf
 
-
-
+# SQL Error [3009] [HY000]: Column count of mysql.user is wrong
+reason: incompatible version?
+solution: mysql_upgrade --force -uroot -p
 
 
 

@@ -49,7 +49,7 @@ alter table student change job job1 char(20);
 alter table student drop column job;
 
 insert into student(name,sex,job1) values("io","D","horsing");
-updat student set name="kvl",sex="M" where name="kl2";
+update student set name="kvl",sex="M" where name="kl2";
 delete from student where name="io";
 delete from student;    (delete all)
 

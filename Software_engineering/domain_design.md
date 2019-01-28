@@ -523,6 +523,15 @@ adv
 2. decouple domain design and persistence technology
 3. object access design
 
+## goal
+specify requirement as input, output as SQL (via any ORM / library)
+
+## anti-pattern
+1. no ad hoc query
+don't open to modification, don't define generic query to support multiple query type 
+2. don't use aggregate to do report
+repository is for single aggregate
+
 ## why not DAO?
 DAO has loosely defined interface
 people continuously add method to DAO interface => huge DAO
