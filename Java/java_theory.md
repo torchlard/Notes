@@ -204,14 +204,53 @@ different levels
 3. cache config value, system check if config file changed; if changed, get latest value
 4. use JMX concentrate all config in class, write MBean, start config
 
+# Monitor
+monitor: 
+- mechanism to control concurrent access to an object
+- synchronization mechanism placed at java.lang.Object
+- wait(), notify() 
+
+
+
+
 # JMX
+Remote Management Level: 
+- JMX console, specific console, web browser, SNMP console
+  > remtoe access entry point
+- connector, adaptor (for RMI, SNMP, IIOP, HTML, HTTP)
+Agent Level:
+- MBeanServer
+  > resource registration, management
+Probe Level:
+- Standard MBean
+  > define attribute, method, time to implement interface
+- Dynamic MBean
+  > all method, attr defined in runtime
+- open MBean
+  > improving...
+- model MBean
+  > use RequiredModelMBean, implemented DynamicMBean
 
+## MBean
+Object Name: id of MBean
+Domain Name = package name
+key properties
+`MyDomain:description=Printeer,type=laser`
 
+## Agent service
+dynamic loading service: download 
 
+monitor attribute change of MBean, if changes exceed range, emit notification
+- Counter Monitor: integer, can use offset
+- Gauge Monitor: integer, floating point
+- String Monitor: string
 
+JMX notification -> MonitorNotification
+- attr name, measured value, triggered threshold
+  - jmx.monitor.counter.threshold, jmx.monitor.gauge.high ... 
 
-
-
+relation service
+- define relation between component
 
 
 

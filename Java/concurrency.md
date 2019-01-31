@@ -1,3 +1,24 @@
+# core principle of concurrency
+2 core: JMM, happen-before rule
+3 properties: atomicity, visibility, ordering
+
+# JMM memory barrier
+1. LoadLoad barrier: load1 before load2
+2. StoreStorebarrier: store1 before store2
+3. LoadStore Barrier: load1 before store2
+4. StoreLoad Barrier: store1 before load2
+JMM insert barrier instructioin at certain position to stop rearrangement
+
+| rearrange?     |              2nd operation                 |
+| 1st operation  | normal RW | volatile read | volatile write |
+| -------------- | --------- | ------------- | -------------- |
+| normal RW      |           |               | NO             |
+| volatile read  | NO        | NO            | NO             |
+| volatile write |           | NO            | NO             |
+
+StoreStore; volatile write; StoreLoad;
+volatile read; LoadLoad; LoadStore;
+
 # synchronized
 can act on block, method, code segment
 - restrict only 1 thread access at the same time
@@ -36,8 +57,8 @@ String lock = "";
 synchronized(lock){ ... }
 ```
 
-
-# CAS
+## synchronized optimization
+### CAS
 Compare and swap
 if value in memory match with expected => 
   then replace with new value, else do nothing
@@ -45,6 +66,60 @@ if value in memory match with expected =>
 use loop to continuously get value in memory, 
   if it is not what we expect, then extract new one and calc again
   if is expected one, then overwrite old value
+
+Synchronized VS CAS : blocking synchronous VS non-blocking synchronous
+- CAS will not suspend anyway, but certain trial after failure
+
+#### CAS problem
+1. if old value A->B->A in short time, think that old value not chagned
+- solution: optimistic lock
+2. spinning time too long
+3. aotmic variable
+- CAS cannot ensure atomicity when multiple atomic variable
+- solution: use atomic class with multiple variables (AtomicReference)
+
+### Java object header
+fields: lock state, hashCode, baised lock, generation age, lock identifier
+level: no lock < baised-lock < lightweight lock < heavyweight lock
+lock can only upgrade, not downgrade
+
+#### baised lock
+when thread get lock, store thread ID in header, start CAS once 
+-> later thread enter and exit synchronized block don't need CAS
+-> if already get lcok, just enter
+when competition occurs, CAS faield -> that thread release lock
+
+#### lightweight lock
+T1 access sync block -> CAS success -> Mark World point to T1 -> execute block
+T2 run CAS fail -> spinning acquire lock fail -> lock upgrade to heavyweight lock -> blocking
+T1 CAS fail -> release lock -> waiting
+T1,T2 notified, compete enter block
+
+#### comparison
+baised lock
+- adv: nano second extra cost compared to no lock
+- disadv: extra cost when competition
+- usage: single thread access
+
+lightweight lock
+- adv: competition thread non-blocking
+- disadv: spinning, waste CPU
+- usage: faster response time, sync block execute rapidly
+
+heavyweight lock
+- adv: no spinning, not consume CPU
+- disadv: blocking, slow
+- usage: high throughput, long time running block
+
+# volatile
+ensure every thread can get latest value from variable, avoid dirty read
+- send lock prefix command when write to `volatile` variable
+Lock prefix command:
+1. write processor cache to memory
+2. invalidate old value cached in other processors
+
+
+
 
 # ThreadLocal
 threadLocal is data structure, like hash map, each keep 1 map
@@ -78,6 +153,7 @@ if ThreadLocal keep running, Entry value will not be collected
 
 when calling get(),set() -> clear null key's Entry -> no GC Root access -> collected
 call remove() after use
+
 
 # operations
 ## interrupt
