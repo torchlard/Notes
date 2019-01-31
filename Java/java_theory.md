@@ -190,8 +190,21 @@ call is covariant concerning signature
 
 declaration (interface) <- definition class
     |                           |
-    ----- call (body) ----------
+    -------- call (body) --------
 
+# JMM (Java memory model)
+restrict how processor and compiler rearrange instructions
+- prohibit some rearrangement that will fail under multi-threading environment
+- keep happen-before rules
+
+# paramter changing strategy
+different levels
+1. hard code parameter in code; if change, change code and recompile
+2. config in file (properties) and restart system
+3. cache config value, system check if config file changed; if changed, get latest value
+4. use JMX concentrate all config in class, write MBean, start config
+
+# JMX
 
 
 

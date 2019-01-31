@@ -126,6 +126,22 @@ Future: cancel, query Runnable, Callable tasks, get result
 boolean: cancel, isCancelled, isDone
 Type: get(), get(timeout, unit)
 
+## Thead VS Runnable
+when extends Thread class, no chance of extending any class
+if implement Runnable, can extend other class
+
+## sync execution
+```java
+Thread t1 = new ThreadA();
+Thread t2 = new ThreadA();
+t1.start();
+t2.start();
+```
+## async execution
+```java
+Thread t1 = new Thread()
+```
+
 # IO
 based on stream, flow of data from writer to reader
 abstract class: 
@@ -413,7 +429,10 @@ eg. @Override, @Deprecated, @SuppressWarnings
 - tell compiler that we are doing sth legal about generic
 
 
-
+# notation
+## %n VS \n
+%n: platform independent
+\n: only applied to *nix platform
 
 
 

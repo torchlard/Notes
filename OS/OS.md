@@ -618,7 +618,7 @@ wait(semaphore *S) {
 }
 
 signal(semaphore *S){
-  S->value++;
+  S->value++;Signals
   if(S->value <= 0){
     remove process P from S->list;
     wakeup(P);

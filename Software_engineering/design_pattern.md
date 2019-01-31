@@ -179,6 +179,7 @@ Client -> Target -> Adapter -> Adaptee
 # Decorator
 subclass is compile-time operation, cannot be changed
 runtime redirection
+- inheritance, composition fixed at compile time
 
 # Observer pattern
 3 actor class: Subject, Observer, Client

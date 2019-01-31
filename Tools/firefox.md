@@ -1,5 +1,8 @@
+
 # inspect browser element
-browser toolbox
+browser toolbox (allow in setting in inspector first)
+
+change .mozilla/firefox/xxx.default/chrome/userChrome.css
 
 ```css
 #titlebar, #tabbrowser-tabs {
@@ -21,8 +24,17 @@ browser toolbox
   margin: 0px 5px !important;
 }
 
+.tabbrowser-tabpanels { background-color: black !important; }
+
+@-moz-document url("about:newtab") {
+  body { background-color: #303030 !important;}
+}
+
+.browserContainer { background-color: #2b2b2b !important; }
 ```
 
+setting in about:config
+`browser.display.background_color`
 
 
 

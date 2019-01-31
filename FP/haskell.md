@@ -1,3 +1,7 @@
+# install hie
+https://oomusou.io/haskell/hie/
+
+=======================
 # module
 if module not found, use `cabal list <module-name>` to find corresponding module
 and `cabal install <module>` to install it.
