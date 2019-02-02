@@ -1,3 +1,6 @@
+# type value size
+since all primitive type occupy same space, Java program is more cross-platform
+
 ## type of JVM
 HotSpot VM
 J9 VM
@@ -267,9 +270,8 @@ size of memory collected in unit time
 reduce fragmented memory space
 
 
-
-
 # JIT (just in time compilation)
+- slower if everything load from .class, better to precompile some in machine code first
 methods get compiled
 compilation is expensive
 JIt faster than interpreter?

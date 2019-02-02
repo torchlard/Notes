@@ -2,22 +2,42 @@
 2 core: JMM, happen-before rule
 3 properties: atomicity, visibility, ordering
 
-# JMM memory barrier
-1. LoadLoad barrier: load1 before load2
-2. StoreStorebarrier: store1 before store2
-3. LoadStore Barrier: load1 before store2
-4. StoreLoad Barrier: store1 before load2
-JMM insert barrier instructioin at certain position to stop rearrangement
+# properties
+## atomicity
+all success / all fail
+```java
+// atomic
+int a = 10; 
+// not atomic
+a++;
+int b = a;
+a = a+1;
+```
+JMM atomic operation
+1. lock: main memory
+2. unlock: main memory
+3. read: variable main -> worker memory
+4. load: value from read -> worker memory
+5. use: worker memory's variable -> execution
+6. assign: value from execution -> worker memory
+7. store: worker -> main memory
+8. write: value from store -> main memory
 
-| rearrange?     |              2nd operation                 |
-| 1st operation  | normal RW | volatile read | volatile write |
-| -------------- | --------- | ------------- | -------------- |
-| normal RW      |           |               | NO             |
-| volatile read  | NO        | NO            | NO             |
-| volatile write |           | NO            | NO             |
+lock & unlock operation not opened to programmer
+-> expose monitorenter, monitorexit command
+=> `synchronized`
 
-StoreStore; volatile write; StoreLoad;
-volatile read; LoadLoad; LoadStore;
+## ordering
+within thread, all operations ordered; 
+from 1 thread observe another thread, all operations unordered
+- goal is to ensure JMM block invalid reordering
+
+## visibility
+when 1 thread changes shared variable, other thread immediately knows the modification
+
+synchronized: atomicity, ordering, visibility
+volatile: ordering, visibility
+
 
 # synchronized
 can act on block, method, code segment
@@ -118,6 +138,78 @@ Lock prefix command:
 1. write processor cache to memory
 2. invalidate old value cached in other processors
 
+## JMM memory barrier
+1. LoadLoad barrier: load1 before load2
+2. StoreStorebarrier: store1 before store2
+3. LoadStore Barrier: load1 before store2
+4. StoreLoad Barrier: store1 before load2
+JMM insert barrier instructioin at certain position to stop rearrangement
+
+| rearrange?     |              2nd operation                 |
+| 1st operation  | normal RW | volatile read | volatile write |
+| -------------- | --------- | ------------- | -------------- |
+| normal RW      |           |               | NO             |
+| volatile read  | NO        | NO            | NO             |
+| volatile write |           | NO            | NO             |
+
+StoreStore; volatile write; StoreLoad;
+volatile read; LoadLoad; LoadStore;
+- target: to stop all possible prohibited rearrangement according to table
+
+# final
+JMM prohibit rearrange to outside of constructor
+`final xxx; StoreStore;`
+
+primitive type:
+1. final wirte: stop final write and constructor rearrange
+- when that object visible to all thread, that final field already initialised
+2. reference data type
+
+pre-requisite: constructor cannot be seen by other threads, no overflow allowed
+
+
+# AbstractQueuedSynchronizer
+int field for sync state `private volatile int state;`
+FIFO for waiting queue
+
+subclass must rewrite methods that changes sync state
+state change method:
+- getState, setState, compareAndSetState
+
+abstract class only defined several sync state acquire and release
+- allow monopoly / shared way
+
+Lock: for user, defined interface how user interact with lock; hide detail
+Synchronizer: for lock implementation, simplified how lock implement
+- hide sync state manage, thread queue, wait, notify
+- subclass responsible for sync semantic
+
+## template design pattern
+tryAcquire: exclusively get sync state, CAS
+tryRelease: exclusively release
+
+tryAcquireShared: if >0 then success; else fail
+tryReleaseShared: release sync state
+isHeldExclusively: check if synchornizer used exclusively (normally current thread)
+
+acquire: exclusively acquire sync state; if success then return; else enter waiting queue -> tryAcquire
+acquireInterruptibly: if interrupted then InterruptedException
+tryAcquireNanos: timeout
+acquireShared: if fail then enter waiting queue
+acquireSharedInterruptibly
+tryAcquireSharedNanos
+
+release: exclusively release
+releaseShared
+getQueuedThreads
+
+## implementation
+Node: waitStatus, prev, next, thread, nextWaiter
+Status: 
+- CANCELLED, SIGNAL(notify waiting threads)
+- CONDITION (enter waiting queue), PROPAGATE(sync state propagate anyway), INITIAL
+
+doubly-linked list
 
 
 
@@ -187,6 +279,42 @@ public void inc1(){
 ```
 reentrant synchronization: 
 thread acquire lock that it already owns -> acquire lock more tham once
+
+# Locks
+## Reentrant lock
+support lock n times, need unlock n times also to exit sync state
+fair lock: order of acquiring lock follow FIFO order
+- need frequently switch context
+unfair lock: not follow FIFO
+- higher throughput, default choice
+
+## ReadWrite lock
+for scenario of many read few write, certain dirty read not affect data correctness
+- read write allow multiple thread read same time; all read,write thread blocked for write access
+
+### ReadWrite reentrant lock
+1. fair / unfair
+2. reentrant
+3. lock downgrade: write lock -> read lock, no upgrade
+
+# Condition
+Condition work with Lock to finish waiting/inform mechanism
+Condition, Lock is language level, higher extensibility and controll
+1. Condition support interrupt, Object not support
+2. Condition support multi queue, Object only 1
+3. supoort timeout, Object not
+
+for Object's wait():
+- await(), awaitNanos(time), await(time, unit), awaitUntil(deadline)
+
+for Object's notify/notifyAll():
+- signal(), signalAll()
+
+# Exchanger
+wehn 1 thread executing, wait for anotehr thread alsoexecute this method => achieve sync
+
+
+
 
 # Atomic access
 atomic RW for reference variables, most primitive veriables (except long, double)
@@ -283,7 +411,8 @@ basic thread blocking primitives for creating locks and other synchronization cl
 - park() return immediately if permit available; otherwise blocked
 park -> block ; unpark -> unblock
 
-
+# Semaphore
+permit control number of concurrent access
 
 
 

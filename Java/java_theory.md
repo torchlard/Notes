@@ -11,6 +11,9 @@ OracleJDK
 OpenJDK
 Zulu build of OpenJDK: from Azul Systems company
 
+## OpenJDK VS OracleJDK
+OpenJDK almost same code as OracleJDK
+OracleJDK has more bug fix, more testing and stable
 
 # IO
 synchronous not equal to blocking
@@ -253,7 +256,34 @@ relation service
 - define relation between component
 
 
+# interface VS abstract
+1. interface method default public, can have default implementation
+2. 1 class at most extend 1 abstract class; but multiple interface
+3. class must implemnt all method in interface, not a must in abstract
 
+# class variable VS local variable
+1. class variable belongs to class, local variable belongs to method
+2. life time follow class / method
+3. class variable has default initial value; local variable no auto assign value
+
+# == VS equals
+==: 
+- non-primitive obj: determine if equal address, ie. if same object
+- primitive object: compare value
+equals: 
+- if not defined equals, then evaluate ==
+- if defined equals, then compare content in objects
+
+# Error handling
+Error: error that program cannot handle
+- VirtualMachineError
+- AWTError
+Exception: error that program can handle
+- IOException
+- RuntimeException
+
+Throwable
+- getMessage, toString, getLocalizedMessage
 
 
 

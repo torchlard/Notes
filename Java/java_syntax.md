@@ -329,10 +329,22 @@ eg. call Math.sin(x)
 
 static is in fact global function
 
+## variables
+1. class variable
+- must be initialised in `static` block / xvariable declaration
+2. instance variable
+- must be non-static init block / variable instance declaration / constructor
+
+
 # final
 functionality
 1. const for variable
 2. cannot inherit for class and method -> destination
+3. can be overloaded
+for object, it only keep reference constant, but you can change field value
+
+wrapper class (Integer, Boolean ...) and String are final
+
 
 # == VS equals
 == : compare if same object
@@ -362,7 +374,7 @@ periodic:
 0 to 127 -> -128 to -1 -> 0 to 127 -> ...
 
 # StringBuilder
-StringBuffer: thread-save, less efficient
+StringBuffer: thread-save (with lock), less efficient
 StringBuilder: not thread-save, ~StringBuffer, most efficient
 +: normal string concat, order of magnitude least efficient
 
@@ -433,6 +445,10 @@ eg. @Override, @Deprecated, @SuppressWarnings
 ## %n VS \n
 %n: platform independent
 \n: only applied to *nix platform
+
+# Javax & java
+javax already becomes part of standard Java API, no difference
+
 
 
 
