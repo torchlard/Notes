@@ -17,21 +17,36 @@ Event bus
 event-driven, non-blocking reactive application on JVM
 handle lot of concurrency using small number of kernel threads
 
+## Golden rule
+don't block event loop
+example of block:
+- Thread.sleep(), wait on lock, wait on mutex/monitor
+- long lived database operation, waiting for result
+- spinning
+
 ## Vertx core
 basic funcionality support HTTP, TCP, file system access
 
 # Verticle
+(optional)
 unit of deployment in Vert.x, executed within Vertx instance
 encapsulate code for different need
 every Vertx instance has N number of event loop (default core*2)
+communicate with each other though event bus
 
 ## types
 standard verticles
-- execute by event loop thread
+- always execute by event loop thread
+- guarantee all code executed on same event loop
+  - => can write all code as single threaded, let Vertx worry about threading & scaling
 worker verticles
-- 
+- thread from worker pool, instance run in only 1 thread
 multi-threaded worker verticles
+- thread from worker pool, instance run concurrently >1 thread
+- (most application don't need this)
 
+# Polyglot
+multi-language
 
 # concurrency
 verticle instance assigned thread/event loop
@@ -55,13 +70,7 @@ write all code assume single threading
 2. P2P
 3. immutable state
 - vertx shared state
-4. 
 
-# Message type
-string, boolean
-primiives, boxed primitives
-JsonObject
-Buffer
 
 # Event loop
 ## Reactor pattern
@@ -81,11 +90,59 @@ some work is naturally blocking
 - communicate using event bus
 
 
+# Rx in Vertx
+## intro
+```java
+for(int x; x<list.size(); x++){
+
+}
+// Iterator pattern
+for(Element elem: list){
+
+}
+// ---
+Iterator iterator = list.iterator();
+while(iterator.hasNext()){
+
+}
+// stream API
+list.stream().map(elem -> ...);
+
+// everything in vertx can be Rxified, make reactive
+Filesystem fileSsytem = vertx.fileSystem();
+fileSystem.open("/data.txt", new OpenOptions(), result -> {
+  AsyncFile file = result.result();
+  Observable<Buffer> observable = RxHelper.toObservable(file);
+  observable.forEach(data -> System.out.println("Read data: "+ data.toString("UTF-8"));
+})
 
 
+```
 
+# Cluster manager
+- discovery and group membership of vertx nodes
+- maintain cluster wide topic subscriber lists
+- distributed map support
+- distributed locks
+- distributed counters
 
+inter-node transport by TCP connection
+default manager: Hazelcast
 
+# Event Bus
+single event bus instance for every Vertx instance
+even allow client-side JS run in browser to communicate on same event bus
+
+support
+- publish/subscribe
+- requset-response message 
+- point-to-point
+
+## message type
+string, boolean
+primiives, boxed primitives
+JsonObject
+Buffer
 
 
 

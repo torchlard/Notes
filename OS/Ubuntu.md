@@ -36,8 +36,8 @@ at /usr/local/applications, search that app's .desktop file
 change line in Exec to
 `Exec=env GTK_THEME=Adwaita:light <original command>`
 
-
-
+# add existing user to group
+usermod -a -G examplegroup exampleusername
 
 
 

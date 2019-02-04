@@ -102,12 +102,46 @@ theoretically no size restriction
 
 GET and POST are the same, except GET in url, POST in body
 
-
-
 # Content Negotiation
 decide to show eng/chi version page
 things to consider:
 accept, accept-charset, accept-encoding, accept-language, content-language
+
+# Forward VS Redirect
+Forward: server action
+Redirect: client action
+
+forward: 
+- use `RequestDispatcher`'s `forward(req, res)` implement
+- eg. `request.getRequestDispatcher("login_success.jsp").forward(request, response)`
+
+redirect: 
+- use server's status code
+- if server return 301/302, then browser will go to new website request resource again
+
+address bar: 
+- server directly access target address URL, return response to browser
+- browser don't know where data come from
+- redirect tell browser to request new address again, address bar show new address
+
+data sharing:
+- forward can share data in request, redirect cannot
+
+usage:
+- forward: when client login, navigate to corresponding module by role
+- redirect: used when user cancel login, return to main page / jump to other website
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

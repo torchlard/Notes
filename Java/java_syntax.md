@@ -450,7 +450,11 @@ eg. @Override, @Deprecated, @SuppressWarnings
 javax already becomes part of standard Java API, no difference
 
 
-
+# &,&&  |,||
+& : binary operator
+&& : and
+| : binary operator
+|| : or
 
 
 

@@ -194,6 +194,142 @@ thin client, only download entire header data
 
 
 
+# blockchain concensus
+## objective
+agreement
+collaboration
+co-operation
+equal rights
+everyone participate
+equally active
+
+## types
+Proof Of Work
+
+Proof of stake
+Delegated PoS
+Leased PoS
+
+Proof of Elapsed Time
+
+Practical Byzantine fault tolerance
+Simplified BFT
+Delegated BFT
+
+Directed Acyclic graphs
+proof of activity
+proof of importance
+proof of capacity
+proof of burn
+proof of weight
+
+## Proof of work
+too complicated: take lot of time to generate block
+too easy: DDoS attack
+
+fair deal of difficulty for hackers
+make hackers difficult to change chain
+no miner can have overall control
+
+### issues
+huge energy consumption, high cost
+centralization of miners
+51% attack
+
+## Proof of stake
+implementations: ethereum, decred, peercoin
+new block depend on user's wealth
+blocks are forged/minted
+forgers: validate transaction, create new block
+
+### process
+forger first put coin at stake, more coin higher chance to create block
+forger get reward / transaction fee
+
+#### randomized block selection
+find lowest hash value + size of stake
+
+#### coin age based selection
+num coin being staked * #days coin held as stake
+coins unspent for >= 30 days
+once coin used sign block => coin age = 0
+age max = 90 days
+
+hash(block_header) < target * coinAge
+larger coinAge, more hash possible
+
+### PoS pooling
+if stake amount too high, can join pool, earn profits
+1. loan coin to another user in pool, share profit with you
+2. join pool yourself
+
+### benefit
+no strong hardware needed, energy saving
+reduce threat 51% attack
+
+### drawback
+Nothing at stake
+- forger can vote both sides of every fork that happen, no cost fork
+
+### Casper protocol
+forgers stake portion of Ethers as stake
+validate block by placing bet on it
+block appended => validator get reward proportion to bet
+malicious block => punish, all stake lost
+
+## Delegated PoS
+holder vote to elect witness to do block generation and trans, validate on their behalf
+vote group of 'delegates' 
+- overseee overnance & performance of entire blockchain
+- not in transaction validation, block production
+
+21-100 elected witness in DPoS
+witness shuffled periodically
+designated timeslot to publish block 
+if witness fail to generate block/publish invalid transaction => vote it out
+longest chain wins
+
+take turn produce block every 3s
+invalid for block producer to produce block at other timeslot
+
+1/3 node can be malicious/malfunction => minority fork
+minority form produce every 9s ; majority fork every 2 blocks/ 9s
+
+## Byzantine fault tolerance
+10 divisions army outside city, each division 1 general
+general communicate each other, decide common action
+some generals are traitors
+1 Commander, rest are subordinates
+
+### objective
+good plan: >= 6 attack/retreat
+bad plan: <= 5 attack, >=1 retreat
+
+### process
+default = 'retreat'
+
+corollary 1: if 3 process, cannot deal with 1 faulty
+corollary 2: no solution < 3m+1, m = #traitor
+
+assumption:
+1. every msg sent delivered correctly
+2. receiver of msg knows who sent it
+3. absence of msg can be detected
+
+### Oral msg algorithm
+OM(0)
+- commander sent value to every lieutenant
+- every lieutenant use the value
+
+OM(m), m>0
+- commander sent value to each lieutenant
+- for each i, vi = value lieutenant i get from commander 
+- lieutenant i as commander, send vi to n-2 other lieutenants [OM(m-1)]
+- vj = value lieutenant i get from other lieutenant j [OM(m-1)]
+- lieutenant i use majority voting
+
+O(n^m) expensive
+
 
 
 
