@@ -7,8 +7,9 @@ multi level cache
 - system cache
 - router cache
 - IPS server cache
-- root name server
-
+- root domain: .
+- top-level domain: edu, goc, com, net
+- second-level domain: nsu, mit, google, att
 
 
 
