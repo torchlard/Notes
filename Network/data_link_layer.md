@@ -81,6 +81,9 @@ every node sees all frames
 frame require address to identify intended node
 
 
+# MAC
+physical address: vendor hardcode in network card, unique worldwide
+48 digits
 
 
 

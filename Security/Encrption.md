@@ -37,6 +37,8 @@ if sender use private key, receiver use public key to decrypt,
 
 
 # RSA
+- private key exchange protocol
+  
 theorem: N^(ED) mod(M) = N
 C = N^E mod(M)
 
@@ -58,6 +60,18 @@ if only know M, difficult to find P and Q
 recommend 768 bits long modulus, key size 1024-4096 
 
 no quick algorithm found to factorize large number M
+
+
+# DH (Diffie-Hellman)
+- private key negotiation protocol
+assume algorithm = 100*n, then public_key=100
+
+1. Alice generate random=5, output=100*5=500
+2. Bob generate random=6, output=100*6=600
+3. exchange 500, 600 without encryption
+4. Alice calc (own private)*(received)=5*600=3000
+5. Bobl calc (own private)*(received)=6*500=3000
+6. shared private key = 3000, use it for encryption
 
 
 # Watermark
