@@ -457,6 +457,26 @@ javax already becomes part of standard Java API, no difference
 || : or
 
 
+# hashcode
+typically use memory address -> hash
+sometimes hash collision => even same hash don't mean same object
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

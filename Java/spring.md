@@ -108,7 +108,21 @@ choose between Type and constructor automatically
 # Inheritance
 to save time, allow bean inheritance, override value of any properties on child bean
 
+# *Aware interface
+ApplicationContextAware
+BeanFactoryAware
+BeanNameAware
+ResourceLoaderAware
+ServletContextAware
+ServletConfigAware
+
+
 # Bean
+## meaning
+create bean definition, like formula
+similar to class, can instantiate multiple instance, injection config value and dep.
+control scope different from java class scope
+
 - receive notification from Spring container
 - make beans spring aware
 interact with ApplicationContext instance that configure it
@@ -138,7 +152,7 @@ annotation-based
 
 ### process
 - Bean instantiation, DI
-scan XML/annotated class/Java config class -> create bean instance -> inject bean dep
+scan XML/annotated class/Java config class -> create bean instance -> inject bean depen.
 
 - Spring Awareness
 BeanNameAware[setBeanName()] -> BeanClassLoaderAware[setBeanClassLoader()] -> ApplicationContextAware[setApplicationContext()]
@@ -291,10 +305,31 @@ by inheritance, implement method interceptor, rewrite intercept()
 2. Spring AOP namespace (XML)
 3. @AspectJ-style annotations
 
-## example
 
+# transaction propagation
+when service method called by another method, must define how service propagate
+eg. continue in current transaction / start new transaction
 
+## propagation condition
+- support current transaction
+PROPAGATION_REQUIRED
+PROPAGATION_SUPPORTS
+PROPAGATION_MANDATORY
 
+- not support current transaction
+PROPAGATION_REQUIRES_NEW
+PROPAGATION_NOT_SUPPORTED
+PROPAGATION_NEVER
+
+- other condition
+PROPAGATION_NESTED
+
+## transaction definition
+default
+read_uncommitted
+read_committed
+repeatable_read
+serializable
 
 
 # servlet/tomcat/spring mvc relation
@@ -313,12 +348,39 @@ MVC framework
 Spring Boot use tomcat as default container
 entry point of spring MVC = servlet (DispatcherServlet)
 
+### lifecycle
+```
+client request -> dispatcherServlet -> handler               -> HandlerMapping
+      response <-      |            <- HandlerExecutionChain <-
+                       v
+          -----------------------------------             
+          View   ViewResolver   HandlerAdapter <-> controller
+```
+request -> find handler -> handler chain -> request exec handler 
+-> exec -> return ModelAndView -> View resolver -> return View -> View rendering
+
+
+###
+DisplatcherServlet: Controller
+HandlerMapping: map user request to appropriate handler, eg. config file, interface, annotation
+HandlerAdapter: use certain rule to run adapter
+
+
 ## JavaBean
 JavaBean is only simple class, can inherit any class, cannot process HTTP data
 Value bean, utility bean
 follow getter, setter trandition
 
+# Spring AOP IOC
+## IOC
+use reflection, let spring container manager
+only write config, set field
+prepare all before you sue
 
+## AOP
+use proxy
+1. dynamic proxy -> decorator
+2. static weaving, use special syntax to create aspect, create in compile time
 
 
 

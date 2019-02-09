@@ -178,6 +178,7 @@ young generation
   survivor space from
   survivor to
 old generation
+permanent generation (method area, final/static const, const pool)
 
 time passes:
 - eden space -> space from -> old generation
@@ -187,11 +188,12 @@ in young generation, when eden full, move to survivor from, clear eden
 2. 2nd round
 all move to survivor to after deleting unreachable
 3. 3rd round
-back to survivor to
+back to survivor from
 ...
 survivor: avoid compact 
 each object count num of times migrated (age)
 if count > MaxTenuringThreshold, move to old generation
+
 
 ### major GC
 for whole heap
