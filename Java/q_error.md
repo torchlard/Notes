@@ -125,6 +125,105 @@ int s = (i++)+(++i)+(i--)+(--i);
 // 5+7+7+5
 ```
 
+# class loader
+1. Bootstrap Classloader
+load all class in jre/lib/rt.jar 
+2. Extension ClassLoader
+load jar with extension function (jre/lib/*.jar)
+3. App ClassLoader
+record down asigned jar package in classpath and class in directory
+4. Custom ClassLoader
+eg. tomcat, jboss self-defined ClassLoader by j2ee standard
+
+Check if class loaded:
+- custom classLoader -> app classloader -> extension classloader -> bootstrap classloader
+
+Bootstrap classloader is native code, other classloader are Java class
+
+
+# ThreadLocal
+threadlocal is not to solve problem of shared variable, not manage sync
+- mechanism manage each thread's state, each thread get copy of initial value
+
+
+# spring transaction management
+spring only has method level, not class level
+
+# transaction
+mandatory: must in transaction
+nested: run in nested transac
+never: never in transaction
+not_supported: if trans, suspend method
+required: if not, new
+requires_new: run in own transac
+supports: can join transac, not necessary
+
+# Servlet
+Servlet
+  init
+  getServletConfig
+  service
+  getServletInfo
+  destroy
+
+HttpServlet
+  doGet
+  doHead
+  doPost
+  doPut
+  doDelete
+  doOptions
+  doTrace
+
+RequestDispatcher
+  forward
+  FORWARD_CONTEXT_PATH
+  FORWARD_PATH_INFO
+  FORWARD_QUERY_STRING
+  RORWARD_REQUEST_URI
+  FORWARD_SERVLET_PATH
+
+
+# db source in spring
+DBCP
+C3P0
+DriverManagerDataSource
+JNDI
+
+# spring check
+ApplicationContext init will check if correct
+BeanFactory will throw exception if first time use not injected
+
+# Collection, Map interface
+Collection interface: List, Set, Queue, sortedSet
+Map interface: HashMap, HashTable, TreeMap, IdentityHashMap, WeakHashMap
+
+# Float
+```java
+Float f = 1.0f // correct
+Float f = 1.0  // wrong
+```
+
+# SQL
+Statement
+PreparedStatement
+CallableStatement
+-------
+BatchedStatement: not standard
+
+# access static variable
+static variable can be accessed by class or object of that class, same effect
+
+
+# wait
+wait() will release lock
+
+
+
+
+
+
+
 
 
 
