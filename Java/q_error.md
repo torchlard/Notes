@@ -218,8 +218,15 @@ static variable can be accessed by class or object of that class, same effect
 # wait
 wait() will release lock
 
+# internal lock
+only way to get interna lock is to enter synchronized block
 
+# 
+for function foo(){
+  a += 1;
+}
 
+output can be (3,2), (2,3), (3,3), (2,2)
 
 
 

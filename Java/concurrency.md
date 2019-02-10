@@ -418,6 +418,61 @@ park -> block ; unpark -> unblock
 # Semaphore
 permit control number of concurrent access
 
+# Read-copy-update (RCU)
+based on mutex
+- allow multiple thread efficiently read from shared memory by deferring updates after pre-existing reads (write after grace period)
+- ensure new readers read updated data
+- suitable for system read >> write
+
+
+# Collections
+[ts]: thread safe
+```
+Collection
+  List
+    LinkedList
+    ArrayList
+    Vector [ts]
+      Stack [ts]
+
+Map
+  Hashtable [ts]
+  HashMap
+  WeakHashMap
+```
+
+# Bernstein condition
+if P1 and P2 satisfy this condition, then they can execute concurrently
+
+R(P1) ∩ W(P2) ∪ R(P2) ∩ W(P1) ∪ W(P1) ∩ W(P2) = {}
+
+# real time OS
+1. raise reliability
+2. raise responsiveness
+
+
+# process
+child process can get parent process's data space, heap and stack copy
+process: unit of allocating and having resource 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
