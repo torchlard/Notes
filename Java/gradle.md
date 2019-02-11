@@ -63,7 +63,8 @@ min JVM version code should run on
 ### quiet run
 ./gradlew -q run
 
-
+# run without progress bar
+gradle run --console=plain
 
 
 
