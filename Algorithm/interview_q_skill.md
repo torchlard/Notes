@@ -137,6 +137,16 @@ start from middle of shorter array,
 - thorughout adjustment 2 parts always have equal length
 
 
+# regex 
+normally use recursion to match characters
+when deal with ".*", split into 2 possible branch and let recursion result
+- run through all possible scenario, return final bool result
+
+# find smallest missing number
+1. mark number exceed range
+2. convert num in (index=value) to negative if that value within range
+3. search first positive number
+
 
 
 
