@@ -462,6 +462,12 @@ typically use memory address -> hash
 sometimes hash collision => even same hash don't mean same object
 
 
+# Observer(interface), Observable(class)
+extends Observer class to be observer
+extends Observable class to be objects that can be observed
+- define functions to set data
+
+
 
 
 
