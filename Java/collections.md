@@ -27,11 +27,13 @@ Map -> SortedMap -> NavigableMap
     X
 [HashTable, Resizable Array, Balanced Tree, Linked List, hash+linked list]
 
+- Map not belongs to Collection
+  
 # Implementation
 ArrayList, LinkedList, Stack, Vector
 HashSet, LinkedHashSet, TreeSet
 PriorityQueue, ArrayDeque, LinkedList(Deque)
-HashMap, HashLinkedMap, HashTable, TreeMap
+HashMap, LinkedHashMap, HashTable, TreeMap
 
 
 # Conversions
@@ -147,7 +149,7 @@ subSet, headSet, tailSet {return range of set}
 
 
 # Queue
-PriorityQueue: not sync
+PriorityQueue, ArrayDeque: not sync
 ## PriorityQueue
 based on priority heap, follow natural ordering/Comparator
 - not permit null, non-comparable object
@@ -155,15 +157,96 @@ based on priority heap, follow natural ordering/Comparator
 
 ## ArrayDeque
 faster than Stack and LinkedList when used as stack/queue
+                [----------]
+addFirst ->                <- add/addLast
+offerFirst ->              <- offer/offerLast
+<- poll/pollFirst          -> pollLast
+<- remove/removeFirst      -> removeLast
+
+```java
+ ArrayDeque<Integer> l2 = new ArrayDeque<>(List.of(1,2,3))
+```
 
 
 # Map
+not sync: hashmap, 
 ## HashMap
 permit null value, null key
+```java
+Map<Integer,Integer> m1 = new HashMap<>();
+m1.put(1,2);
+m1.put(2,3);
+
+Map<Integer,Integer> m2 = new HashMap<>();
+m2.putAll(m1);
+
+// original: {1: 2, 3: 4, 7: 8}
+m2.compute(1, (k,v) -> v+9);
+// new: {1: 11, 3: 4, 7: 8}
+
+```
+"modify"
++: put, putAll, putIfAbsent
+-: remove(key), remove(key,value), clear()
+replace, replaceAll
+
+"view"
+get, getOrDefault, values()
+
+"map -> set view"
+entrySet, keySet: cannot modify resulting viewing set
+
+"test"
+containsKey, containsValue
+
+## LinkedHashMap
+predictable iteration order, doubly-linked list
+
+## Hashtable
+capacity: number of buckets in hash table
+
+## TreeMap
+red black tree based navigableMap, follow natural ordering
+log(n) for containsKey,get,put,remove
+
+headMap()
+
+"key"
+firstKey, lastKey, lowerKey, higherKey, ceilingKey, floorKey
+subMap, tailMap
 
 
 
+# Collections (utility class)
+## synchronized
+synchronized(Collection, List, Map, NavigableMap, NavigableSet, SortedMap)
 
+## operations
+rotate, shuffle, sort, binarySearch, swap, min, max
+reverse, replaceAll, replace, frequency
+
+## immutable
+empty(List, Iterator, ListIterator, Map, NavigableMap, NavigableSet, Set, SortedMap, SortedSet)
+singleton(T o), singletonList, singletonMap
+unmodifiable(Collection, List, Map, NavigableMap, NavigableSet, Set, SortedMap, SortedSet)
+nCopies(int n, T elem)
+
+## duplicate
+copy(dest, src): need same size
+
+## conversion
+Deque              Queue
+    asLifoQueue -->
+
+
+## type safe viewer
+checked(Collection, Lost, Map, NavigableMap, Queue, Set ...)
+- for debug use, see if any incorrect type element placed in Collection
+
+### use case of Collections.emptyList()
+1. method that return List of address, but this time no data to return -> so return emptyList, cost nothing
+2. call method that take list as parameter, can't take null
+3. base case of recursive function
 
 
 

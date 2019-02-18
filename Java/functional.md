@@ -1,3 +1,30 @@
+# behavior parameterization
+situation: filter apples by different combination of criteria
+  eg. by size, weight, color ...
+1. use predicate  
+```java
+// strategy design pattern
+public interface ApplePredicate {
+  boolean test(Apple apple);
+}
+
+public class AppleHeavyWeightPRedicate implements ApplePredicate {
+  public boolean test (Apple apple){
+    return apple.getWeigth() > 150;
+  }
+}
+// abstract criteria
+static List<Apple> filterApples(List<Apple> inventory, ApplePredicate p) {
+  List<Apple> result = new ArrayList<>();
+  for(Apple apple: inventory){
+    if(p.test(apple))
+      result.add(apple);
+  }
+  return result;
+}
+
+```
+
 # Predicate
 ```java
 // Integer: type of input; Output type = Boolean (always)
@@ -109,6 +136,11 @@ finisher(): optional final transform
 
 # Collectors
 implementation of Collector
+1. reducing, summarizing stream
+2. grouping elements
+3. partitioning elements
+- split into 2 groups {true, false}
+
 
 toList(), toMap(xx,xx), toSet(), toCollection(), 
 
@@ -133,14 +165,45 @@ Map<Integer,Integer> ps3 =
 // {bb=2, cc=2, a=1, d=1}
 Stream.of("a","bb","cc","d").collect(Collectors.toMap(i->i, i->i.length()));
 
-// 36
+// reducing
+//// mutable reduction, can't work in parallel
+collect(reducing(0, Dish::getCalories, (i,j) -> i+j))
+collect(reducing(0, Dish::getCalories, Integer::sum))
+collect(reducing((d1,d2) -> d1.getCalories() > d2.getCalories() ? d1 : d2))
+
+//// immutable reduction
+stream.reduce(new ArrayList<Integer>,
+  (List<Integer> l, Integer e) -> {
+    l.add(e); return l;
+   }, (List<Integer> l1, List<Integer> l2) -> {
+    l1.addAll(l2); return l1;
+  });
+
+//// 36
 Stream.of(0,1,2,9).collect(Collectors.reducing(0, (x,y)->x+y));
+
+Map<Dish.Type,Set<CalorieLevel>> calorieLevelsByType =
+  menu.stream().collect(
+    groupingBy(Dish::getType, mapping(
+      dish -> {
+        if (dish.getCalories() <= 400) return CalorieLevel.DIET;
+        else if (dish.getCalories() <= 700) return CalorieLevel.DIET;
+        else return CalorieLevel.FAT;
+      }, toCollection(HashSet::new)
+    ))
+  );
 
 // {"aa",12},{"bb",34} 
 LinkedList<BlogPost> ls = 
   Arrays.asList(new BlogPost("aa", 12), new BlogPost("bb", 34))
     .stream()
     .collect(Collectors.toCollection(LinkedList::new));
+
+// parititioning
+Map<Boolean, Map<Dish.Type, List<Dish>>> vegetarianDishesByType =
+  menu.stream().collect(
+    partitioningBy(Dish::isVegetarian, groupingBy(Dish::getType))
+  );
 
 ```
 
@@ -169,6 +232,47 @@ List<String> collect =
                 .collect(Collectors.toList());
 collect.forEach(x -> System.out.println(x));
 ```
+
+# parallel
+
+```java
+// last one control globally (parallel)
+stream.paralle()
+      .filter().sequential()
+      .amp().parallel()
+      .reduce();
+```
+
+parallel stream use ForkJoinPool
+
+in simple case, parallel sum much slower than sequential sum
+- iterate generate boxed objects -> unbox before they add
+- difficult to divide into independent chunks to execute in parallel
+
+don't call imperative(sequential) code directly (with mutable state)
+if no lock, parallel execution will get incorrect results
+
+solution:
+1. use primitive stream (IntStream, LongStream, DoubleStream) to avoid autommatic boxing and unboxing
+2. some operations expensive in parallel stream. eg. limit, findFirst
+3. for data structure, ArrayList split much more efficiently than LinkedList, because random access
+- get full control of decomposition process by Spliterator
+4. whether terminal operation has cheap/expensive merge step
+
+Decomposability:
+ArrayList, IntStream.range > HashSet, TreeSet > LinkedList, Stream.iterate
+
+## fork/join
+recursively split parallelizable task into smaller tasks
+-> implement ExecutorService
+
+
+
+
+
+
+
+
 
 
 
