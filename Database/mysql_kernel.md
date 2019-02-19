@@ -25,6 +25,10 @@ table index -> .ibd file
 page as smallest management unit
 data stored in rows, every 16KB page store 2-200 rows
 
+#### transmition
+can change `max_allowed_packet` variable in both client and server to transfer larger file
+- blob/text suitable store media file
+
 ## row file format
 ```
 Barracuda -> compressed

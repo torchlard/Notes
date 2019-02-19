@@ -1,21 +1,14 @@
+
 # index
 dense index = that index appear in every record with search key
 sparse index = that index appear in some record with search key
 primary index = record sort by that index
 secondary index = record not sort by that index
 
-# to create new account in mysql
+## to create new account in mysql
 1. login to mysql console using root account
 2. create user '<username>'@'<hostname>' identified by '<password>';
 3. grant all privileges on *.* to '<user>'@'<host>' with grant option;
-
-# data type
-tinyint, smallint, mediumint, int, bigint
-float, double
-decimal(m,d): approximation 
-char, varchar, tinytext, text, mediumtext, longtext [text based, canspecify charset]
-tinyblob, blob, mediumblob, longblob [binary, only read as whole]
-date, time, datetime, timestamp(store last modified time, not for storing time)
 
 # attributes
 NULL, NOT NULL
@@ -103,6 +96,133 @@ select hour('10:05:03')
 hour, minute, second
 to days, from days
 curdate(), curtime(), now()
+
+
+## storage
+### numeric type
+[*: exact numeric, ~: approx numeric]
+
+*tinyint: 1B (+-half 2^8)
+*smallint: 2B  (+-half 2^16)
+*mediumint: 3B (+-half 2^24)
+*int,*integer: 4B  (+-half 2^32)
+*bigint: 8 B (+-half 2^64)
+
+*decimal, *numeric
+- eg. decimal(5,2): precision 5(num sig digit), scale 2(num digit after decimal point)
+- decimal max digits = 65
+  
+~float: 4 B (single-precision) 
+~double: 8 B (double precision)
+
+bit(M): (m+7)/8
+- store m bit value, 1-64
+
+#### numeric attribute
+smallint(3): 
+keey smallint range -32768 to 32767, but zerofill to display 3 digits
+
+#### auto_increment
+integer, floating-point can have auto_increment
+if field assigned NOTNULL, can insert null -> convert to next int
+if inserted larger int, start seq from that int
+
+#### overflow, out of range
+if strict mode, reject
+if non-strict moide, clip value
+
+
+### Date and time type
+year/year(4): 1
+- range: 1901-2155, 0000
+- 00-69 -> 2000-2069, 70-99 -> 1970-1999
+date: 3
+- 1000-01-01 to 9999-12-31
+- format: xx-xx-xx OR xx/xx/xx
+time: 3
+- -838:59:59.000000 to 838:59:59.000000
+  
+datetime: 5 B
+- 1000-01-01 00:00:00 to 9999-12-31 23:59:59
+- value contain both date and time parts
+- can have tractional seconds
+- eg. 1000-01-01 00:00:00.000000
+- no timezone conversion
+  
+timestamp: 4 B
+- 1970-01-01 00:00:01 to 2038-01-19 03:14:07
+- convert value from current time zone to UTC for storage
+- back to current time zone for retrieved
+- default use server's timezone
+
+#### date, time conversion
+date -> datetime/timestamp
+- add '00:00:00'
+
+datetime/timestamp -> date
+- '1999-12-31 23:59:59.499' -> '1999-12-31'
+- '1999-12-31 23:59:59.500' -> '2000-01-01'
+
+datetime/timestamp -> time
+- discard date part
+
+date -> time
+- '00:00:00'
+time -> date
+- CURRENT_DATE() + time value
+
+
+### String type 
+char(M): M*w
+- length 0-255
+varchar(M), varbinary(M): 
+- length 0-65535 [max row size 65535 B]
+- 1B/2B prefix + data => indicate num of bytes
+binary(M), varbinary
+- similar to char, varchar; contain binary string
+- M in bytes, 0 <= M <= 255
+
+blob, text: L+2
+- blob = binary large object
+- text = non-binary string
+  
+tinyblob, tinytext: L+1
+mediumblob, mediumtext: L+3
+longblob, longtext: L+4
+
+enum('val1', 'val2'): 1/2 B
+- string object with few permitted values
+- adv: compact data storage, readable query and output
+- issue: extra care for order by
+- strongly recommend not using number, but string
+  
+set('val1', 'val2'): 1,2,3,4/8 B
+- max 64 distinct members
+- can insert multiple distinct value in same record
+- sum()/avg() -> use numeric value
+
+#### varchar overflow 
+if strict, reject too long string
+if non-strict, eg. varchar(4) store 
+  'abcdefgh' -> 'abcd' with 5 B
+
+### spatial type
+single geometry value
+- geometry, point, linestring, polygon
+
+collection of values
+- multipoint, multilinestring, multipolygon, geometrycollection
+
+### JSON type
+adv over in string column
+- automatic validation of JSON document
+- optimized storage format
+
+no default value
+support partial, in-place update of JSON column
+- json_set(), json_replace(), json_remove()
+- new value cannot > old value
+- {"a":1,"b":2,"c":3} (must use ", not '), input as string
 
 ===========================
 # import file

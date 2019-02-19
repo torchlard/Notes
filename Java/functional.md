@@ -266,6 +266,187 @@ ArrayList, IntStream.range > HashSet, TreeSet > LinkedList, Stream.iterate
 recursively split parallelizable task into smaller tasks
 -> implement ExecutorService
 
+- invoke `join` method on task blocks caller until result produced by task ready
+- `invoke` method not use within RecursiveTask -> always fork/compute()
+- natural invoke in left and right subtasks
+- fork/join need warm up time for optimization by JIT compiler
+
+### work stealing
+difficult to find right threshold of starting sequential processing
+
+work stealing: task more or less evenly divided on all thread
+- each thread hold doubly-linked queue of task
+- if one thread complete much faster, randomly choose queue, take from tail
+- forking large number of fine-grained task better
+
+## Spliterator (splitable iterator)
+traverse elements of source
+- tryAdvance(), trySplit(), estimateSize(), characteristics()
+
+1. Split spliterator1 -> 2
+2. split 1->3, split 2->4
+3. split 1->null, 2->null, 3->5, 4->null
+4. try split all until null
+
+characteristics:
+- ORDERED: defined order
+- DISTINCT: all eleemtns unique
+- SORTED
+- SIZED: source with known size
+- NONNULL
+- IMMUTABLE
+- CONCURRENT: source safely concurrently modified without any synchronization
+- SUBSIZED: both Spliterator and all further Spliterators are sized
+
+tryAdvance
+- feed Consumer with Character
+trysplit
+- define logic to split
+
+```java
+
+class WordCounter {
+  private final int counter;
+  private final boolean lastSpace;
+  public WordCounter(int counter, boolean lastSpace){
+    this.counter = counter;
+    this.lastSpace = lastSpace;
+  }
+
+  public WordCounter accumulate(Character c){
+    if(Character.isWhitespace(c)){
+      return lastSpace ? this : new WordCounter(counter, true);
+    } else {
+      return lastSpace ? new WordCounter(counter+1, false) : this;
+    }
+  }
+  public WordCounter combine(WordCounter wordCounter){
+    return new WordCounter(counter+wordCounter.counter, wordCounter.lastSpace);
+  }
+
+  public int getCounter() {
+    return this.counter;
+  }
+}
+
+
+class WordCounterSpliterator implements Spliterator<Character> {
+  private final String string;
+  private int currentChar = 0;
+
+  public WordCounterSpliterator(String string){
+    this.string = string;
+  }
+
+  @Override
+  public boolean tryAdvance(Consumer<? super Character> action){
+    action.accept(string.charAt(currentChar++));
+    return currentChar < string.length();
+  }
+
+  @Override
+  public Spliterator<Character> trySplit(){
+    int currentSize = string.length() - currentChar;
+    // end split 
+    if (currentSize < 10){
+      return null;
+    }
+    for (int splitPos = currentSize/2 + currentChar;
+        splitPos < string.length(); splitPos++){
+      if (Character.isWhitespace(string.charAt(splitPos))) {
+        Spliterator<Character> spliterator =
+          new WordCounterSpliterator(string.substring(currentChar, splitPos));
+        currentChar = splitPos;
+        return spliterator;
+      }
+    }
+    return null;
+  }
+
+  @Override
+  public long estimateSize(){
+    return string.length() - currentChar;
+  }
+  @Override
+  public int characteristics(){
+    return ORDERED + SIZED + SUBSIZED + NONNULL + IMMUTABLE;
+  }
+}
+
+public class Solution {
+  public static int countWords(Stream<Character> stream){
+    WordCounter wordCounter = stream.reduce(new WordCounter(0, true),
+                                  WordCounter::accumulate, WordCounter::combine);
+    return wordCounter.getCounter();                                  
+  }
+
+  public static void main(String[] args) {
+    final String SENTENCE = "afds fdsfds";
+
+    Spliterator<Character> spliterator = new WordCounterSpliterator(SENTENCE);
+    Stream<Character> stream = StreamSupport.stream(spliterator, true);
+
+    System.out.println("found: " + countWords(stream) + " words");
+  }
+}
+```
+
+# Refractoring old Java code
+## anonymous class -> lambda expression
+```java
+doSomething(new Task(){
+  public void execute(){
+    System.out.println("danger");
+  }
+});
+// TO
+doSomething((Task)() -> System.out.println("danger"));
+```
+
+## lambda -> method references
+## impreative data processing -> Streams
+
+# Improve code flexibility
+## adopt functional interface
+### conditional deferred execution
+```java
+if(logger.isLogger(Log.FINER)){
+  logger.finer("Problem: " + generateDiagnostic());
+}
+// TO
+public void log(Level level, Supplier<String> msgSupplier)
+logger.log(Level.FINER, "Problem: " + generateDiagnostic()); 
+
+```
+
+### execution around
+```java
+String 
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
