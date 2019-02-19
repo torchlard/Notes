@@ -1,4 +1,3 @@
-
 # index
 dense index = that index appear in every record with search key
 sparse index = that index appear in some record with search key

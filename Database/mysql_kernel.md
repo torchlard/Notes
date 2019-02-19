@@ -2,8 +2,7 @@
 1. database: collection of filesystem and other file type
 2. instance: backend threads + shared memory
 
-we cannot directly control database, but throught db instance to control db file
-process
+we cannot directly control database, but throught db instance to control db file process
 - mysqld: database daemon
 - mysql_safe: check and init mysqld, when mysqld has error, mysql_safe check it and restart if appropriate
 
@@ -25,7 +24,7 @@ table index -> .ibd file
 page as smallest management unit
 data stored in rows, every 16KB page store 2-200 rows
 
-#### transmition
+#### transmission
 can change `max_allowed_packet` variable in both client and server to transfer larger file
 - blob/text suitable store media file
 
