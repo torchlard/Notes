@@ -93,6 +93,7 @@ next-key lock: record lock + gap lock
 - lock records with id 21-40
 
 # isolation
+## MVCC (multi version concurrency control)
 read uncommited
 - since no lock on query -> dirty read
 read commited
@@ -103,7 +104,6 @@ serializable
 - InnoDB implicitly add shared lock on all query, solve phantom read problem
 
 default repeated read, but next-key can solve phantom read to some extend
-
 
 
 

@@ -51,6 +51,8 @@ rollback;   --rollback previous transaction
 
 limit 1,4   --start from 1, offset 4
 
+-- constraint "constraint-name" foreign key "your key in this table"
+-- references "another table" "other table's field"
 constraint userID_payment foreign key userID references payment p_userID
   on delete {restrict | cascade | set null | no action}
   on update {...}
