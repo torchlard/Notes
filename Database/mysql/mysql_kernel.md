@@ -24,6 +24,17 @@ table index -> .ibd file
 page as smallest management unit
 data stored in rows, every 16KB page store 2-200 rows
 
+## InnoDB function
+1. transactional
+2. data storage can share table space / separate by config
+3. primary key search efficiency high
+4. build hash when read from disk, insert data to cache first
+5. hot backup 
+6. secure recovery
+7. row level lock
+8. foreign key
+
+
 #### transmission
 can change `max_allowed_packet` variable in both client and server to transfer larger file
 - blob/text suitable store media file

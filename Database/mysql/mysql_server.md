@@ -11,6 +11,11 @@ mysql_upgrade
 
 ## client side
 mysql: command-line tool
+- u:username, p:password, h:host, P:port
+
+mysql (after enter)
+- \s:show status, \h:help, \q:quit connection
+
 mysqladmin: 
 - client perform administrative operation
 - eg. create, drop db; reload grant taables, flush table to disk

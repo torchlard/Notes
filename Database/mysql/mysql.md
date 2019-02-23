@@ -44,6 +44,7 @@ insert into student(name,sex,job1) values("io","D","horsing");
 update student set name="kvl",sex="M" where name="kl2";
 delete from student where name="io";
 delete from student;    (delete all)
+truncate table ...
 
 set autocommit = false;   --set to manual control
 commit;   --manual commit for each transaction
@@ -108,6 +109,7 @@ curdate(), curtime(), now()
 *mediumint: 3B (+-half 2^24)
 *int,*integer: 4B  (+-half 2^32)
 *bigint: 8 B (+-half 2^64)
+{if use with unsigned zerofill, then stored as eg. 00012}
 
 *decimal, *numeric
 - eg. decimal(5,2): precision 5(num sig digit), scale 2(num digit after decimal point)
@@ -224,6 +226,62 @@ support partial, in-place update of JSON column
 - json_set(), json_replace(), json_remove()
 - new value cannot > old value
 - {"a":1,"b":2,"c":3} (must use ", not '), input as string
+
+
+# trigger
+before,after insert
+before,after update
+before,after delete
+
+# index
+```sql
+-- primary index
+alter table 'table_name' add primary key 'index_name' ('column')
+-- unique index
+alter table 'table_name' add unique 'index_name' ('column');
+-- normal index
+alter table 'table_name' add index 'index_name' ('column');
+-- fulltext index
+alter table 'table_name' add fulltext 'index_name' ('column');
+-- composite index
+alter table 'table_name' add index 'index_name' ('a','b','c');
+```
+## unique index
+same as index, not allow duplicates
+
+## composite index
+for above composite index, can query
+- (a), (a,b), (a,b,c)
+usage: restrict search range
+
+if maybe query first column, make it leftmost
+if maybe query two cols, make it second left
+
+## index principle
+1. as few as possible
+2. shortest field put on left
+3. avoid file sort, temp table scan
+4. fixed better than dynamic
+5. 
+
+## hash index
+in mysql, only (memory,NDB) support hash index
+for InnoDB, can manually create hash column(int type) of eg. email and query that hash column directly
+
+## scan
+### full index scan
+iterate whole index tree to get row
+need to query table again after getting index of that row
+### full table scan
+read physical table, sequential read file
+### covering index
+if condition in where and return data in same index, no need to query table again
+
+### notes
+- if data in memory, full index no difference from full table scan
+- full index may not better than full table all time time, depend on data position
+
+
 
 ===========================
 # import file
