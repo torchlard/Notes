@@ -1,3 +1,8 @@
+# What company looking for
+1. Can you do this job?
+2. Can we tolerate working with you?
+3. Will you love this job?
+
 # CV project STAR model
 1. situation
 project size, function, target user
