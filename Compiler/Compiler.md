@@ -2,7 +2,7 @@
 ## phases
 1. Lex : source file -> individual words(token)
 2. Parse : analyse phrase structure
-3. Semantic Action : buid abstract syntax tree
+3. Semantic Action : build abstract syntax tree
 4. Semantic analysis : relate variable -> definitions, check expression, find what each phrase mean
 5. Frame layout : place variable into activation records (stack frame)
 6. Translate : produce intermediate representation (IR) trees
@@ -330,6 +330,250 @@ parser sees identifier a, no way of knowing whether arithmetic/boolean variable
 
 
 # Abstract syntax
+each terminal, non-terminal associate with own type of semanic value
+eg. exp,INT -> int
+
+semantic action = value returned by parsing functions / side effect / both
+when parser pop top k elements from symbol stack, push non-terminal symbol
+- also pop k from semantic value stack, push value get by executing C semantic action code
+
+LR parse -> stack hold states, semantic values
+(virtual) parse tree traversed in postorder
+- can predict order of occurrence
+
+## abstract parse tree
+parse tree: 1 leaf for each token in input, 1 internal node for each grammar rule reduced 
+
+abstract syntax make clean interface between parser and later phase of compiler
+
+```
+// Abstract syntax builder
+%union {int num; string id; A_stm stm; A_exp exp; A_expList expList;}
+
+// token, type, left, start ...
+%%
+prog: stm                         {$$=$1;}
+
+stm : stm SEMICOLON stm           {$$=A_CompoundStm($1,$3);}
+stm : ID ASSIGN exp               {$$=A_AssignStm($1,$3);}
+stm : PRINT LPAREN exps RPAREN    {$$=A_PrintStm($3);}
+
+exps: exp                         {$$=A_ExpList ($1,NULL);}
+exps: exp COMMA exps              {$$=A_ExpList ($1,$3);}
+
+exp : INT                         {$$=A_NumExp($1);}
+exp : ID                          {$$=A_IdExp($1);}
+exp : exp PLUS exp                {$$=A_OpExp($1,A_plus,$3);}
+```
+
+```
+a := 5; a+1
+
+A_SeqExp(2,
+  A_ExpList (A_AssignExp (4, A_SimpleVar (2, S_Symbol("a")), A_IntExp(7,5) )),
+  A_ExpList (A_OpExp (11, A_plusOp, A_VarExp (A_SimpleVar(10,
+                        S_Symbol("a"))), A_IntExp(12,1) )),
+  NULL
+)
+```
+
+there's no abstract syntax for "&" and "|" expression,
+- e1 & e2   =>   if e1 then e2 else ()
+- e1 | e2   =>   if e1 then 1 else e2 
+- (-i)    =>    (0 - i)
+  
+keep abstract syntax type smaller, make fewer cases for semantic analysis phase to process
+
+S_symbol: string -> symbol
+S_name: symbol -> string
+escape: keep track of which local variable used from within nested functions
+
+{LISP: Lots of Irritating Silly Parentheses} <- write abstract syntax directly in program
+
+
+# Semantic Analysis
+1. connect variable definitions to their use
+2. check expression has correct type
+3. abstract syntax -> simple representation for generate machine code
+
+maintain symbol table: map identifier to their types and locations
+
+set of binding |-> , eg. g |-> string
+```
+1. function f(a:int, b:int, c:int) = 
+2.   (print_int(a+c);
+3.     let var j := a+b
+4.         var a := "hello"
+5.       in print(a); print_int(j)
+6.     end;
+7.     print_int(b)
+8.   )
+
+start from environment s0
+for line 1, s1 = s0 + {a |-> int, b |-> int, c |-> int}  
+for line 3, s2 = s1 + {j |-> int}
+for line 4, s3 = s2 + {a |-> string}
+for line 6, discard s3, go back s1
+for line 8, discard s1, go back s0
+```
+similar to repl environment
+
+in functional style, make sure to keep s1 in pristine condition, while creating s2, s3
+- when need s1, its ready
+
+in imperative style, modify s1 until it bcomes s2 ...
+- global environment: s0 -> s1 -> s2 -> s3 -> s1 -> s0
+- undo stack with enough information to remove destructive updates
+
+either style can be used regardless of nature of language
+
+## multiple symbol tables
+some lang can be several active environment at once
+each module/class/record in program has symbol table `s` of its own
+
+```
+structure M = struct
+  structure E = struct
+    val a = 5
+  end
+  structure N = struct
+    val b = 10
+    val a = E.a + b
+  end
+  structure D = struct
+    val d = E.a + N.a
+  end
+end
+
+package M;
+class E {
+  static int a = 5;
+}
+class N {
+  static int b = 10;
+  static int a = E.a + b;
+}
+class D {
+  static int d = E.a + N.a;
+}
+```
+```
+s1 = a |-> int
+s2 = E |-> s1
+s3 = b |-> int, a |-> int
+s4 = N |-> s3
+s5 = d |-> int
+s6 = D |-> s5
+s7 = s2 + s4 + s6
+```
+in ML, compiiled using environment ? to look up identifier
+- N: s0 + s2 
+- D: s0 + s2 + s4
+=> result of analysis M |-> s7
+
+in Java, forward reference allowed
+- E, N, D all compiled in environment s7 => M |-> s7
+
+## efficient table lookup
+imperative-style: use hash table
+eg. s' = s + {a |-> t1}  =>  insert t1 in hash table with key a
+for s + {a |-> t2}, insert function put `a |-> t2` earlier in list than `a |-> t1`
+with pop(a), s is restored
+
+in functional style
+- create new table by computing "sum" of existing table and new binding
+- eg. 7+8, leave 7 alone, create new 15
+binary search tree, persistent red-black tree to guarantee log(n) access time
+
+## symbol
+to save time, convert string to symbol to compare
+- fast extracting integer ahsh-key
+- we want different notion of binding for different purpose in compiler
+eg. type binding for type, value binding for variable and functions
+
+## binding in Tiger compiler
+2 namespace: type(Ty_ty), function
+
+primitive type: int, string, constructed using record/array from other
+record type: names, types of fields (Ty_record)
+array: ~records (Ty_array)
+
+enventry: hold info of (type) if variable, (parameter,result type) if function
+variable map to VarEntry -> type
+function map to FunEntry -> formals(type of formal params), result(type of result)
+
+## type checking expression
+```
+struct expty transVar(S_table venv, S_table tenv, A_var v);
+struct expty transExp(S_table venv, S_table tenv, A_exp a);
+```
+type-checker: recursive funciton of AST (transExp)
+all types returned from transExp should be "actual" type
+every kind of expression has own type-checking rules
+
+## type declaraiton
+transExp mark current state of environment by calling `beginScope()`
+call `transDec` to augment environments (venv, tenv) with new declarations
+revert to environemnt original state: `endScope()`
+
+variable declaration: declare augments an environment by a new binding
+
+### recursive declaration
+for set of mutually recursive things
+- put all the headers in environment first => e1
+- process all bodies in environemtn e1
+- lookup some newly defined names
+
+`type list = {first: int, rest: list}`
+header: type list =
+
+
+# Activation Records
+function may have local variables 
+- several invocation of function may exist at same time
+- each invocation has own instantiation of local variable
+
+normally local variables destroyed when fn returns
+- LIFO fashion
+- use stack to hold
+
+## higher order functions
+lang that support nested funciton and function-valued variables 
+-> need to keep local variables after funciton returned
+-> cannot use stack
+
+## stack frames
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
