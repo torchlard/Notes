@@ -121,42 +121,215 @@ expr = "("sum")"|digits
 since impossible for N states machine remember () nesting depth > N
 => sum, expr cannot be regex
 
+## context free grammars
+
+grammars define syntatic structure declaratively -> describe structure of lexical tokens
+symbol -> symbol symbol ... symbol
+
+symbol = terminal(token from alphabet of string) | non-terminal(appear on LHS of some production)
+one non-terminal -> start symbol 
+
+terminal symbol `id print num , + ( ) := ;`
+```
+a := 7;
+b := c + (d := 5 + 6, d)
+==>
+id := num; id := id + (id := num + num, id)
+```
+
+## parse tree
+connect each symbol in derivation 
+### ambiguous grammars
+derive sentence with 2 different parse trees
+```
+S -> S: S         E -> id     
+S -> id := E      E -> num        L -> E
+S -> print(L)     E -> E + E      L -> L, E
+                  E -> (S, E)
+
+target: `1-2-3`
+two possible parse trees:
+E -- E -- E -- 1
+       -- (-)
+       -- E -- 2
+  -- (-)
+  -- E -- 3
+result = (1 - 2) - 3 = -4
+
+E -- E -- 1
+  -- (-)
+  -- E -- E -- 2
+       -- (-)
+       -- E -- 3       
+result = 1 - (2 - 3) = 2       
+```
+
+E: expression, T: term (things you add), F: factor (things you multiply)
+
+## predictive parsing
+recursive descent
+
+FIRST(T*F) = {id, num, (}
+must keep track of which symbols can produce empty string -> nullable
+FOLLOW(X): set of terminals that can immediately follow X
+
+choose one of these clauses based on next token T of input
+if we choose right rpoduction for each (X,T), then we can write recursive-descent parser
+predictive parsing table
+- all info encoded as 2D table of productions, with non-terminals X, terminals T
+
+duplicate entries => predictive parsing won't work
+LL(1) [Left-to-right parse]: no duplicate entries
+examine left-to-right input in one pass
+
+recursive-descent parsent only look at next token in input
+generalize notion of FIRST set to first k tokens of string
+=> make LL(k) [rarely done]
+
+## Elimilate left recursion
+```
+E -> E + T
+E -> T
+=== rewirte using right recursion ==>
+E -> T E'
+E' -> + T E'
+E' ->
+
+S -> if E then S else S
+S -> if E then S
+=== left factor ===>
+S -> if E then S X
+X ->
+X -> else S
+```
+
+## LR parsing
+postpone decision until seen input token corresponding to entire right-hand side of production
+LR(k) = rightmost-derivation, k-token lookahead, left-to-right parse
+
+```
+a := 7;
+b := c + (d := 5 + 6, d)
+```
+parser has stack, input
+Shift: move first input token to top of stack
+Reduce: choose gammar rule X -> A B C; pop C,B,A from top of stack; push X onto stack
+$: accept end
+
+```
+s_n: shift into state n
+g_n: goto state n
+r_k: reduce by rule k
+a: accept
+  : error
+
+rules:
+0: S' -> S$
+1: S -> (L)
+2: S -> x
+3: L -> S
+4: L -> L , S
+```
+treat shift and goto action as edges of DFA, scan stack
+
+closure: add more items to set of items when "." to left of non-terminal
+goto: move dot past symbol X in all items
+
+![](img/grammar_class.png)
+
+grammar is LALR(1) if LALR(1) parsing table contains no conflict
+All SLR grammars are LALR(1), not vice versa
+any reasonalbe PL has LALR(1) grammar => standard for PL and automatic parser generators
+
+## LR parsing of ambiguous grammars
+S -> if E then S else S
+S -> if E then S
+S -> other
+
+=> allow `if a then if b then s1 else s2`
+```
+understood 2 ways:
+1. if a then {if b then s1 else s2}   <-- match most recent possible then
+2. if a then {if b then s1 } else s2
+
+S -> if E then S .         (else)
+S -> if E then S . else S  (any)
+```
+
+eliminate ambiguity by auxiliary non-terminals M (match statement) and U (unmatched statement)
+    OR
+leave grammar unchanged, tolerate shift-reduce conflict
+
+## parser generator
+YACC (yet another compiler-compiler): widely used parser generator
+- instead to do by hand LR parsing for realistic grammars
+
+yacc spec
+```
+parser declaration: terminal symbols, non-terminals ...
+%%
+grammar rules
+%%
+programs
+```
+
+```yacc
+%{
+  int yylex(void);
+  void yyerror(char *s) { EM_error(EM_tokenPos, "%s", s); }
+%}
+% token ID WHILE BEGIN END DO IF THEN ELSE SEMI ASSIGN
+% start prog
+%%
+
+prog: stmlist
+
+stm : ID ASSIGN ID
+    | WHILE ID DO stm
+    | BEGIN stmlist END
+    | IF ID THEN stm
+    | IF ID THEN stm ELSE stm
+
+```
+
+yacc reports 
+  shift-reduce: choice between shift and reduce
+- reduce-reduce conflicts: choice of reducing by 2 different rules
+
+## precedence directives
+eg. *,/ bind more tightly than +,-
+
+if minus is non-associative, then must force to write (a-b)-c OR a-(b-c) for a-b-c
+write precedence directives in Yacc
+```
+%nonassoc EQ NEQ
+%left PLUS MINUS
+%left TIMES DIV
+%right EXP
+```
+instead of using "rule has precedence of its last token"
+- assign specific precedence to rule using %prec directive
+- commonly used to solve unary minus problem
+- eg. `-6*8 => (-6)*8`
+
+## syntax VS semantics
+x+y=z VS a&(b=c)
+boolean expression cannot be added to arithmetic expression
+=> reduce-reduce conflict
+
+```
+rules
+E -> E & E
+E -> E + E
+```
+
+`a + 5&b`
+parser sees identifier a, no way of knowing whether arithmetic/boolean variable
+=> defer analysis until semantic phase of compiler
+=> expression syntatically legal, later phase reject it
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+# Abstract syntax
 
 
 

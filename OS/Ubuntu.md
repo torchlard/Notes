@@ -32,6 +32,7 @@ gsettings set org.gtk.Settings.Debug enable-inspector-keybinding true
 press ctrl+shift+d
 
 # set certain application particular theme
+~/.local/share/applications
 at /usr/local/applications, search that app's .desktop file
 change line in Exec to
 `Exec=env GTK_THEME=Adwaita:light <original command>`
