@@ -32,6 +32,7 @@ for each variant(CompoundStm, AssignStm) make constructor to malloc, init data s
 6. if =1 value-carrying symbol, union -> value
 7. every class constructor init all fields
 
+
 # Lexical analysis
 stream of char -> stream of names,keywords,punctuation
 token:
@@ -40,7 +41,7 @@ nontoken:
 - comment, preprocessor directive, macro, blanks/tabs/newline
 
 identifier: sequence of letter and digits, first char must be letter/_
-## deterministic finite automata
+## deterministic finite automata (DFA)
 regex
 
 ```
@@ -58,6 +59,99 @@ find longest match, longest initial substring of input that is valid token
 
 ## non-deterministic finite automata (NFA)
 static, declarative regular expression -> simulatable, quasi-executable NFA
+
+![](img/non_deterministic_finite_automata.png)
+
+## NFA -> DFA
+can avoid need to guess by trying all possibility at once
+
+for every state, we compute ε-closure
+
+start: {1,4,9,14}
+i: {2,5,6,8,15}
+n: {6,7,8}
+
+string "in":
+one of possible state set is 8, which is final => ID
+
+edge(s,c)
+- set of all NFA states reachable from state S with label c
+
+## optimization
+too costly to do on every char in source program
+-> do all sets-of-states calculations in advance
+- each set of NFA correspond to 1 DFA state
+
+![](img/NFA2.png)
+
+several members are final => need rule priority
+after DFA constructed, state array -> trans array used for lexical analysis
+
+automaton is suboptimal: not smallest one recognize same language
+=> apply algorithm to minimize by finding equivalent rules
+
+states s1,s2 equivalent when 
+- machine starting in s1 accept "σ" <=> starting in s2 accepts "σ"
+- both final / non-final
+- for any symbol c, `trans[s1,c] = trnas[s2,c]`
+
+computing ε-closure efficiently by keeping queue / stack of states
+regex converted directly to DFAs
+
+DFA transition table very large and sparse (states x symbols)
+
+
+## start states
+regular expression: static, declarative
+automata: dynamic, imperative
+
+declare set of start states, each regex prefixed by set of valid start states
+
+
+# Parsing
+```
+digits = [0-9]+
+sum = expr "+" expr
+expr = "("sum")"|digits
+
+(109+23)
+61
+(1+(250+3))
+```
+since impossible for N states machine remember () nesting depth > N
+=> sum, expr cannot be regex
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

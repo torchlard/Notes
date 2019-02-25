@@ -39,8 +39,10 @@ change line in Exec to
 # add existing user to group
 usermod -a -G examplegroup exampleusername
 
-
-
+# make qt follow system wide gtk theme
+1. install qtconfig-qt4
+2. install qt5-style-plugins
+3. add line "QT_QPA_PLATFORMTHEME=gtk2" in /etc/environment
 
 
 
