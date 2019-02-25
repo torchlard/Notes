@@ -543,11 +543,17 @@ lang that support nested funciton and function-valued variables
 -> cannot use stack
 
 ## stack frames
+local variables pushed,poped in large batches
+treat stack as big array, with special register (stack pointer)
+- allocated <-|stack pointer|-> garbage
+- stack grows only at entry to function, large enough for new local variable
+- just before exit from function, shrink by same amount
+- historically start at high memory address, grow towards lower
 
+function's activation record/stack frame:
+- area devoted to lcal variables, param, return address
 
-
-
-
+![](img/stack_frame.png)
 
 
 
