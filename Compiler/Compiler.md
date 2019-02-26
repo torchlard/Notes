@@ -555,33 +555,163 @@ function's activation record/stack frame:
 
 ![](img/stack_frame.png)
 
+if follow "standard" frame layout, may possible to call function written in another lang
+
+## frame pointer
+function g(...) call f(a1 ... an) => g: caller, f: callee
+f allocate frame by (stack pointer - frame size)
+
+on entry to f:
+old stack pointer(SP) -> current frame pointer(FP)
+old vale FP saved in memory, new FP -> old SP
+
+when f exits: copies FP back to SP, fetches back saved FP
+if frame size fixed, no need use register for FP
+
+frame size not known until quite late in compilation process 
+-> time when #memory-resident temporaries, saved registers determined
+-> so not refer to all variables by offset from SP
+
+## register
+modern CPU has 64 registers
+to make compiled program run fast, useful to keep 
+- local variables, intermediate results of expression, other values in registers
+- instead of in stack frame
+
+funciton f using register r to hold local variable and call procedure g
+- r: caller-save register if caller save,restore it
+- r: callee-save regsiter if callee responsible for it
+eg. in MIPS, register 16-23 callee-save; others caller-save
+
+if f knows variable x not needed after call 
+=> put x in caller-save register, not save it when calling g
+
+if f has local variable i needed before and after several fn calls
+=> put i in callee-save register r
+=> save r just once (enter f), fetch back once (before return from f)
+
+## parameter passing
+in past very few functions have > 4 arguments, none > 6
+- convention specify first k arguments (k=4/6) of function passed in registers r_p,...r_p+k-1
+- rest of args passed in memory
+
+use of register save time (overcome memory traffic)
+1. some procedure don't call other procedures (leaf procedure)
+  - procedure either call nothing / call >= 2 otehrs
+2. some optimizing compiler use interprocedural register allocation
+  - assign different procedures different registers
+  - receive params, hold local vars
+3. if not leaf procedure, finish use of x when call h => overwrite register without saving
+4. register windows -> allocate fresh set of register without memory traffic
+
+C lang guarantees formal params of functions are consecutive addresses
+- constraint compiler, make stack-frame layout more compilcated
+
+calling fn reserve space for register arguments in own frame
+- calling fn doesn't actually write params, called fn do
+
+take address of local variable: call by ref
+- no need explicitly manipulate address of variable x
+- compiler generate code to pass address of x, instead of value of x
+
+faster, more flexible to pass return address in register
+- avoid building stack discipline into hardware
+
+## frame resident variables
+necessary write to stack frame when
+- variables passed by ref, must have memory address
+- variable accesed by procedure nested inside current one
+- value too big fit into register
+- variable is array
+- register used for other purpose, temp store in memory
+- so many local vars, temp values not all fit into registers
+
+when formal params / local variable declared
+- convenient to assign locaiton right at point in processing program
+- difficult as no idea whther called/access in nested / address taken ...
+- industrial-strength compiler assign provisional locations to all formals and locals
+
+## static links
+inner fn may use variables declared in outer fn -> block structure
+1. static link
+- when f called, pass pointer to frame of function statically encolsing f
+2. display
+- global array (index i) contain pointer to frame of most recently entered procedure
+- whose static nesting depth = i
+3. lambda lifting
+- when g calls f, each variable of g accessed by f -> passed to f as extra parameter
+
+frame interface
+```
+typedef struct F_frame_ *F_frame;
+typedef struct F_access_ *F_access;
+
+typedef struct F_accessList_ *F_accessList;
+struct F_accessList_ { F_access head; F_accessList tail; };
+
+F_frame F_newFrame(Temp_label name, U_boolList formals);
+Temp_label F_name(F_frame f);
+F_accessList F_formals(F_frame f);
+F_access F_allocLocal(F_frame f, bool escape);
+...
+```
+
+1. how param will be seen from insdie function?
+2. what instruction must be produced to implement the view shift
+
+implementation module Frame supposed to keep representation of F_frame type secret from any client
+data structure holding
+- location of all formals
+- instructions required to implement view shift
+- number of locals allocated so far
+- label at which function's machine code is to begin
+
+## local variable
+some kept in frame, others in register
+the register allocator use as few registers as possible to represent temporaries
+
+compiler want to choose registers for params, local variable, machine-code address
+- too early to know => temporarily held in regsiter
+- => label: some machine-lang location whose exact address yet to be determined
+
+## abstraction
+```
+    semant.c
+    translate.h
+    translate.c
+frame.h      temp.h
+mu_frame.c   temp.c
+```
+temp.h|c : machine-independent view of memory-resident, register-resident variables
+translate.h|c : handle notion of nested scope via static links
+
+## history
+early program variable most in memory, less worry about which variables escaped
+- procedure call assume all arguments pushed on stack
+with RISC revolution
+- local variable should be kept in register by default
+- store, fetch done as needed
 
 
+# Intermediate Code
+total #compiler = N source lang * M different machines
+- can be compiled to same IR to unify all
 
+## intermediate representation tree
+good criteria
+- convenient for semantic analysis phase to produce
+- convenient translate to real machine lang, for all target machine
+- each construct clear, simple meaning; optimization easily implemented
 
+IR have individual components describe only extermely simple things
+- single fetch, store, add, move, jump
+- translate to right set of abstract machine instruction
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+## translation
+1. kind of expressioin
+A_exp translate to:
+- eg. expression return nothing / while exp => T_stm
+- others maybe T_exp
 
 
 
