@@ -508,12 +508,50 @@ if let Some(3) = some_val {
 }
 ```
 
-
 # Collections
+```rust
+let v = vec![1,2,3,4,5];
+let third: &i32 = &v[2];
+
+match v.get(1) {
+  Some(third) => println!("third elem is {}", third),
+  None => println!("none")
+}
 
 
+let mut v2 = vec![100, 32, 57];
+for i in &mut v2 {
+  // dereference operator * to get value in i before using +=
+  *i += 50;
+}
+```
+rust need to know what types will be in vector at compile time
+- to know exactly how much memory on heap will be needed to store each element
+- can be explicit about what types allowed in vector
 
+## String
+only one string type: string slice `str`
 
+String: a module
+use `String::from` to create String from string literal
+
+## HashMap
+```rust
+use std::collections::HashMap;
+
+let mut scores = HashMap::new();
+scores.insert(String::from("Blue"), 10);
+scores.insert(String::from("Yellow"), 50);
+
+println!("{:?}", scores);
+
+let teams = vec![String::from("Blue"), String::from("Yellow")];
+let initial_scores = vec![10, 50];
+let sc: HashMap<_,_> = teams.iter().zip(initial_scores.iter()).collect();
+
+println!("{:?}", sc);
+
+```
 
 
 
