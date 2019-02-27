@@ -23,6 +23,141 @@ cargo clean
 cargo update: update all dependency
 cargo install
 
+# Packages
+crate: binary/library
+crate root: source file that know how to build crate
+Cargo.toml: describe how to build >= 1 crates
+
+- a package contain 0/1 library crate, any number of binary crates (multiple files in src/bin)
+- at most 1 crate in package can be library
+- at least 1 crate(library/binary) in package
+
+# module
+module: way to organize code, control privacy of paths
+path: way to name items
+use: bring path into scope
+pub: make items public
+as: rename items
+
+- all items (fn, method, struct, enums, modules, constants) are private by default
+- use `pub` to make item public
+
+```rust
+mod sound {
+  pub mod instrument {
+    pub fn guitar(){
+      super::breath();
+    }
+  }
+  fn breath(){}
+  mod voice {
+  }
+}
+mod ma {
+  mod mb {
+    mod mc {
+      pub fn calls(){}
+    }
+  }
+}
+mod pa {
+  pub use ma::mb::mc;
+}
+
+use crate::ma::mb::mc;
+use std::io::Result as IoResult;
+
+fn fn2() -> IoResult<()> {}
+
+fn main(){
+  // absolute path
+  crate::sound::instrument::guitar();
+  // relative path
+  sound::instrument::guitar();
+  mc::calls();
+  pa::mc::calls();
+}
+```
+define 2 modules (instrument, voice) within sound module
+
+module tree
+```
+crate
+  |-- sound
+      |-- instrument
+      |-- voice
+```
+
+absolute path: starts from crate root
+relative path: start from current module, use `self`, `super`, identifier in current module
+- both abs/rel path followed by >=1 identifier separated by ::
+
+```rust
+
+mod plant {
+  pub struct Vegetable {
+    // since name field is public, in main we can read/write to name field by dot notation
+    // if not pub, cannot read/write to name
+    pub name: String,
+    id: i32
+  }
+
+  impl Vegetable {
+    pub fn new(name: &str) -> Vegetable {
+      Vegetable {
+        name: String::from(name),
+        id: 1
+      }
+    }
+  }
+}
+
+fn main(){
+  let mut v = plant::Vegetable::new("squash");
+  v.name = String::from("butternut squash");
+  println!("{} are deliciout", v.name);
+}
+```
+- for functions, better to `use` parent module
+- for structs,enum,others, better to `use` full path
+  
+to bring standard library items
+```rust
+use std::cmp::Ordering; // start with std
+use std::{cmp::Ordering, io}; // nested
+
+use std::io;
+use std::io::Write;
+// ==>
+use std::io::{self, Write};
+
+use std::collections::*;
+```
+
+## different files
+```rust
+// src/main,rs
+mod sound;
+fn main(){
+  crate::sound::instrument::clarinet();
+}
+
+// src/sound.rs
+fn main(){
+  pub mod instrument {
+    pub fn clarinet() {}
+  }
+}
+// OR
+pub mod instrument;
+
+// src/sound/instrument.rs
+pub fn clarinet() {}
+
+```
+
+<!-- ============================== -->
+
 # syntax
 ref immutable by default
 safe and easy to use reference
@@ -330,15 +465,51 @@ rust can figure out whether method is reading(&self), mutating (&mut self), or c
 - make borrowing implicit
 
 ## associated funciton
+define functions within impl that not take self as parameter
+use `::` to call associated function
+```rust
+impl Rectangle {
+  fn adds(x: i32, y: i32) -> i32 {
+    x+y
+  }
+}
+fn main(){
+  println!("{}", Rectangle::adds(1,2));   // 3
+}
+```
+each struct allowed to have multiple impl blocks
+
+# enum
+```rust
+
+enum IpAddr2 {
+  V4(u8, u8, u8, u8),
+  V6(String)
+}
+let home = IpAddr2::V4(127, 0, 0, 1);
+let loopback = IpAddr2::V6(String::from("::1"));
+
+```
+
+# Optional
+rust don't have null
+
+```rust
+let some_val = Some(0u8);
+match some_val {
+  Some(3) => println!("three"),
+  _ => println!("fail")
+}
+// ===>
+if let Some(3) = some_val {
+  println!("three");
+} else {
+  println!("fail");
+}
+```
 
 
-
-
-
-
-
-
-
+# Collections
 
 
 
