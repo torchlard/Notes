@@ -541,7 +541,10 @@ use std::collections::HashMap;
 
 let mut scores = HashMap::new();
 scores.insert(String::from("Blue"), 10);
+scores.insert(String::from("Blue"), 30);  // overwrite
 scores.insert(String::from("Yellow"), 50);
+// only insert when key has no value
+scores.entry(String::from("Yellow")).or_insert(70);
 
 println!("{:?}", scores);
 
@@ -552,6 +555,246 @@ let sc: HashMap<_,_> = teams.iter().zip(initial_scores.iter()).collect();
 println!("{:?}", sc);
 
 ```
+
+
+# Error
+## Unrecoverable error
+panic!
+```rust
+let v = vec![1,2,3];
+// panic! error
+v[99];
+
+// call panic
+panic!("crash and burn");
+```
+program will stop immediately
+
+## Recoverable error
+Result
+- most errors aren't serious enough to require program to stop entirely
+- can easily interpret and respond to
+eg. open a file that doesn't exist => create file instead
+```rust
+use std::fs::File;
+fn main(){
+  let f = File::open("hello.txt");
+  let f = match f {
+    Ok(file) => file,
+    Err(error) => {
+      panic!("there was problem opening file {:?}", error)
+    }
+  };
+}
+```
+
+unwrap: return value inside Ok
+expect: keep track of error easier by msg
+
+### propagating error
+if error in fn1 called by fn2
+- handling error within fn1 => return error to fn2
+- let fn2 decide what to do
+```rust
+// if fn succeed, return Ok that hold String (username)
+// if Err, return Err value that holds an instance of io::Error
+fn read_username() -> Result<String, io::Error> {
+  let f = File::open("hello.txt");
+  let mut f = match f {
+    Ok(file) => file,
+    Err(e) => return Err(e)
+  };
+
+  let mut s = String::new();
+  match f.read_to_string)&mut s) {
+    Ok(_) => Ok(s),
+    Err(e) => Err(e)
+  }
+}
+// ==>
+fn read_username() -> Result<String, io::Error> {
+  // ?: work almost same way as match expression defined to handle Result value above
+  let mut s = String::new();
+  File::open("hello.txt")?.read_to_string(&mut s)?;
+  Ok(s)
+}
+```
+`?` can only be used in functions that return Result
+- use unwrap/expect as placeholder for prototyping, before ready to decide how to handle errors
+- `panic` can mark test as failure
+- unwrap to ensure Result will have Ok value
+
+## advice
+- panic when possible that code end up in bad state
+- bad state: sth that expected to happen occasionally
+- bad state: when some assumption/guarantee/contract/invariant broken
+- return Result when failure expected
+make use of Rust's type system to do many checks for you
+
+better to make new type and put validation in fn, so to guarantee output valid
+```rust
+pub struct Guess {
+  value: i32
+}
+impl Guess {
+  pub fn new(value: i32) -> Guess {
+    if vlaue < 1 || value > 100 {
+      panic!("guess value must 1-100, got {}", value);
+    }
+    Guess {
+      value
+    }
+  }
+  pub fn value(&self) -> i32 {
+    self.value
+  }
+}
+
+```
+
+# Generic
+zero cost abstraction by monomorphization
+- turn generic code into specific code by filling in concrete type when compiled
+
+```rust
+struct Point2<T,U> {
+  x: T,
+  y: U
+}
+impl<T,U> Point2<T,U> {
+  fn mixup<V,W>(self, other: Point2<V,W>) -> Point2<T,W> {
+    Point2 {
+      x: self.x, 
+      y: other.y
+    }
+  }
+}
+
+fn main() {
+  let q1 = Point2{ x: 5, y: 10.0};
+  let q2 = Point2{ x: "hello", y: 'w'};
+
+  println!("p.x = {}", p.x());
+  let mix = q1.mixup(q2);
+  println!("after mixup: {}, {}", mix.x, mix.y);
+}
+```
+
+# Trait
+tell compiler about functionality of particular type, can share with other type
+- group method signature together
+
+we can't implement external trait on external types
+- must be local to our crate
+- for other file, has to specify `use aggregator::Summary`
+
+must implement all methods without default implementation in trait
+
+```rust
+pub trait Summary {
+  fn summarize(&self) -> String;
+}
+
+pub struct NewsArticle {
+  pub headline: String,
+  pub location: String,
+  pub author: String,
+  pub content: String
+}
+
+impl Summary for NewsArticle {
+  fn summarize(&self) -> String {
+    format!("{} by {} ({})", self.headline, self.author, self.location)
+  }
+}
+
+pub struct Tweet {
+  pub username: String,
+  pub content: String,
+  pub reply: bool,
+  pub retweet: bool
+}
+
+impl Summary for Tweet {
+  fn summarize(&self) -> String {
+    format!("{}: {}", self.username, self.content)
+  }
+}
+
+fn main(){
+
+  let tweet = Tweet {
+    username: String::from("horse_ebook"),
+    content: String::from("of coz, as you"),
+    reply: false,
+    retweet: false
+  };
+  println!("1 new tweet: {}", tweet.summarize());
+}
+```
+
+## default implementation
+can have default implementation in trait
+- impl can choose to overwrite it or not
+
+
+## trait bounds
+traits can act as arguments
+trait bound: syntax sugar for longer form
+```rust
+pub trait Summary {
+  fn summarize(&self) -> String;
+}
+pub fn notify(item: impl Summary) {
+  println!("breaking news! {}", item.summarize());
+}
+// rewrite ==>
+pub fn notify<T: Summary> (item: T) {
+  println!("Breaking news! {}", item.summarize());
+}
+// notify needed to display formatting on item, use summarize
+pub fn notify(item: impl Summary + Display) {}
+pub fn notify<T: Summary + Display>(item: T) {}
+
+fn some_fn<T,U>(t: T, u: U) -> i32
+  where T: Display + Clone, U: Clone + Debug {
+  }
+// return sth that implements Summary trait
+fn return_smm() -> impl Summary {
+  Tweet {
+    username: xxx
+    ...
+  }
+}  
+```
+
+## conditionally implement
+```rust
+struct Pair<T> {
+  x: T, y: T
+}
+
+impl<T> Pair<T> {
+  fn new(x: T, y: T) -> Self {
+    Self {x, y}
+  }
+}
+
+impl<T: Display + PartialOrd> Pair<T> {
+  fn cmp_display(&self) {
+    if self.x >= self.y {
+      println!("largest x = {}", self.x);
+    } else {
+      println!("largest y = {}", self.y);
+    }
+  }
+}
+```
+blanket implementation: 
+implement trait on any type that satisfies the trait bounds
+
+
+
 
 
 
