@@ -1136,8 +1136,16 @@ eg. in graph multiple edges point to same node
 - keep track of #ref to value
 - only for use in single-threaded
 
-
-
+```rust
+let a = Cons(5, Box::new(Cons(
+  10, Box::new(Nil)
+)));
+let b = Cons(3, Box::new(a));
+// error
+let c = Cons(4, Box::new(a));
+```
+since a -> b, b owns a
+- every element in list will live at least as long as entire list
 
 
 
