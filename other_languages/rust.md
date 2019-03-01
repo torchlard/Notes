@@ -793,6 +793,348 @@ impl<T: Display + PartialOrd> Pair<T> {
 blanket implementation: 
 implement trait on any type that satisfies the trait bounds
 
+trait and trait bounds let us write code that use generic type param -> reduce duplication
+- no need to write code check behavior at runtime -> done at compile time
+
+
+# Lifetime
+every reference in rust has lifetime
+- scope for which reference is valid
+- must annotate lifetimes when lifetimes of reference could be related in few different ways
+- (must annotate types when multiple types possible)
+```rust
+{
+  let r;
+  {
+    let x=5;
+    r = &x;
+  }
+  println!("r: {}", r); // error!
+}
+// r has no value to print
+```
+
+## borrow checker
+compile has borrow checker that compares scope to determine whether all borrows are valid
+```rust
+{
+  let x=5;               // ----------'b
+                         //         |   
+  let r = &x;            // ---- 'a |  
+                         //   |     |
+  println!("r: {}", r);  //   |     |
+                         //-----    |
+}                        //-----------
+```
+lifetime of x='b is longer than lifetime of r='a
+- r can reference x
+
+## generic lifetimes in functions
+```rust
+fn longest (x: &str, y: &str) -> &str {
+  if x.len() > y.len() {x} else {y}
+}
+```
+&str expected lifetime parameter
+- rust can't tell whether ref being returned refers to x or y
+- don't know concrete lifetimes of ref passed in
+
+## lifetime annotation
+- fn can accept ref with any lifetime by specifying generic type param
+- annotation describe relationship of lifeitme of multiple ref to each other without affecting lifetime
+
+start with `'`
+```rust
+&i32  // ref
+&'a i32   // ref with explicit lifetime
+&'a mut i32   // mutable ref with explicit lifetime
+
+// x, y, result all have same lifetime
+fn longest<'a>(x: &'a str, y: &'a str) -> &'a str {
+  if x.len() > y.len() {x} else {y}
+}
+
+// string1 valid until end of outer scope
+// string2 valid until end of inner scope
+// result reference to sth valid until end of inner scope
+fn main() {
+  let string1 = String::from("long string is long");
+  {
+    let string2 = String::from("xyz");
+    let result = longest(string1.as_str(), string2.as_str());
+    println!("longest str is {}", result);
+  }
+}
+
+struct ImportantExcerpt<'a> {
+  part: &'a str
+}
+```
+lifetime annotations in particular situations are predictable
+=> in future compiler can infer lifetimes
+=> ever fewer lifetime annotations required
+
+### lifetime elision rule
+set of particular rules that compiler will consider
+
+input lifetime: lifetime on function/method param
+output lifetime: lifetime on return values
+
+1. (input) each param that is a ref get its own lifetime param
+2. (output) if there's exactly one input lifetime param, that lifetime assigned to all output lifetime param
+3. (output) if multiple input lifetime param, but one is `&self`/`&mut self`, then lifetime of `self` assigned to all output lifetime param
+```rust
+fn foo<'a,'b> (x: &'a i32, y: &'b i32);   // 1
+fn foo<'a> (x: &'a i32) -> &'a i32    // 2
+```
+
+## lifetime for method definition
+lifetime name for struct field must declare after `impl`
+```rust
+// can infer from rule 3, no need annotate
+impl<'a> ImportantExcerpt<'a> {
+  fn announce(&self, ann: &str) -> &str {
+    println("attention pls: {}", ann);
+    self.part
+  }
+}
+
+let s: &'static str = "I have static lifetime";
+```
+'static: entrie duraiton of program
+
+# Functional lang feature
+## closure
+anonymous functions save in variable / pass as argument to other functions
+- capture value from scope in which they're defined
+  
+```rust
+
+fn simulated_epensive(intensity: u32) -> u32 {
+  println!("calc slowly...");
+  intensity
+}
+// ==>
+let expensive_closure = |num| {
+  println!("calc slowly...");
+  num
+};
+
+fn add_v1(x: u32) -> u32 {x+1}
+let add_v2 = |x: u32| -> u32 {x+1};
+let add_v3 = |x: u32| { x+1 };
+let add_v4 = |x: u32| x+1;
+
+```
+
+# Iterator
+iterating over items
+iterator are lazy, no effect until you call method that consume iterator to use it up
+```rust
+trait Iterator {
+  type Item;
+  fn next(&mut self) -> Option<Self::Item>;
+}
+
+
+#[derive(PartialEq, Debug)]
+struct Shoe {
+  size: u32,
+  style: String
+}
+
+fn shoes_in_size(shoes: Vec<Shoe>, shoe_size: u32) -> Vec<Shoe> {
+  shoes.into_iter().filter(|s| s.size == shoe_size)
+       .collect()
+}
+
+
+fn main() {
+
+  let shoes = vec![
+    Shoe {size: 10, style: String::from("sneaker")},
+    Shoe {size: 13, style: String::from("sandal")},
+    Shoe {size: 10, style: String::from("boot")}
+  ];
+
+  let in_my_size = shoes_in_size(shoes, 10);
+  println!("{:?}", in_my_size);
+}
+
+// implement iterator
+
+struct Counter {
+  count: u32
+}
+
+impl Counter {
+  fn new() -> Counter {
+    Counter { count: 0 }
+  }
+}
+
+impl Iterator for Counter {
+  type Item = u32;
+  fn next(&mut self) -> Option<Self::Item> {
+    self.count += 1;
+    if self.count < 6 {Some(self.count)} else {None}
+  }
+}
+
+fn main() {
+  let sum: u32 = Counter::new().sum();
+  println!("{}", sum);
+}
+
+```
+
+# OOp
+```rust
+
+impl<T> Screen<T> where T: Draw {
+  pub fn run(&self){
+    for components in self.components.iter(){
+      components.draw();
+    }
+  }
+}
+
+impl Screen {
+  pub fn run(&self) {
+    for component in self.components.iter(){
+      component.draw();
+    }
+  }
+}
+
+pub struct Button {
+  pub width: u32,
+  pub height: u32,
+  pub label: String
+}
+
+impl Draw for Button {
+  fn draw(&self){
+
+  }
+}
+
+use gui::Draw;
+struct SelectBox {
+  width: u32,
+  height: u32,
+  options: Vec<String>
+}
+
+impl Draw for SelectBox {
+  fn draw(&self){
+
+  }
+}
+
+use gui::{Screen, Button};
+
+fn main() {
+  let screen = Screen {
+    components: vec![
+      Box::new(SelectBox {
+        width: 75,
+        height: 10,
+        options: vec![
+          String::from("Yes"),
+          String::from("Maybe"),
+          String::from("No")
+        ]
+      }),
+      Box::new(Button {
+        width: 50,
+        height: 10,
+        label: String::from("OK")
+      })
+    ]
+  };
+
+  screen.run();
+}
+```
+write code similar to duck typing
+- never have to check whether value implements particular method at runtime OR worry about getting err not implemented
+  
+static dispatch: compiler know what method call at compile time
+- runtime cost if lookup method
+
+if use trait object, must use dynamic dispatch
+- compiler don't know all types might be used
+- dynamic dispatch prevents compiler from choosing to inline method's code, prevent some optimization
+
+trait is object-safe if methods
+- return type isn't self
+- no generic type parameters
+
+
+# Smart pointer
+box simpliest smart pointer, type: Box<T>
+store data on heap rather than stack
+- pointer remain on stack ppoint to heap
+
+```rust
+// value 5 allocated on heap
+let b = Box::new(5);
+println!("b = {}", b);
+```
+
+## recursive type
+if type ref type directly, compiler don't know how much memory (infinite) to store all data => Error
+- wrap type inside box, leave pointer only => finite space needed
+```rust
+enum List {
+  Cons(i32, Box<List>),
+  Nil
+}
+use List::{Cons, Nil};
+
+fn main() {
+  let list = Cons(1,
+    Box::new(Cons(2,
+      Box::new(Cons(3,
+        Box::new(Nil))))));
+}  
+```
+Box<T> implements `Deref` trait: smart pointer
+- when Box<T> goes out of scope, heap data box pointing to cleaned up as well (due to `Drop` trait implementation)
+
+## Deref trait
+allow customize behavior of dereference operator *
+```rust
+
+let x = 5;
+let w = Box::new(x);
+let y = &x; // y = ref to x
+let z = &y;
+assert_eq!(5, x);
+assert_eq!(5, *w);
+assert_eq!(5, *y);  // *y: find value ref pointing to
+assert_eq!(5, **z); 
+
+```
+
+## Deref coercion
+`deref` method give compiler ability to take value of any type that implements `Deref`, call `deref` to get & that know how to deref
+- compiler do automatically, when type *y -> *(y.deref())
+
+&T -> &U when T: Deref<Target=U>
+&mut T -> &mut U when T: DerefMut<Target=U>
+&mut T -> &U when T: Deref<Target=U>
+
+mutabble -> immutable never break borrowing rule
+immutable -> mutable require there's only 1 immutable ref to that data
+
+
+## RC (reference counted smart pointer)
+enable multiple ownership
+eg. in graph multiple edges point to same node
+- keep track of #ref to value
+- only for use in single-threaded
 
 
 
