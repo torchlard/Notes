@@ -1143,9 +1143,233 @@ let a = Cons(5, Box::new(Cons(
 let b = Cons(3, Box::new(a));
 // error
 let c = Cons(4, Box::new(a));
+
+// ==>
+let a = Rc::new(Cons(5, Rc::new(
+  Cons(10, Rc::new(Nil)))));
+let b = Cons(3, Rc::clone(&a));
+let c = Cons(4, Rc::clone(&a));
+// same as a.clone()
 ```
 since a -> b, b owns a
 - every element in list will live at least as long as entire list
+
+Rc<List> has initial ref count = 1, each time call `clone`, count+=1
+at end of main, count = 0
+
+## RefCell<T>
+interior mutability: mutate data even when immutable reference to data 
+ref, Box<T>: borrowing rules' invariant enforced at compile time 
+RefCell<T>: enforced at runtime checking
+- both Rc<T>, RefCell only use in single-thread
+
+## comparison
+- Rc<T>: multiple owner; Box<T>,RefCell<T>: single owner
+- Box<T>: immutable/mutable borrows; Rc<T>: only immutable borrows
+- RefCell<T>: immutable/mutable borrows checked at runtime
+- can mutable value inside RefCell<T> even when RefCell<T> is immutable
+
+```rust
+use super::*;
+use std::cell::RefCell;
+
+struct MockMessenger {
+  sent_messages: RefCell<Vec<String>>
+}
+
+impl MockMessenger {
+  fn new() -> MockMessenger {
+    MockMessenger { sent_messages: RefCell::new(vec![]) }
+  }
+}
+
+impl Messager for MockMessenger {
+  fn send(&self, message: &str) {
+    self.sent_messages.borrow_mut().push(String::from(message));
+  }
+}
+
+#[test]
+fn send_75() {
+  assert_eq!(mock_messager.send_messages.borrow().len(), 1);
+}
+
+```
+
+## reference cycle
+prevent memory leaks not rust guaranteed
+1. if have RefCell<T> contain Rc<T> value, must ensure don't create cycles
+2. recognize data structure so that some ref express ownerhip, some ref don't
+Rc<T> only cleaned up if strong_count == 0
+
+## Rc<T> -> Weak<T>
+call `Rc::downgrade`, pass ref to `Rc<T>`, get smart pointer of type `Weak<T>`
+- weak_count += 1
+
+strong ref: about how share ownership of Rc<T> instance
+weak ref: don't express ownership relationship
+
+
+# Concurrency
+Erlang: elegant functionality for message-passing concurrency, obscure way to share states between threads
+
+green thread: programming language provided threads
+- M:N model -> M green threads per N OS threads
+
+every non-assembly lang will have some amount of runtime code
+- "no runtime" means "small runtime"
+- fewer features, smaller binaries
+- easier to combine lang with other lang in more context
+- rust aim at nearly no runtime, avoid calling C
+
+```rust
+thread::spawn(|| {
+  for i in 1..10 {
+    println!("hi number {} from spawned thread!", i);
+    thread::sleep(Duration::from_millis(1));
+  }
+});
+
+for i in 1..5 {
+  println!("hi num {} from main thread!", i);
+  thread::sleep(Duration::from_millis(1));
+}
+```
+when main thread ends, even if spawned thread not finished, still terminated
+
+wait for spawn thread to finish:
+`handle.join().unwrap();`
+
+```rust
+// clousre uses v, capture v make it part of closure's environment
+// move: force clousre to take ownership of value, rather than Rust infer that it should borrow the values
+let handle = thread::spawn(move || {
+  println!("vector: {:?}", v);
+});
+
+// error: guarantee main thread won't use v anymore
+// drop(v);
+
+handle.join().unwrap();
+```
+
+## message passing
+Go: "do not communicate by sharing memory; instead, share memory by communicating"
+- go use channel
+- transmitter, receiver
+
+
+```rust
+// tx: sending end; rx: receiving end
+let (tx,rx) = mpsc::channel();
+thread::spawn(move || {
+  let val = String::from("hi");
+  // send method return Result<T,E> type
+  tx.send(val).unwrap();
+});
+// receive Result<T,E>
+let received = rx.recv().unwrap();
+println!("Got: {}", received);  
+
+// multiple tx
+let (tx,rx) = mpsc::channel();
+
+let tx1 = mpsc::Sender::clone(&tx);
+thread::spawn(move || {
+  let vals = vec![
+    String::from("hi"),
+    String::from("from"),
+    String::from("the"),
+    String::from("thread"),
+  ];
+  for val in vals {
+    tx1.send(val).unwrap();
+    thread::sleep(Duration::from_secs(1));
+  }
+});
+thread::spawn(move || {
+  let vals = vec![
+    String::from("more"),
+    String::from("msg"),
+    String::from("for"),
+    String::from("you"),
+  ];
+  for val in vals {
+    tx.send(val).unwrap();
+    thread::sleep(Duration::from_secs(1));
+  }
+});
+
+for received in rx {
+  println!("Got {}", received);
+}
+
+```
+mpsc: multiple producer, single consumer
+try_recv: not block, instead return Result<T,E> immediately
+
+## shared state concurrency
+channel similar to single ownership
+- once transfer value down channel, no longer use that value
+- shared memory ~ multiple ownership
+- multiple thread access same memory location at same time
+
+### mutex
+- must attempt to acquire lock before using data
+- when done with data with mutex guards, must unlock
+
+```rust
+let m = Mutex::new(5);
+{
+  let mut num = m.lock().unwrap();
+  *num = 6;
+}
+println!("m = {:?}", m);
+```
+Mutex<T> is smart pointer, call to lock return smart pointer `MutexGuard`
+- implements Deref to point at our inner data
+- `Drop` implementation to auto release lock when MutexGuard goes out of scope
+- don't risk forgetting release lock and blocking mutex
+
+### share Mutex<T> between multiple threads
+create counter variable to hold `i32` insdie Mutex<T>
+- create 10 threads iterate through numbers
+- move counter into thread -> acquire lock -> +1 to value in mutex
+- when thread finish closure, num go out of scope -> relase lock
+- in main thread, collect all join handles
+
+### multiple ownership with multiple threads
+Rc not safe to share across threads => replace with Arc<T>
+
+```rust
+let counter = Arc::new(Mutex::new(0));
+let mut handles = vec![];
+
+for _ in 0..10 {
+  let counter = Arc::clone(&counter);
+  let handle = thread::spawn(move || {
+    let mut num = counter.lock().unwrap();
+    *num += 1;
+  });
+  handles.push(handle);
+}
+
+for handle in handles {
+  handle.join().unwrap();
+}
+
+println!("Result: {}", *counter.lock().unwrap());
+```
+
+### extensible concurrency
+Send: trait indicates ownership of type 
+- can be transferred between threads
+- almost every rust type is `Send`
+- exception: Rc<T>
+
+Sync
+
+
 
 
 
