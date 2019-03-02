@@ -1588,6 +1588,113 @@ fn returns_closure() -> Box<dyn Fn(i32) -> i32> {
 use macros like `println!` throughout rust
 
 ## Macro VS funcitons
+macro: way of writing code that writes other code (meta-programming)
+derive: generates implementation of various traits
+
+function signature msut declare number and type of param function has
+- function can't implement trait of given type
+- because it gets called at runtime, trait implement need at compile time
+  
+macro can take variable num of params
+- eg. `println!("hi")`, `println!("{}", name)`
+- macro expanded before compiler interprets msg of code
+- must define or bring macros into scope before call them in file
+
+## declarative macros 
+"macro_rules!"
+allow write sth similar to match expression
+- macro compare value to pattern that have code associated with them
+
+```rust
+let v: Vec<u32> = vec![1,2,3];
+
+//// vec! defined as ==>
+
+// indicate macro should be made available whenever crate bought into scope
+#[macro_export]
+macro_rules! vec {
+  // pattern matching (macro pattern syntax)
+  // $ : capture value that match pattern within (...) for use in replacement code
+  // * : match 0 or more
+  ( $( $x: expr ), * ) => {
+    {
+      let mut temp_vec = Vec::new();
+      $(
+        temp_vec.push($x);
+      )*
+      temp_vec
+    }
+  };
+}
+
+//// code generated ==>
+let mut temp_vec = Vec::new();
+temp_vec.push(1);
+temp_vec.push(2);
+temp_vec.push(3);
+temp_vec
+
+```
+
+## procedural macros
+more like funcitons, accept some code as input -> process -> code as output
+```rust
+use proc_macro;
+
+#[some_attribute]
+pub fn some_name(input: TokenStream) -> TokenStream {
+  ...
+}
+```
+
+## attribute like macros
+allow you create new attributes
+`derive` only works for structs and enums
+similar to annotation in Java
+
+```rust
+#[route(GET, "/")]
+fn index() {
+  ...
+}
+
+//// macro defintion
+pub fn route(attr: TokenStream, item: TokenStream) -> TokenStream {}
+```
+
+## function-like macros
+```rust
+let sql = sql!(SELECT * FROM posts WHERE id=1);
+
+#[proc_macro]
+pub fn sql(input: TokenStream) -> TokenStream {}
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
