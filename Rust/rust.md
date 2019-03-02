@@ -1371,11 +1371,223 @@ Sync
 
 
 
+# Advanced lifetime
+## lifetime subtyping
+one lifetime outlive another lifetime
+
+```rust
+struct Context<'s>(&'s str);
+// 's guarentee to live >= 'c
+struct Parser<'c, 's: 'c> {
+  context: &'c Context<'s>
+}
+
+impl<'c,'s> Parser<'c,'s> {
+  fn parse(&self) -> Result<(), &'s str>{
+    Err(&self.context.0[1..])
+  }
+}
+
+fn parse_context(context: Context) -> Result<(), &str> {
+  Parser{context: &context}.parse()
+}
+
+fn main() {
+  let v = parse_context(Context("abc") );
+  println!("{:?}", v);
+}
+```
+tell rust {string slice in Context, ref to Context in Parser} different lifetimes
+- return value of parse_context, tied to lifetime of string slice in Context
+
+## lifetime bounds
+```rust
+// Type T must live >= a'
+struct Ref<'a, T: 'a>(&'a T);
+
+// 'static: ref live as long as entireprogram
+// no ref meet requirement all ref live as long as entire program
+struct StaticRef<T: 'satatic>(&'static T);
+
+// default lifetime of trait obj = 'static
+// &'a Trait / &'a mut Trait => default lifetime = 'a
+// T: 'a => lifetime = 'a
+// with multiple lcauses like T: 'a => no defualt lifetime, must be explicit
+trait Red{}
+struct Ball<'a> {
+  diameter: &'a i32
+}
+impl<'a> Red for Ball<'a> {}
+
+fn main() {
+  let num = 5;
+  let obj = Box::new(Ball{diameter: &num}) as Box<dyn Red>;
+}
 
 
+fn foo<'a>(string: &'a str) -> StrWrap<'a> {
+  StrWrap(string)
+}
+// ===>
+fn foo(string: &str) -> StrWrap<'_> {
+  StrWrap(string)
+}
 
 
+impl<'a> fmt::Debug for StrWrap<'a> {}
+// ===>
+impl fmt::Debug for StrWrap<'_> {}
+```
 
+
+# Advanced trait
+```rust
+trait Animal {
+  fn baby_name() -> String;
+}
+struct Dog;
+impl Dog {
+  fn baby_name() -> String{
+    String::from("Spot")
+  }
+}
+impl Animal for Dog {
+  fn baby_name() -> String {
+    String::from("puppy")
+  }
+}
+
+fn main() {
+  println!("A bady dog called {}", Dog::baby_name());
+  println!("A bady dog called {}", <Dog as Animal>::baby_name());
+}
+```
+`<Type as Trait>::funiton(...)`
+
+## sueprtrait
+```rust
+
+use std::fmt;
+
+trait OutlinePrint: fmt::Display {
+  fn outline_print(&self) {
+    // to_string method from Display
+    let output = self.to_string();
+    let len = output.len();
+    println!("{}", "*".repeat(len+4));
+    println!("*{}*", "*".repeat(len+2));
+  }
+}  
+
+```
+
+# Advanced type
+## newtype patten
+allow to implement trait on type, as long as either trait/type local to out crate
+
+1. statically enforce value are never confused and indicating units of value
+2. abstract away some implementation details of type
+- expose public API different from API of private inner type
+
+```rust
+
+type Kilometers = i32;
+let x: i32 = 5;
+let y: Kilometers = 5;
+
+
+type Thunk = Box<dyn Fn() + Send + 'static>;
+let f: Thunk = Box::new(|| println!("hi"));
+
+fn takes_long_type(f: Thunk) {}
+fn returns_long_type() -> Thunk {}
+```
+Never type: `!` == empty type, has no value, never return
+continue has `!` value, so allow
+```rust
+loop {
+  let guess: u32 = match guess.trim().parse() {
+    Ok(num) => num,
+    Err(_) => continue,
+  };
+  break;
+}
+
+
+print!("forever");
+loop {
+  print!("and ever");
+}
+```
+
+## dynamically size types
+DST / unisized type: let us write code using value whose size known only at runtime
+```rust
+let s1: str = "hello there";
+let s2: str = "how's it going?";
+```
+s1 and s2 need different storage size -> type as `&str`
+although &T is single vlaue, &str is two values: (address of str, its length)
+- can know size of &str at compile time (2*usize)
+- combine `str` with all inds of pointers
+every trait is dynamically sized type 
+
+```rust
+fn generic<T: Sized>(t: T) {}
+// ===
+fn generic<T>(t: T) {}
+```
+
+# Advanced functions
+```rust
+fn add_one(x: i32) -> i32 {
+  x+1
+}
+// fn as a parameter type
+fn do_twice(f: fn(i32) -> i32, arg: i32) -> i32 {
+  f(arg) + f(arg)
+}
+
+fn main() {
+  let answer = do_twice(add_one, 5);
+  println!("ans = {}" , answer);
+}
+```
+function pointer implement closure traits(Fn, FnMut, FnOnce)
+situation only accept fn, not closure:
+- interfacing with external code that doesn't have closure
+- eg. C accept function as arguments, but not have closures
+
+```rust
+let list_of_num = vec![1,2,3];
+let list_of_strs: Vec<String> = 
+  list_of_num.iter()
+              .map(|i| i.to_string())
+              .collect();
+println!("{:?}", list_of_strs);
+
+#[derive(Debug)]
+enum Status {
+  Value(u32), Stop
+}
+
+// (5u32..20) implemented as funtions: function pointer implementing closure trait
+let list_of_status: Vec<Status> = 
+  (5u32..20).map(Status::Value).collect();
+println!("{:?}", list_of_status);
+```
+
+## return closure
+```rust
+fn returns_closure() -> Box<dyn Fn(i32) -> i32> {
+  Box::new(|x| x+1)
+}
+```
+
+# Macro
+use macros like `println!` throughout rust
+
+## Macro VS funcitons
 
 
 
