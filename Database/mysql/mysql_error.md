@@ -50,6 +50,28 @@ solution: mysql_upgrade --force -uroot -p
 
 
 
+# how to install mariadb correctly
+sudo apt-get remove --purge mysql-\*
+sudo apt-get install mysql-server mysql-client
+sudo apt-get install mariadb-server mariadb-client
+sudo mysql_secure_installation
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

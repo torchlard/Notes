@@ -86,6 +86,25 @@ docker stack rm getstartedlab
 eval $(docker-machine env -u)
 
 
+## example
+- run mariadb
+docker run --name some-mariadb -e MYSQL_ROOT_PASSWORD=123456 -d mariadb:latest
+
+docker stop e4a8800b0d71
+docker container start e4a8800b0d71
+
+OR
+
+1. write stack.yml
+2. docker-compose -f stack.yml up
+3. docker exec -it "container_name" bash
+
+
+
+
+
+
+
 
 
 
