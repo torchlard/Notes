@@ -116,13 +116,75 @@ recover changes made during given time span (point-in-time recovery)
 - follow full recovery from backup files
 
 
+# Connection management
+each client connection get own thread within server process
+- no need created, destroyed for each new connection
+- when client connect to mysql server, need authentication
+- username, originating host, password
+- X.509 certificate used across SSL connection
+
+# lock granularity
+some db not offer choice of lock
+table lock, row lock
+
+# transaction
+mysql not manage transaction at server level, but storage engine does
+=> can't mix different engine in single transaciton
+rollback is problem if non-transactional table
+
+MVCC: twist on row-level locking
+- allow nonlocking reads
+- only lock necessary rows during write operations
 
 
+# other engine
+## archive engine
+support only insert and select
+best for logging and data acquisition
 
+## blackhole engine
+no storage mechanism at all
+- for fancy replication setup and audit logging
 
+## CSV engine
+treat CSV as tables, not support index
+copy file into and out of db while server running
+write data into CSV table, external program can read it right away
 
+## Federated engine
+~ proxy to other server
+open client connection to another server, execute queries against table there
+- many problem, disabled by default
+- successor: FederatedX
 
+## memory engine
+need fast access to data that never change / no need to persist after restart
+- hold up order of magnitude faster than MyISAM
+- all data stored in memory
 
+good use
+- lookup/mapping tables
+- caching results of periodically aggregated data
+- intermediate results when analyzing data
+
+table level locking => low write concurrency
+not support TEXT / BLOB
+support fixed-size rows
+
+## Merge storage engine
+variation of MyISAM
+- combine serveral MyISAM into 1 virtual table
+- deprecated for partitioning
+
+## NDB
+cluster storage engine as interface between SQL and native NDB protocol
+
+## 3rd party engine
+pluggable storage engine API
+### OLTP storage engine
+Percona's XtraDB storage engine
+PBXT, GMBH
+RethinkDB for SSD
 
 
 
