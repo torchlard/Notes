@@ -122,6 +122,10 @@ repository.findByFirstName("Jack").forEach(...);
 
 
 
+# interface JpaRepository
+once extends JpaRepository, then already implemented save(create,update), delete, findAll, findOne, 
+
+
 
 
 

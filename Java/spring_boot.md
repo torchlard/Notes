@@ -117,7 +117,8 @@ springboot add @EnableWebMvc automatically wehn see spring-webmvc on classpath
 
 
 
-
+# command
+gradle bootRun
 
 
 

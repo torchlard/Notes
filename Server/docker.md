@@ -40,7 +40,7 @@ docker container ls --all
 docker image ls
 
 // delete none images
-docker rmi $(docker images -f "dangling=true" -q)
+docker rmi -f $(docker images -f "dangling=true" -q)
 
 # open container initiative
 established in 2015 
@@ -97,7 +97,7 @@ OR
 
 1. write stack.yml
 2. docker-compose -f stack.yml up
-3. docker exec -it "container_name" bash
+3. docker exec -it mariadb_db_1 bash
 
 
 
