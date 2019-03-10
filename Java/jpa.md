@@ -90,6 +90,58 @@ mapping.xml
 
 
 
+# setting
+spring.jpa.properties.hibernate.hbm2ddl.auto
+- create
+- create-drop
+- validate
+- update
+
+## update
+
+### entity changes
+if entity name change => table generated not delete, gen new table
+entity index change => 
+- if no existing index, @Index added => new index
+- if existing index, @Index delete => no del index in db
+
+### field add/delete
+if add field in class => create new column, not affect other row
+if delete field => will not delete column in db, not affect db attribute
+
+field name change => add/delete field
+
+### field attr change
+primary key
+```java
+@Entity
+public class User {
+  @Id
+  private Long id;
+  @Id
+  private Long id0;
+  @Column
+  private String name;
+}
+```
+auto gen statement ==>
+```sql
+create table `user` {
+  `id0` bigint(20) not null,
+  `id` bigint(20) not null,
+  `name` varchar(255) default null,
+  primary key (`id0`, `id`)
+}
+```
+
+### column attr change
+eg. unique, nullable, length
+if not set these attr before
+- later you add/delete attr => not affect db
+- as long as column name unchange
+
+
+
 
 # implement
 no need to write class that implements CustomerRepository

@@ -105,6 +105,35 @@ match greatest number of arguments in constructor
 choose between Type and constructor automatically
 5. no
 
+## principle
+for dependency injection
+when Spring managed bean discover annotation, inject related bean managed by Spring
+- spring will scan custom defined package
+- OR find bean method in config file 
+object in signature must be bean managed by Spring
+
+config
+```xml  
+<bean name="comment1" class="com.sss.Comment">
+  <property name="text" value="Content of 1st comment" />
+</bean>
+
+<bean name="comment2" class="com.sss.Comment">
+  <property name="text" value="Content of 2nd comment" />
+</bean>
+```
+don't know which bean to inject -> need to specify by @Qualifier
+```java
+@Qualifier(value="comment1")
+@Autowired
+private Comment firstComent;
+
+@Qualifier(value="comment2")
+@Autowired
+private Comment secondComment;
+```
+
+
 # Inheritance
 to save time, allow bean inheritance, override value of any properties on child bean
 
@@ -134,6 +163,7 @@ bean property value <--> String representation
 - Spring ApplicationContext
 
 portability among IoC containers: be careful
+
 
 ## Bean lifecycle
 ### types
@@ -273,7 +303,7 @@ after throwing: when throw exception
 aroung
 
 -------------------
-
+```
 Advice
   BeforeAdvice
     MethodBeforeAdvice
@@ -282,8 +312,7 @@ Advice
     AfterRunningAdvice
   Interceptor
     MethodInterceptor
-
-
+```
 ## AspectJ
 joinPoint: what target function can be captured
 pointcut(target method): method in joinPoint need to be cut into
@@ -304,6 +333,8 @@ by inheritance, implement method interceptor, rewrite intercept()
 1. use ProxyFactoryBean
 2. Spring AOP namespace (XML)
 3. @AspectJ-style annotations
+
+
 
 
 # transaction propagation
@@ -330,6 +361,8 @@ read_uncommitted
 read_committed
 repeatable_read
 serializable
+
+
 
 
 # servlet/tomcat/spring mvc relation
@@ -390,6 +423,12 @@ ValidationUtils
 
 # Data Persistence
 cater for NoSQL => 'Sprint Data' project
+
+
+
+<!-- ================================ -->
+
+## SpringBeanJobFactory
 
 
 
