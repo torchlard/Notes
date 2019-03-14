@@ -9,6 +9,8 @@ secondary index = record not sort by that index
 2. create user '<username>'@'<hostname>' identified by '<password>';
 3. grant all privileges on *.* to '<user>'@'<host>' with grant option;
 
+
+
 # attributes
 NULL, NOT NULL
 DEFAULT xxx
@@ -287,7 +289,8 @@ if condition in where and return data in same index, no need to query table agai
 # import file
 `mysql -u <user> -p<password> <dbname> < /path/to/file.sql`
 
-
+# import sql in docker
+docker exec -i mysql-container mysql -u 'user' -p 'password' 'name_db' < 'data.sql'
 
 
 

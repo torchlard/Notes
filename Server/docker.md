@@ -99,10 +99,13 @@ OR
 2. docker-compose -f stack.yml up
 3. docker exec -it mariadb_db_1 bash
 
+mariadb:
+(GRANT ALL PRIVILEGES ON *.* TO 'root'@'%' IDENTIFIED BY PASSWORD '123456' WITH GRANT OPTION)
+(show grant for user@localhost)
 
-
-
-
+mysql 8.0:
+(CREATE USER 'root'@'%' IDENTIFIED BY 'root';
+ mysql> GRANT ALL PRIVILEGES ON *.* TO 'root'@'%' WITH GRANT OPTION;)
 
 
 

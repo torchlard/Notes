@@ -108,6 +108,20 @@ funcitonal interface to indicate that bean should run when contained within Spri
 springboot add @EnableWebMvc automatically wehn see spring-webmvc on classpath
 
 
+
+# Annotation
+@Value
+1. ${property: default_value}
+2. #{obj.property ? : default_value }
+
+inject default value
+
+
+
+
+
+
+
 <!-- ==================================== -->
 
 # gradle 
@@ -119,7 +133,7 @@ springboot add @EnableWebMvc automatically wehn see spring-webmvc on classpath
 
 # command
 gradle bootRun
-
+mvn spring-boot:run
 
 
 

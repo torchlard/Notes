@@ -37,7 +37,7 @@ map object type <-> relational type
 ### phases
 1. Object data contains POJO, service interface, class
 - POJO with attributes ID, name, salary, designaiton; methods of setter, getter
-- DAO/service class eg. create, find, delete employee
+- DAO/service class, eg. create, find, delete employee
 2. Mapping/persistence phase
 - JPA provider: javax.persistence (eg. Hibernates)
 - mapping file: eg. ORM.xml
@@ -76,17 +76,34 @@ mapping.xml
 @Id: primary key
 
 @GeneratedValue: how id initialized (eg. aotumatic, manual, value)
+- IDENTITY: let db handle -> some db use it as PK
+- AUTO: default, let persistence engine decide
+- SEQUENCE: refer to generator
+- @Embeddable: coomposite key
+
 @SequenceGenerator: define value for property @GeneratedValue
 @TableGenerator: define value generator for property in @GeneratedValue
 
 @AccessType
 @Transient: value that never stored in db
 @Column: column/attribute for persistence property
+
+## relational annotation
 @JoinColumn: entity collection (many-one, one-many)
+```java
+@OneToOne(cascade=CascadeType.ALL, optional=true)
+@JoinColumn(name="addressID")
+public Address getAddress(){
+  return address;
+}
+```
+
+
 @UniqueConstraint: unique constraint for primary, secondary table
 
 @ManyToMany | ManyToOne | OneToMany | OneToOne
 @NamedQueries | NamedQuery
+
 
 
 
@@ -121,9 +138,100 @@ repository.findByFirstName("Jack").forEach(...);
 ```
 
 
+# Java Persistence Qeury Language (JPQL)
+create query against entites stored in db
+based on SQL syntax
+
+JPQL query get entity object, rather than field result set form db for SQL
+JPQL strucutre
+```
+select ... from ...
+[where ...]
+[group by ... [having ...]]
+[order by ...]
+
+delte from ... [where ...]
+
+update ... set ... [where ...]
+```
+sample query
+```java
+EntityManagerFacotry emfactory = Persistence.createEntityManagerFactory("Eclipselink");
+EntityManager entityManager = emfactory.createEntityManager();
+
+Qeury query = entityManager.createQuery("select e from Employee e orderby e.ename ASC" );
+List<Employee> lsit = (List<Employee>)query.getResultList();
+
+for(Employee e: list){
+  System.out.println("employee id: " + e.getEid());
+}
+```
+
+# inheritanace
+## single table
+take all class fields, map into single talbe
+
+## joined table
+share ref column which contains unique values to join table, make easy transaction
+
+## table per class
+create table for each sub entity
+
 
 # interface JpaRepository
 once extends JpaRepository, then already implemented save(create,update), delete, findAll, findOne, 
+
+extends relations:
+```
+CrudRepository: mainly provide CRUD functions
+  PagingAndSortingRepository: methods to do pagination and sorting
+    JpaRepository: JPA-related method, eg. flush persistence context, delete record in batch
+```
+
+## Pageable
+Pageable: interface in Spring Data, abstraction about paging
+- can get all info related to paging (eg. pageNumber, pageSize)
+- get sql with paging info by pageable param
+
+Page
+- collection of part of data
+- and related next part of data, data total
+- get summary info (eg. data count, total page, current page no, current collection)
+
+### gen Pageable object
+```java
+public Page<Blog> getEntryByParams(@RequestParam(value="page", defaultValue="0") Integer page,
+  @RequestParam(value="size", defaultValue = "15") Integer size) {
+    Sort sort = new Sort(Direction.DESC, "id");
+    Pageable pageable = new PageRequest(page, size, sort);
+    return blogRepository.findAll(pageable);
+}
+// ===>
+public Page<Blog> getEntryByPageable(@PageableDefault(value=15, sort={"id"}, Pageable pageable )
+  return blogRepository.findAll(pageable);
+)
+```
+
+mvn spring-boot:run
+
+
+
+## CriteriaBuilder
+construct criteria queries, compound selection, expression, predicate, ordering
+
+## CriteriaQuery<T>
+define functionality that specific to top-level queries
+
+
+
+
+
+
+
+
+
+
+
 
 
 

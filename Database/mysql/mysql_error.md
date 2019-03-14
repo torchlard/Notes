@@ -58,13 +58,23 @@ sudo mysql_secure_installation
 
 
 
+# Unable to load authentication plugin 'caching_sha2_password'
+alter user 'root'@'%' identified with mysql_native_password by '123456';
 
 
+# Unknown system variable 'query_cache_size'
+# Unknown system variable 'tx_read_only'
+# Unknown system variable 'language'
+reason: mysql driver version not matched
+solution: add dependency
 
-
-
-
-
+```xml
+<dependency>
+    <groupId>mysql</groupId>
+    <artifactId>mysql-connector-java</artifactId>
+    <version>8.0.15</version>
+</dependency>
+```
 
 
 
