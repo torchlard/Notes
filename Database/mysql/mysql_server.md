@@ -187,13 +187,7 @@ PBXT, GMBH
 RethinkDB for SSD
 
 
-
-
-
-
-
-
-
+grant all privileges on *.* to 'root'@'%' identified by 'example';
 
 
 
