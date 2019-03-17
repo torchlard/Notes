@@ -101,7 +101,17 @@ public Address getAddress(){
 
 @UniqueConstraint: unique constraint for primary, secondary table
 
-@ManyToMany | ManyToOne | OneToMany | OneToOne
+@ManyToMany 
+@ManyToOne
+- single direction, no intermediate table
+- @Joincolumn(name="xx") assign foreign key name
+@OneToMany 
+- single direction, has intermediate table
+- foreign key exists in table with more record
+
+@ManyToOne, @OneToMany
+
+@OneToOne
 @NamedQueries | NamedQuery
 
 
@@ -264,9 +274,17 @@ public Page<Blog> getEntryByPageable(@PageableDefault(value=15, sort={"id"}, Pag
 )
 ```
 
-mvn spring-boot:run
 
 
+
+
+
+# Specification
+build around `Specification` interface , 
+only defined 
+```java
+Predicate toPredicate(Root<T> root, CriteriaQuery<?>)
+```
 
 ## CriteriaBuilder
 construct criteria queries, compound selection, expression, predicate, ordering
@@ -276,7 +294,12 @@ define functionality that specific to top-level queries
 
 
 
+# error
+PathVariable: boolean can pass 0|1|true|false in url 
+query cannot use "`"
+inside query need to use class names and field names in Java
 
+reqeust param: cannot parse json directly, need form
 
 
 
