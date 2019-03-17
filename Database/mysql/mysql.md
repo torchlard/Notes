@@ -1,3 +1,13 @@
+# order
+1. from: choose and join table
+2. where: filter base data
+3. group by: aggregate base data
+4. having: filter aggregated data
+5. select: return final data
+6. order by: sort final data
+7. limit: limit returned data
+
+
 # index
 dense index = that index appear in every record with search key
 sparse index = that index appear in some record with search key

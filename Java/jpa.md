@@ -275,7 +275,9 @@ public Page<Blog> getEntryByPageable(@PageableDefault(value=15, sort={"id"}, Pag
 ```
 
 
-
+# HQL VS SQL
+hql is object oriented, from + class name + class object + where + class field
+sql is table oriented, from + table name + where + table field
 
 
 
@@ -301,7 +303,7 @@ inside query need to use class names and field names in Java
 
 reqeust param: cannot parse json directly, need form
 
-
+for native query, parameter will auto add quote => dynamic sql not possible
 
 
 
