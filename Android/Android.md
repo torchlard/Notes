@@ -26,13 +26,14 @@ eg. show activity effect before compile:
     tools:layout="@layout/yourFragmentLayoutName"
 
 ### xmlns:app="http://schemas.android.com/apk/res-auto"
-    for custom View's custom attribute
+for custom View's custom attribute
 
 action view = action providing rich features within app bar
 actionLayout = layout resource describing action's components
 
 actionProvider = responsible for creating action view 
   just another kind of custom view in menu bar
+
 
 # Layout
 ## CoordinatorLayout
@@ -44,7 +45,6 @@ super-powered FrameLayout
 // coordinator Layout will auto find affcted view
 add app:layout_behavior="@string/appbar_scrolling_view_behavior" 
 
-
 android.support.v7.app.ActionBar => getSupportActionBar()
 android.app.ActionBar => getActionBar()
 
@@ -54,6 +54,40 @@ BottomNavigationView is persistent view
 
 
 
+# View
+## ViewGroup
+special view that can contain other views
+base class for layouts and view containers
+ViewGroup.LayoutParams: base class of layouts parameters
+
+## RecyclerView
+### RecyclerView.Adapter
+base class for Adapter
+provide binding from app-specific dataset to views displayed within RecyclerView
+
+### RecyclerView.ViewHolder
+describe item view and metadata about place within RecyclerView
+
+
+
+
+
+
+
+# Utils
+## LayoutInflater
+instantiate XML file -> View object
+- Activity.getLayoutInflater() to get inflater instance
+
+
+# OS
+## Bundle
+mapping from String keys to various Parcelable values
+Parcel
+- container for msg (data, obj ref) that sent throught IBinder
+- contain flattened data that unflattened on other side of IPC
+- contain ref to live IBinder obj -> other side receiving proxy IBinder -- original IBinder in parcel
+=> high performance IPC transport
 
 
 
