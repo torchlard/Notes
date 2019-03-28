@@ -71,6 +71,83 @@ describe item view and metadata about place within RecyclerView
 
 
 
+# Notification
+## overview
+- status bar, notification drawer
+- heads-up notification
+- lock screen
+- app icon badge
+- wear os device
+
+## anatomy
+small_icon (setSmallIcon) | app name | timestamp (setWhen, setShowWhen)
+large_icon (setLargeIcon)
+title (setContentTitle)
+text (setContentText)
+
+## notification action
+tap on notification -> go to app
+
+## update
+update existing notification / inbox style notification
+group multiple notification
+
+## notification channel
+all notificaiton must assigned to channel (in order to appear)
+user can disable notification channel for your app
+- control visual, auditory options for each channel
+- separate channel for each notification type
+- channel specify importance level
+
+## importance level
+urgent: sound, heads-up notification
+high: sound
+medium: no sound
+low: no sound, not appear in status bar
+
+## do not disturb
+total silence
+- block everything
+alarms only
+- block all except alarm
+priority only
+- choose only alaram/reminder/event/call/msg
+- filter based on caller
+
+## service
+notification required to run as "foreground service"
+app cannot make notification sound >1 / second
+
+## compatibility
+### history
+4.1
+- expandable notification template
+- additional action
+- turn notification off
+4.4
+- notification listener
+5.0
+- lock screen
+- setPriority, notification group
+7.0
+- can reply directly inside notification
+8.0
+- must put in channel, user turn individual on/off
+- display badge on top of app icon
+- snooze notification from drawer
+- set notification background color
+
+
+### NotificationCompat
+
+NotificationManagerCompat (check compatibility)
+- support older device
+- easier control over all flags, help construct typical notification layouts
+
+
+
+
+
 
 
 
