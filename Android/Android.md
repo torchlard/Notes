@@ -144,7 +144,12 @@ NotificationManagerCompat (check compatibility)
 - support older device
 - easier control over all flags, help construct typical notification layouts
 
+### pendingIntent
+describe intent and target action to perform with it
 
+ref to token maintained by system describing original data used to retrieve it
+- give PendingIntent to other app -> grant right perform operation specified like other app is yours
+- even owning applicaiton's process killed, PendingIntent remain usable from other processes
 
 
 
