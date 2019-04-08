@@ -115,6 +115,10 @@ public Address getAddress(){
 @NamedQueries | NamedQuery
 
 
+@PrimaryKeyJoinColumn
+- itself as foreign key and primary key in table at same time
+
+
 
 # setting
 spring.jpa.properties.hibernate.hbm2ddl.auto

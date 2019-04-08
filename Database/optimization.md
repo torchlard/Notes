@@ -35,6 +35,16 @@ subquery caching
 
 
 
+
+### count, distinct 
+
+SELECT COUNT(*) FROM (SELECT DISTINCT column_name FROM table_name) AS temp;
+
+<!-- (much faster than) -->
+
+COUNT(DISTINCT column_name)
+
+
 # subquery cache
 store result together with correlation in cache, avoid re-execution of subquery 
 
@@ -79,6 +89,24 @@ exists_to_in=on
 orderby_uses_equalities=on
 condition_pushdown_for_derived=on
 split_materialized=on
+
+
+
+# Group by
+## principle
+(1) group by本质是先分组后排序【绝不是先排序后分组】
+(2) group by默认会出现 Using filesort， 很多场景我只需要分组后的列【即被去重的列,  解决方法就是 group by ... order by null
+(3) group by column 默认会按照column分组, 然后根据column升序排列;  group by column order by null 则默认按照column分组,然后根据标的主键ID升序排列 
+
+
+Temporary tables can be created under conditions such as these:
+
+If there is an ORDER BY clause and a different GROUP BY clause, or if the ORDER BY or GROUP BY contains columns from tables other than the first table in the join queue, a temporary table is created.
+
+
+
+
+
 
 
 

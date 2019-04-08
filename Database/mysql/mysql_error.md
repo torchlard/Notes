@@ -76,6 +76,13 @@ solution: add dependency
 </dependency>
 ```
 
+# /usr/bin/mysqladmin: connect to server at 'localhost' failed                                         
+# error: 'Access denied for user 'root'@'localhost' (using password: NO)' 
+mysqladmin -u root -p password '123456'
+
+
+
+
 
 
 

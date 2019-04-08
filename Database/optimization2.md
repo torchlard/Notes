@@ -106,6 +106,84 @@ enormous table: overhead of indexing start adding up
 TB scale table: index replaced by per-block metadata
 
 
+## prefix index
+most frequent prefix occur more often than most frequent full-length value
+=> selectivity lower
+
+- cannot use for ORDER BY / GROUP BY
+- not as covering index
+
+sometimes suffix indexes make sense
+
+
+## multicolumn index
+mistake: 
+- index many/all of columns separately
+- index columns in wrong order
+
+index merge
+- intersect indexes => need single index with all relevant columns
+- union indexes => indexes very selective, scan return lots of rows to merge
+
+
+## good column order
+place most selective column first when no sorting or grouping to consider
+- depends on selectivity (overall cardinality) , but also distribution of values
+
+if where condition enarly examine all rows, index can't help
+-> solution: chnage application code to recognize special-case user ID and group ID
+
+## clustered index
+when table has clustered index, rows stored in index's leaf page
+- clustered = rows with adjacent key values stored close to each other
+- only 1 clustered index per table
+
+InnoDB cluster data by primary key 
+- PK > unique non-nullable index > hidden PK
+- cluster records togeether only within a page
+
+### advantage
+1. keep related data close together (eg. a few page VS own disk IO)
+2. fast data access
+3. queries using covering index can use PK values in leaf node
+
+### disadv
+1. if data fits in memory, clustering not much benefit
+2. insert speed depend heavily on inertion order
+3. update clustered index columns expensive => move each updated row to new location
+4. clustered table slower for full table scan
+5. secondary index larger
+6. secondary index access require 2 index lookup instead of 1
+
+
+## covering index
+definition: index that contains all data needed to satisfy a query
+- index find rows efficiently / get column's data
+- mysql can only use B-tree index to cover queries
+- index mu
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

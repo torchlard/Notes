@@ -117,6 +117,13 @@ springboot add @EnableWebMvc automatically wehn see spring-webmvc on classpath
 inject default value
 
 
+# Security
+## Authorize
+```java
+@PreAuthorize("<expression>")
+```
+method level security, support Spring EL
+authorize before entering method
 
 
 
