@@ -1,3 +1,47 @@
+# benchmark
+strategy:
+- full-stack
+- single-component
+
+## measurement
+### throughput
+number of transactions per unit of time
+measure OLTP throughput
+
+### response time or latency
+total time task requires
+percentile response time
+- 95th percentile 5ms = 95% time finish in 5ms
+
+### Concurrency
+open connections VS actual query running concurrently
+
+### Scalability
+maintain performance under changing workload
+get twice as much work done if twice resource
+
+## tactics
+mistakes
+- use subset of real data
+- incorrectly distributed data (missing hot spot in real system)
+- unrealistic distributed parameters
+- single user scenario
+- benchmark distributed application on single server
+- fail to match real user behavior
+- running identical queries in loop
+- fail to check for error
+- no warm up for cache
+- use default server setting, no optimization
+- benchmark too quickly
+
+do benchmark in same configuration
+need to run benchmark for meaningful amount of time
+- observe system in steady state
+
+if don't know how long to run -> run forever until satisfied
+
+
+
 # Optimize schema, data type
 1. avoid extreme, avoid using very complex query
 2. avoid NULL
@@ -160,13 +204,60 @@ InnoDB cluster data by primary key
 definition: index that contains all data needed to satisfy a query
 - index find rows efficiently / get column's data
 - mysql can only use B-tree index to cover queries
-- index mu
+
+when issue query covered by index => "Using index" in Extra column in EXPLAIN
+
+```sql
+select * 
+from products
+where actor='sean carrey' and title like '%apollo%'
+
+==>
+
+select *
+from products
+join (
+  select prod_id
+  from products
+  where actor='sean carrey' and title like '%apollo%'
+) as t1 on (t1.prod_id = products.prod_id)
+
+```
+2nd version do subquery first using covering index
+
+### benchmark
+actor: 30,000 rows  title: 20,000
+==> 5 query/s | 5   
+==> most time spent reading and sending data
+
+actor: 30,000   title: 40
+==> 7 | 35    
+==> 2nd filter leave small dataset, needing read only 40 full rows, instead of 30,000 in first query
+
+actor: 50   title: 10
+==> 2400 | 2000
+==> set of result left after index filtering so small, more expensive than reading all data from table
 
 
+many tricks are result of limited storage engine API
+if mysql could send query to data, instead of pulling data into server where it evaluates query
+=> huge improvement
 
+## index condition pushdown (using index condition)
+start from mysql 5.6
+goal: push down where condition
 
+without pushdown:
+1. read matching index record
+2. follow pointer in index to read table record
 
+with pushdown:
+1. read matching index record
+2. evaluate where condition, read table record only when satisfy condition
 
+limitation:
+1. only on secondary index
+2. explain type (range, ref, eq_ref, ref_or_null)
 
 
 
