@@ -260,11 +260,84 @@ limitation:
 2. explain type (range, ref, eq_ref, ref_or_null)
 
 
+## order by limitation
+cannot use index for sorting:
+1. 2 different sort directions
+2. order by refer to column isn't in index
+3. WHERE and ORDER BY don't form leftmost prefix of index
+4. query has range condition on first column, can't use rest
+   - multiple equality on fist column = range
+   
+```sql
+select count(*) from userinfo WHERE state_id=5;
+```
+if index (state_id, ...), may lower query speed
 
 
+## locking
+InnoDB locks rows when access it ONLY IF can filter ouit undesired rows at storage engine level
+- can unlock rows after server filters them out
+  
+if no index for query, mysql do full table scan => lock every rows in table
+"Using where": mysql server applying WHERE filter after storage engine returns the rows
+
+### select ... for update
+add exclusive lock on rows accessed
+other thread cannot access these rows unless COMMITTED
+
+InnoDB can place shared lock on secondary indexes, exclusive lock require access to PK
+
+SELECT FOR UPDATE much slower than LOCK IN SHARE MODE
 
 
+## case study
+situation: user's country, state/region, city, sex, age, eye color ...
 
+create many different combination of columns prefixed with (sex, country)
+trick: add "AND sex in ('m', 'f')"
+
+general principle:
+- don't just consider index needed for existing query, but consider optimizing queries too
+- if column not very selective, not used a lot => skip
+- keep column with range search at end
+
+```sql
+where eye_color in ('brown','blue','hazel')
+  and hair_color in ('black', 'red', 'blonde', 'brown')
+  and sex in ('m', 'f')
+```
+optimizer cover 4x3x2 = 24 combinations
+
+
+## avoid multiple range condition
+both `actor_id > 45` and `actor_id in (1,4,99)` are type = range in EXPLAIN
+but they perform differently
+
+
+## index and table maintenance
+### finding and repairing table corruption
+corrupted index => return incorrect result
+run `CHECK TABLE` check
+fix table `REPAIR TABLE`
+
+### maintaining accurate index statistics
+record_in_range(): return num of records in that range
+info()
+`ANALYZE TABLE` regenerate statistics
+
+### reduce fragmentation
+B tree index can become fragmented => reduce performance
+leaf pages still perform better if physically sequential and tightly packed
+
+row fragmentation:
+row into pieces stored in multiple place
+
+intra-row fragmentation:
+logically sequential pages/rows not stored sequentially on disk
+affect full table scan, clustered index range scan
+
+free space fragmentation:
+lot of empty space in data pages => wasteful
 
 
 
