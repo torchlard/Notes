@@ -341,6 +341,206 @@ lot of empty space in data pages => wasteful
 
 
 
+# Optimize query
+## ways to apply WHERE
+1. apply condition to index lookup -> filter (storage engine)
+2. use covering index to avoid row access -> filter (server layer)
+3. get rows from table, need to read rows -> filter (server layer)
+
+mysql not tell you how many rows accessed used to build result set
+=> only tell total number of rows accessed
+=> many rows could be eliminated by WHERE clause
+
+## restructure query
+1. rewrite into equivalent form
+2. change result set, change application code
+
+### Complex query VS many queries
+- traditionally favour complex and fewer query, because of high networking cost and overhead
+mysql handle network well
+- running multiple queries not bad thing
+
+### chopping up query
+original
+```sql
+DELETE FROM messages WHERE created < DATE_SUB(NOW(), INTERVAL 3 MONTH);
+```
+
+deleting 10,000 rows a time
+add sleep time between DELETE to spread load
+```
+rows_affected = 0
+do {
+  row_affected = do_query(
+    "DELETE FROM messages WHERE created < DATE_SUB(NOW(), INTERVAL 3 MONTH) LIMIT 10000"
+  ) 
+} while rows_affected > 0
+```
+
+### join decomposition
+decompose join by running multiple single-table queries, perform join in application
+
+adv:
+1. caching more efficient
+if only one of tables changes frequently, decomposing join can reduce number of cache invalidation
+2. reduce lock contention
+3. easier to scale database by placing tables on different servers
+4. using IN() instead of join let mysql sort row ID and get rows more optimally
+5. reduce redundant row access
+retrieve each row only once, reduce network traffic and memory usage
+6. manually implementing hash join instead of nested loops join
+
+
+## MySQL client/server protocol
+protocol half-duplex => at any time either sending or receiving message, but not both
+(max_allowed_packet is important for large query)
+- once client send query, no control anymore, only wait for result
+
+when client fetch rows from server, actually server pushing rows 
+
+library connect to mysql, 2 ways handle
+1. fetch whole result set and buffer in memory (default)
+2. fetch each row as you need it
+
+until all rows fetched, MySQL server not release locks, other resources requried by query
+- query in "Sending data" state
+
+most client library make as if fetching from server
+- actually fetch from buffer in library's memory
+
+```php
+$link = mysql_connect(...);
+$result = mysql_query('SELECT * FROM huge_table', $link);
+while ($row = mysql_fetch_array($result) ){
+  // do sth
+}
+```
+code fetch entrie result into buffer with `mysql_query()`
+
+### query state
+each mysql connection / thread has state at any time
+
+Sleep: 
+thread wiating for new query from client
+
+Query: 
+thread either executing query / sending result back to client
+
+Locked: 
+thread waiting for table lock to be granted at server level
+
+Analyzing and statistics: 
+thread checking storage engine statistics, optimize query\
+
+Copy to tmp table: 
+thread processing query, copying result to tmp table (probably GROUP BY)
+
+Sorting result:
+thread sorting result set
+
+Sending data:
+1. thread sending data between stages of query
+2. generating result set
+3. returning result set to client
+
+### query cache
+before parsing query, mysql check it for query cache
+case-sensitive hash lookup, if query differ, won't match
+
+
+## optimization process
+### parser
+build parse tree
+- validate query token, proper order
+
+check resulting parse tree for additional semantics
+- check tables, columns exist
+- resolve names, aliases
+- check privileges
+
+### optimizer
+cost-based optimizer
+- try to predict cost of various execution plans => choose least expensive
+
+calc cost based on
+1. number of pages per table / index
+2. cardinality of index
+3. length of rows and keys
+4. key distribution
+
+may not always choose best plan
+1. statistics could be wrong (InnnoDB not maintain accurate statistics)
+2. cost metric not exactly same as cost of running query
+(eg. sequential read make disk IO faster, page already cached in memory)
+3. MySQL goal not make query fast, but minimize cost
+4. not always do cost-based optimization
+maybe just follow rules (eg. MATCH() -> FULLTEXT)
+5. not consider cost of stored function or user-defined functions
+6. can't estimate every possible execution plan
+
+static optimization:
+- inspecting parse tree
+- eg. transform WHERE clause into equivalent form by applying algebraic rule
+- value independent 
+- compile-time optimization
+
+dynamic optimization:
+- based on context, eg. which value in WHERE
+- runtime optimization
+
+MySQL can do static optimization once, but re-evaluate dynamic optimization everytime execute query
+
+
+#### type of optimization
+1. Reordering joins
+2. OUITER JOIN -> INNER JOIN
+some factors like WHERE can cuase OUTER JOIN = INNER JOIN
+mysql recognize and rewrite join
+3. applying algebraic equivalence rules
+simplify, canonicalize expression
+eg. (5=5 AND a>5) === a>5
+4. COUNT(), MIN(), MAX()
+index, column nullability help optimize away expression
+eg. only read first row in index to find min value
+
+5. evaluating and reducing const expression
+6. covering index
+7. subquery optimization
+convert to more efficient alternative forms
+8. early termination
+LIMIT, impossible condition
+eg. find movies without any actors
+- as soon as finds 1 actor, stop processing current film
+9. Equality propagation
+
+
+## join strategy
+mysql consider every query a JOIN
+eg. UNION
+mysql execute UNION as series of single queries => store in temp table
+treat every join as nested-loop join
+
+FULL OUTER JOIN can't be executed with nested loop & backtracking when no matching row
+=> not support FULL OUTER JOIN
+
+mysql not generate bytecode to execute query (many other DB do)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
