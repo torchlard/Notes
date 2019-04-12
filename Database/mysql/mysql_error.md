@@ -82,6 +82,7 @@ mysqladmin -u root -p password '123456'
 
 
 
+# Illegal mix of collations for operation 'UNION'
 
 
 

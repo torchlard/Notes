@@ -526,24 +526,83 @@ FULL OUTER JOIN can't be executed with nested loop & backtracking when no matchi
 mysql not generate bytecode to execute query (many other DB do)
 
 
+## Semi-join materialization 
+subquery materialization
+
+```sql
+select * from Country
+where Country.code IN (
+  select City.Country
+  from City
+  where City.Popultion > 7000000
+) 
+and Country.continent = 'Europe'
+```
+
+### materialization scan
+- full scan on materialized table
+- from materialized table to countries in Europe
+
+explain select * from Country where Country.code IN (select City.Country from City where  City.Population > 7*1000*1000);
++----+--------------+-------------+--------+--------------------+------------+---------+--------------------+------+-----------------------+
+| id | select_type  | table       | type   | possible_keys      | key        | key_len | ref                | rows | Extra                 |
++----+--------------+-------------+--------+--------------------+------------+---------+--------------------+------+-----------------------+
+|  1 | PRIMARY      | <subquery2> | ALL    | distinct_key       | NULL       | NULL    | NULL               |   15 |                       |
+|  1 | PRIMARY      | Country     | eq_ref | PRIMARY            | PRIMARY    | 3       | world.City.Country |    1 |                       |
+|  2 | MATERIALIZED | City        | range  | Population,Country | Population | 4       | NULL               |   15 | Using index condition |
++----+--------------+-------------+--------+--------------------+------------+---------+--------------------+------+-----------------------+
+
+MySQL [world]> explain select * from Country where Country.code IN (select City.Country from City where  City.Population > 7*1000*1000);
++----+--------------------+---------+-------+--------------------+------------+---------+------+------+------------------------------------+
+| id | select_type        | table   | type  | possible_keys      | key        | key_len | ref  | rows | Extra                              |
++----+--------------------+---------+-------+--------------------+------------+---------+------+------+------------------------------------+
+|  1 | PRIMARY            | Country | ALL   | NULL               | NULL       | NULL    | NULL |  239 | Using where                        |
+|  2 | DEPENDENT SUBQUERY | City    | range | Population,Country | Population | 4       | NULL |   15 | Using index condition; Using where |
++----+--------------------+---------+-------+--------------------+------------+---------+------+------+------------------------------------+
 
 
+### materialization lookup
+- lookup primary key
+- from countries in Europe to materialized table
+
+explain select * from Country where Country.code IN (select City.Country from City where  City.Population > 1*1000*1000) ;
++----+--------------+-------------+--------+--------------------+--------------+---------+------+------+-----------------------+
+| id | select_type  | table       | type   | possible_keys      | key          | key_len | ref  | rows | Extra                 |
++----+--------------+-------------+--------+--------------------+--------------+---------+------+------+-----------------------+
+|  1 | PRIMARY      | Country     | ALL    | PRIMARY            | NULL         | NULL    | NULL |  239 |                       |
+|  1 | PRIMARY      | <subquery2> | eq_ref | distinct_key       | distinct_key | 3       | func |    1 |                       |
+|  2 | MATERIALIZED | City        | range  | Population,Country | Population   | 4       | NULL |  238 | Using index condition |
++----+--------------+-------------+--------+--------------------+--------------+---------+------+------+-----------------------+
+COST = 239 + 238 = 477 reads, 238 tmp table writes
 
 
+MySQL [world]> explain select * from Country where Country.code IN (select City.Country from City where  City.Population > 1*1000*1000) ;
++----+--------------------+---------+----------------+--------------------+---------+---------+------+------+-------------+
+| id | select_type        | table   | type           | possible_keys      | key     | key_len | ref  | rows | Extra       |
++----+--------------------+---------+----------------+--------------------+---------+---------+------+------+-------------+
+|  1 | PRIMARY            | Country | ALL            | NULL               | NULL    | NULL    | NULL |  239 | Using where |
+|  2 | DEPENDENT SUBQUERY | City    | index_subquery | Population,Country | Country | 3       | func |   18 | Using where |
++----+--------------------+---------+----------------+--------------------+---------+---------+------+------+-------------+
+COST = 18*239 = 4302
+
+read 18 rows using index on City.Country
+- full scan on Country table
 
 
+### subquery with grouping
 
-
-
-
-
-
-
-
-
-
-
-
+select * from City 
+where City.Population in (select max(City.Population) from City, Country 
+                          where City.Country=Country.Code 
+                          group by Continent)
++------+--------------+-------------+------+---------------+------------+---------+----------------------------------+------+-----------------+
+| id   | select_type  | table       | type | possible_keys | key        | key_len | ref                              | rows | Extra           |
++------+--------------+-------------+------+---------------+------------+---------+----------------------------------+------+-----------------+
+|    1 | PRIMARY      | <subquery2> | ALL  | distinct_key  | NULL       | NULL    | NULL                             |  239 |                 |
+|    1 | PRIMARY      | City        | ref  | Population    | Population | 4       | <subquery2>.max(City.Population) |    1 |                 |
+|    2 | MATERIALIZED | Country     | ALL  | PRIMARY       | NULL       | NULL    | NULL                             |  239 | Using temporary |
+|    2 | MATERIALIZED | City        | ref  | Country       | Country    | 3       | world.Country.Code               |   18 |                 |
++------+--------------+-------------+------+---------------+------------+---------+----------------------------------+------+-----------------+
 
 
 
