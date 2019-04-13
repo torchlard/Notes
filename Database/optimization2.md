@@ -605,6 +605,44 @@ where City.Population in (select max(City.Population) from City, Country
 +------+--------------+-------------+------+---------------+------------+---------+----------------------------------+------+-----------------+
 
 
+### execution
+MySQL always begins with 1 table and finds matching rows in next table
+=> left-deep tree
+
+can join in different orders to get same result
+more table, factorial growth of possibility => 10 tables = 3,628,800 different ways
+if too much table, full analyse -> greedy search
+some operation (eg. LEFT JOIN) cannot be reordered => restrict possibility
+
+## sort optimization
+call both sort (in memory / on disk) filesort
+if values sorted fit into sort buffer, mysql perform quicksort in memory
+if not enough memory,  sort values in chunk
+
+### filesort algorithm
+1. two passes (old)
+read row pointers and order by columns -> sort -> scan sorted list, reread rows for output
+expensive, read rows twice
+2. single pass (new)
+read all columns needed -> sort -> scan sorted list, output specified columns
+use a lot more space (hold all desired columns)
+
+ORDER BY clause refer only to columns from first table in join order 
+=> filesort this table, proceed with join
+all other cases 
+=> must store results in tmp table
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
