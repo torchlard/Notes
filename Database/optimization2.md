@@ -633,6 +633,280 @@ all other cases
 => must store results in tmp table
 
 
+## Query execution engine
+operations in plan use methods implemented by storage negine interface (handler API)
+- only need dozen of operations to execute most queries
+
+## returning results to client
+even query empty result, return information about query (eg. num of rows affected)
+server generate and sends results incrementally
+- as soon as mysql process last table, gen 1 row successfully => send that row to client
+1. server avoid holding row in memory
+2. client get results as soon as possible
+
+
+## optimizer limitation
+worst offering: IN() subquery in WHERE
+
+original
+```sql
+SELECT * FROM sakila.film
+WHERE file_id IN (
+  select film_id from sakila.film_actor WHERE actor_id = 1);
+```
+
+optimially should transform to sth like
+```sql
+SELECT * FROM sakila.film
+WHERE film_id IN (1,23,23, ...)
+```
+
+reality: mysql want push correlation into subquery from outer table
+dependent subquery, can't be executed first
+```sql
+SELECT * FROM sakila.film
+WHERE EXISTS (
+  SELECT * FROM sakila.film_actor WHERE actor_id = 1
+  AND film_actor.film_id = film.film_id );
+```
+=> full table scan on film table, execute subquery for each row it finds
+
+### correlated subquery limitation
+```sql
+select film.film_id from sakila.film
+  inner join sakila.film_actor USING(film_id);
+
+-- ==optimized as==>  
+select film_id from sakila.film
+where exists (
+  select * from sakila.film_actor
+  where film.film_id = film_actor.film_id
+)
+```
+
+### union limitation
+mysql sometime can't push down condition from outside of UNION to inside
+
+```sql
+(
+  select first_name, last_name
+  from sakila.actor
+)
+UNION ALL
+(
+  select first_name, last_name
+  from sakila.customer
+)
+order by last_name
+limit 20
+
+-- == optimize limit ==>
+(
+  select first_name, last_name
+  from sakila.actor
+  order by last_name
+  limit 20
+)
+UNION ALL
+(
+  select first_name, last_name
+  from sakila.customer
+  order by last_name
+  limit 20
+)
+limit 20
+```
+
+### equality propagation
+huge IN() list that equal to same column on other table
+=> copy list to all related tables
+
+### parallel execution
+not possible in mysql
+
+### hash join
+mysql can't do true hash join (everything nested-loop join)
+mariadb support hash join
+
+### loose index scans
+scan non-contiguous ranges of index
+- mysql require defined start and end point
+
+scan entrie range of rows within these end points
+
+cannot optimize: range query on 1st column, equality on 2nd column
+loose index scan possible in max,min values in grouped query
+
+### min(), max()
+```sql
+select min(actor_id) from sakila.actor where first_name = 'penelope';
+```
+primary key is strictly ascending, can stop after matching first row
+=> mysql can't optimize this
+- workaround: add `limit 1` at the end
+
+### select and update on same table
+```sql
+update tb1 as outer_tb1
+set cnt = (
+  select count(*) 
+  from tb1 as inner_tb1
+  where inner_tb1.type = outer_tb1.type
+)
+
+==>
+
+update tb1
+  inner join (
+    select type, count(*) as cnt
+    from tb1
+    group by type
+  ) as der using(type)
+set tb1.cnt = der.cnt
+```
+use derived table to overcome limitation
+- materialized subquery result as temp table
+- select subquery opens and closes table before outer UPDATE opens table
+
+## query optimizer hint
+HIGH_PRIORITY, LOW_PRIORITY
+- prioritize statement relative to other statements
+- hints work on table-level lock => not needed with fine-grained lock
+  
+DELAYED
+- for INSERT, REPLACE
+- place inserted rows into buffer, insert in bulk when table is free
+  
+STRAIGHT_JOIN
+- use after/in SELECT, any statement between 2 joined tables
+- force table joined in specified order
+  
+SQL_SMALL_RESULT
+- SELECT
+- result set will be small, can put into indexed temp table, avoid sorting for grouping
+  
+SQL_BIG_RESULT
+- result set will be large, better to use temp table on disk with sorting
+
+SQL_BUFFER_REUSLT
+- put result into temp table, release table lock as soon as possible
+- use server's memory instead of client's
+
+SQL_CACHE, SQL_NO_CACHE
+- query is/not candidate for cacing in query cache
+
+SQL_CALC_FOUND_ROWS
+- tell mysql to calc full result set when there's LIMIT clause
+- can get total number of rows via FOUND_ROWS()
+
+FOR UPDATE, LOCK IN SHARE MODE
+- place locks on matched rows
+- disable some optimization (eg. covering index)
+
+USE INDEX, IGNORE INDEX, FORCE INDEX
+
+### configuration variables
+optimizer_search_depth
+- how exhaustively examine partial plans
+
+optimizer_prune_level
+- skip certain plans based on num of rows examined
+
+optimizer_switch
+- contains set of feature flags 
+- eg. index merge
+
+
+## version dependent optimization
+(fast, accurate, simple) pick 2
+
+### count()
+works in 2 ways
+1. count values: how many tiems that expression has a value
+2. count rows
+always use COUNT(*) to count rows
+use approximate count if you don't need accuracy
+
+### optimize JOIN
+1. if join from table B to A, no need to index column on table B, only need A
+2. ensure GROUP BY / ORDER BY only refer to single table
+
+### optimize subquery
+usually prefer join where possible (may not true in future)
+
+### optimize group by, distinct
+when can't use index => temp table / filesort
+more efficient to group by lookup table's identifier (not vlaue)
+```sql
+select first_name, last_name, count(*)
+from film_actor
+  inner join actor using(actor_id)
+group by first_name, last_name;
+
+-- ==more efficient==>
+select first_name, last_name, count(*)
+from film_actor
+  inner join actor using(actor_id)
+group by actor_id;
+
+-- === another way ==>
+select min(first_name), max(last_name) ...
+```
+use fact that actor's first_name, last_name dependent on actor_id
+
+bad idea to select non-grouped columns in grouped query
+- result non-deterministic
+mysql auto orders grouped queries by column in GORUP BY
+- unless specify ORDER BY explicityly
+- if not care order => `ORDER BY NULL`
+- add optional DESC/ASC after GROUP BY to order results
+
+### optimize limit
+deferred join
+```sql
+select film_id, descrip
+from film
+order by title limit 50,5;
+-- ==>
+select film_id, descrip
+from film
+  inner join (
+    select film_id from film
+    order by title limit 50,5
+  ) as lim using(film_id);
+```
+
+### optimize SQL_CALC_FOUND_ROWS
+add SQL_CALC_FOUND_ROWS hint to query with limit
+better design
+1. add "next" link, assume 20 results per page => limit 21 rows, display only 20
+- if 21st exists, then next page
+2. fetch and cache many more rows than you need (eg. 1000)
+- retrieve them from cache for successive pages
+3. use separate count(*) if above not works
+
+### optimize UNION
+always execute UNION by creating temp table, fill with UNION results
+have to manually "pushing down" WHERE, LIMIT, ORDER BY conditions
+
+always use UNION ALL, unless remove duplicate rows
+- if omit ALL, mysql add distinct option to temp table => examine full row
+
+### use user-defined variables
+mixture of procedural and relational logic
+purely relational query treat everything as unordered set that manipulate all at once
+
+user-defined variables = temporary container 
+persist as long as connection to server lives
+
+#### disadv
+- disable query cache
+- can't use as table / colummn names, in LIMIT
+- connection-specific
+- connection pool => causing isolated parts of code to interact
+- optimizer might optimize away variables in some condition
+- order of assignment can be non-deterministic
+
 
 
 
