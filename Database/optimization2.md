@@ -1045,7 +1045,43 @@ for storage engine, partitions are just tables
 
 SELECT, INSERT, DELETE, UPDATE
 - open and lock all partitions
-- find partition forwarded
+- find partition to forward
+
+### partition type
+```sql
+create table sales (
+  order_date datetime not null,
+  -- other columns
+) ENGINE=InnoDB PARTITION BY RANGE(YEAR(order_date)) (
+  PARTITION p_2010 values less than (2010),
+  PARTITION p_2011 values less than (2011),
+  PARTITION p_2012 values less than (2012),
+  PARTITION p_catchall values less than MAXVALUE
+);
+```
+also supports key,hash, list partitioning methods
+- some support subpartitions
+- RANGE COLUMNS: partition by date-based columns directly
+
+use of subpartition:
+per-index mutex inside InnoDB table
+
+- partition by key to reduce contention
+- by range using modulo function (round-robin)
+- auto_increment 
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
