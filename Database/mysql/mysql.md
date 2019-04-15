@@ -245,6 +245,27 @@ before,after insert
 before,after update
 before,after delete
 
+
+# others
+## insert on duplicate key update
+when insert new row, if row cause duplicate on PK / unique column => issue error
+if specify ON DUPLICATE KEY UDPATE, will update existing row with new values inserted
+
+
+```sql
+insert into t1(id,str,dt) 
+values(8,'a2','2019-01-01 00:00:00')
+on duplicate key update 
+   id=id+2,
+   str='a2',
+   dt='2019-01-01 00:00:00'
+```
+id is PK, if row id=8 exists, then change its id to 9 (8+1), set str,dt to new values
+
+row to be inserted cause duplicate value in UNIQUE index / primary key
+auto_increment: INSERT increase auto_increment value, UPDATE does not
+
+
 # index
 ```sql
 -- primary index
@@ -274,7 +295,9 @@ if maybe query two cols, make it second left
 2. shortest field put on left
 3. avoid file sort, temp table scan
 4. fixed better than dynamic
-5. 
+
+
+
 
 ## hash index
 in mysql, only (memory,NDB) support hash index

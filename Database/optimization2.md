@@ -907,17 +907,145 @@ persist as long as connection to server lives
 - optimizer might optimize away variables in some condition
 - order of assignment can be non-deterministic
 
+#### adv
 
 
+```sql
+set @row := 0;
+select * from (
+  select 
+    dt, id, 
+    @row := @row +1 as rownum
+  from t1
+  order by dt asc
+) tt
+where rownum > 1 and rownum<=4
+```
+
+#### find num of rows inserted without conflict
+```sql
+insert into t1(c1,c2) values(4,4), (2,1), (3,1)
+on duplicate key update
+  c1 = values(c1) + (0 * (@x := @x +1));
+```
+
+### lazy union
+```sql
+-- original
+select id from users where id=123
+  union all
+select id from users_archived where id=123;
+
+-- ==>
+select 
+  greatest(@found := -1, id) as id, 
+  'users' as which_tb1
+from users 
+where id=1
+UNION ALL 
+  select id, 'users_archived'
+  from users_archived 
+  -- if not fond in 'users' => @found is null
+  where id=1 and @found is null
+UNION ALL
+  select 1, 'reset'
+  from dual
+  -- side effect: reset @found
+  where (@found := null) is not null;    
+
+```
+lazily access users_archived only when no result in users
+
+#### other use
+sometimes LEAST() can help for placing assignmnet
+check whether variable has defined value before executing containing statement
+
+- calc running totals and averages
+- emulate FIRST(), LAST() functions for grouped queries
+- do math on large num
+- reduce entire table to single MD5 hash value
+- unwrap smapled values
+- emuate read/write cursor
+- put variables in SHOW statement by embedding into WHERE
+
+3-pronged approach
+1. stop doing things
+2. do them fewer times
+3. do them more quickly
 
 
+### case study
+avoid SELECT FOR UPDATE
+```sql
+begin;
+-- to claim 10 rows
+select id from unsent_emails
+  where owner=0 and status='unsent'
+  limit 10 for udpate;
+-- result: 123, 456, 789
+
+update unsent_emails
+  set status='claimed', owner=connection_id()
+  where id in (123,456,789);
+
+commit;
+
+-- ===>
+set autocommit = 1;
+commit;
+update unsent_emails
+  set status='claimed', owner=connection_id()
+  where owner=0 and status='unsent'
+  limit 10;
+
+set autocommit=0;
+select id from unsent_emails
+  where owner=connection_id() and status='claimed';
+
+-- periodically timeout and reclaims rows after 10 mins
+-- clean up rows claimed but never processed
+-- execute SHOW PROCESSLIST to find thread ID that are currently connected to server
+update unsent_emails
+  set owner=0, status='unsent'
+  -- thread id = 0,10,20,30
+  where owner not in (0, 10, 20, 20) and status='claimed'
+  and ts < current_timestamp - interval 10 minute;
+
+```
 
 
+# Advanced features
+## Partition
+single logical table that composed of multiple physical subtables
+
+decide which partition holds each row of data PARTITION BY
+- select partition that contains wanted data
+
+indexes defined per-partition
+coarse form of indexing and data clustering over table
+
+suitable scenarios:
+1. table too big fit in memory
+2. easier to maintain, eg. discard old data by dropping entire partition
+3. partitioned data distribute physically
+4. avoid bottleneck, eg. per index mutex / per-inode locking
+5. backup and restore individual partitions
+
+limitation:
+1. max 1024 partitions per table
+2. inteagral expression, some cases can partition by column
+3. any PK / unique index must include all columns in partitioning expression
+4. can't use foreign key constraints
+5. all partitions must have same storage engine
 
 
+### working principle
+multiple underlying tables represented by Handler objects
+for storage engine, partitions are just tables
 
-
-
+SELECT, INSERT, DELETE, UPDATE
+- open and lock all partitions
+- find partition forwarded
 
 
 
