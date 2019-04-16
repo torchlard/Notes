@@ -1051,13 +1051,18 @@ SELECT, INSERT, DELETE, UPDATE
 ```sql
 create table sales (
   order_date datetime not null,
+  id int(11) auto_increment,
   -- other columns
+  primary key(id, order_date)
 ) ENGINE=InnoDB PARTITION BY RANGE(YEAR(order_date)) (
   PARTITION p_2010 values less than (2010),
   PARTITION p_2011 values less than (2011),
   PARTITION p_2012 values less than (2012),
   PARTITION p_catchall values less than MAXVALUE
 );
+-- ===========
+explain partitions select * from sales
+where order_date < '2011-01-01';
 ```
 also supports key,hash, list partitioning methods
 - some support subpartitions
@@ -1132,8 +1137,21 @@ REOORGANIZE PARTITION
 - create new temporary partition, move rows into it, delete old partition when it's done
 => costly
 
+## View
+virtual table that doesn't store any data itself
+view and table share same namespace 
 
+```sql
+create temporary table tmp_oceania as
+  select * from country where continent = 'Oceania';
 
+select code, name 
+from tmp_oceania
+where name = 'australia';
+```
+
+### algorithm
+merge algorithm:
 
 
 
