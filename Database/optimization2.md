@@ -1068,7 +1068,80 @@ per-index mutex inside InnoDB table
 
 - partition by key to reduce contention
 - by range using modulo function (round-robin)
-- auto_increment 
+- auto_increment PK => cluster hot recent data together
+ 
+for 10 TB table
+- can't scan whole table every time
+- get a lot of fragmentation and poorly clustered data for index
+  => 1000x cuts through random IO
+2 options
+1. sequential scan over portion of table
+2. desired portion of table and index must fix entirely in memory
+
+some system replace B-tree index with per-block metadata over large blocks of data
+partition = crude form of indexing
+
+partition no data structure that point to rows, must be updated => low overhead
+
+### strategies work at large scale
+1. scan data, don't index
+create table without indexes, use partitioning as only mechanism navigate to desired rows
+always use WHERE prunes query into small num of partitions
+- not try to fit data in memory, each time read from disk
+- ignore cache, query change frequently
+- access a lot table on regular basis
+
+2. index data, and segregate hot data
+if data mostly unused except for hot portion, 
+and can partition so that hot data fit in single partition => fit in memory with index
+- can add index
+
+### what can go wrong
+assumptions (can be wrong)
+1. can narrow search by pruning partitiosn
+2. partition itself not very costly
+
+
+#### NULL can defeat pruning
+PARTITION BY RANGE YEAR(order_date)
+- if order_date is null or not valid => store in first partition
+- every time query single partition => check first and target partition
+
+solution: define dummy first partition
+- `PARTITION p_nulls values less than (0)`
+
+#### mismatched PARTITION BY and index
+if define index on a, partition by b
+- each parition has own index
+- lookup on index open and each index tree in every partition
+  
+solution: AVOID indexing on non-parititioned columns
+
+#### selecting partitions can be costly
+need linear search list of partition definitions
+worst case: row-by-row insert (need search partition every time insert)
+
+soluiton: limit how many partitions you define
+
+#### opening and locking partitions costly
+opening and locking occur before pruning
+solution: use bulk insert/delete
+
+#### maintenance operations costly
+REOORGANIZE PARTITION
+- create new temporary partition, move rows into it, delete old partition when it's done
+=> costly
+
+
+
+
+
+
+
+
+
+
+
 
 
 
