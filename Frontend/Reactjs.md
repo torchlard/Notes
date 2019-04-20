@@ -37,6 +37,88 @@ subscribe(listener): function listener
 - ex: UserPage, FollowerSidebar, StoryContainer
 - data from redux state
 
+# State
+## setState
+component accept arbitrary inputs and return React elements
+must act like pure functions wrt. props
+State allow React components change output over time in response to action, without violating rule
+```js
+// wrong
+this.state.fullName = 'edura'
+// correct
+this.setState({
+  fullName: 'edura'
+})
+
+// wrong
+this.setState({
+  counter: this.state.counter + this.props.increment
+})
+// correct
+this.setState((state, props) => ({
+  counter: state.counter + props.increment
+}))
+```
+
+when setState(), react merge object provide into current state
+state is local / encapsulated, not accessible to any component
+
+```js
+this.state = {
+  value: '',
+  list: ['a', 'b', 'c']
+}
+// add item to beginning
+this.setState(state => {
+  const list = [...state.list, state.value]
+  return {list, value: ''}
+})
+
+// add item to end
+this.setState(state => {
+  const list = state.list.concat(state.value)
+  return {list, value: ''}
+})
+
+// update every item in array
+this.setState(state => {
+  const list = state.list.map(item => item+1)
+  return {list}
+})
+
+// update an item
+<button onClick={() => this.onUpdateItem(index)} />
+onUpdateItme = i => {
+  this.setState(state => {list: state.list.map((item, i) => (j === i) ? item+1 : item)})
+}
+
+// remove an item
+//// option1
+this.setState(state => {list: state.list.filter((item,j) => i != j)})
+//// option2
+this.setState(state => {
+  const [first, ...rest] = state.list;
+  return {list: rest}
+})
+
+```
+
+# input
+not creating HTML input element, 
+- but create React input object that happens to render as HTML input element
+- event handling not actually use input events
+
+state is always final authority, not "whatever UI library is used to render it" (DOM)
+- just particular UI framework that React happens to be using
+
+1. type in input element
+2. nothing happen to element yet, event intercepted by React and killed
+3. forward event to function set up
+4. function schedule state update
+5. React run update async, trigger render if update changed state
+
+
+
 # ref
 ## when to use
 sometimes want to modify child directly, outside typical dataflow
