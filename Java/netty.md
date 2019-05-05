@@ -23,8 +23,11 @@ future.addListener(new ChannelFutureListener(){
 since all IO async, may not immediately return
 every outbound IO will return ChannelFuture
 
+## ChannelPromise
+ChannelPromise is special ChannelFuture
 
-## Event, Handler
+
+# Event, Handler
 use event to inform change in states / operational states
 - logging, data transform, streaming, application logic
 
@@ -39,10 +42,15 @@ predefined program to manage all kinds of protocol (eg. HTTP, SSL/TLS)
 # Channel
 netty implemented many kinds of channels: eg. AbstractChannel, AbstractNioByteChannel, NioSocketChannel ...
 
-## liefcycle
+## channel liefcycle
+channelUnregistered: channel not reg to EventLoop
+channelRegistered: channel reg to EventLoop
+channelActive: channel connected to remote, can send and receive data 
+channelInactive: not connected to remote
 
+registered -> active -> inactive -> unregistered
 
-## Channel handler
+# Channel handler
 support many protocol, provide container for data management
 most common: ChannelInboundHandler
 
@@ -50,12 +58,31 @@ most common: ChannelInboundHandler
 - outbound: data from client to server
 the order program add to ChannelPipeline decide order of data management
 
-## Channel pipeline
+- ChannelHandler can belong to multiple ChannelPipeline, bind to multiple ChannelHandlerContext; 
+- must use @Sharable
+- must be thread save, safely use multiple channel
+
+## channel handler lifecycle
+handlerAdded: when handler added to ChannelPipeline
+handlerRemoved: remove handler from pipeline
+exceptionCaught
+
+# Channel pipeline
 container for ChannelHandler chain, each channel has its own ChannelPipeline
 initChannel()
 manage event flow
 
-## Channel(In|Out)boundHandlerAdapter
+- addFirst, addBefore, addAfter, addLast
+- remove
+- replace
+
+## ChannelInboundHandler lifecycle
+channelReadComplete
+channelRead: when data read from channel
+channelWritabilityChanged: ensure writes not done too fast (risk of OutOfMemoryError)
+
+
+### Channel(In|Out)boundHandlerAdapter
 in chain, event can pass to next handler via ChannelHandlerContext
 - provide abstract base class adapter
 
@@ -63,9 +90,16 @@ in chain, event can pass to next handler via ChannelHandlerContext
 1. send msg to Channel (start from end of ChannelPipeline)
 2. write to ChannelHandlerContext (start from next processor in ChannelPipeline)
 
-## SimpleChannelHandler
+### SimpleChannelHandler
 IO must not be blocked, prohibit any blocking operation on ChannelHandler
 - assign an EventExecutorGroup for adding ChannelHandler to ChannelPipeline
+
+## ChannelHandlerContext
+manage interactions among ChannelHandler in same ChannelPipeline
+- if call methods in Channel/ChannelPipeline, propagate in pipeline
+- if call in ChannelHandlerContext, only propogate start from current ChannelHandler
+
+
 
 
 ## event loop
@@ -75,12 +109,33 @@ single event loop manage multiple channel event
 
 think of eventLoop as a thread working for Channel
 
-## Bootstrap
+# Bootstrap
+the way to package ChannelPipeline, ChannelHandler ... together 
+
 Bootstrap: bind to remote host and port, 1 event loop group
 ServerBootstrap: bind to local port, 2 event loop group
 - singleton ServerChannel (bind local socket)
 - all created Channel (to handle all client connections)
 
+server: parent pipe accept connection, create child pipes
+client: only need single child pipe
+
+## AbstractBootstrap
+Cloneable => for creating multiple pipes with similar config
+shallow copyof EventLoopGroup (share all cloned pipes)
+
+## compatibility
+NioEventLoopGroup must use with NioServerSocketChannel
+
+## transfer client among channel
+transfer shared EventLoop to Bootstrap's group() method
+- allow client to work on same EventLoop, avoid thread context switching
+  
+
+# Resource Management
+when using ChannelInboundHandler.channelRead(...) / ChannelInboundHandler.write(...)
+- ensure no resource leakage
+use ResourceLeakDetector check 1% ByteBuf
 
 
 
@@ -230,6 +285,80 @@ allocate any ByteBuf
 ## ReferenceCoujnted
 count number of ref in object
 when ref=0, release
+
+
+# Codec
+## Decoder
+### ByteToMessageDecoder
+decode, decodeLast
+```java
+public class ToIntegerDecoder extends ByteToMessageDecoder {
+  @Override
+  public void decode(ChannelHandlerContext ctx, ByteBuf in, List<Object> out)
+    throws Exception {
+      if (in.readableBytes() >= 4)
+        out.add(in.readInt());
+  }
+}
+```
+if msg encoded or decoded -> call ReferenceCountUtil.release(message)
+force keep ref: ReferenceCountUtil.retain(message)
+
+### ReplayingDecoder
+special ByteToMessageDecoder
+```java
+public class ToIntDecoder extends ReplayingDecoder<Void> {
+  @Override
+  public void decode(ChannelHandlerContext ctx, ByteBuf in, List<Object> out)
+    throws Exception {
+      out.add(in.readInt());
+    }
+}
+```
+
+### MessageToMessageDecoder
+```java
+public class IntegerToStringDecoer extends MessageToMessageDecoder<Integer>{
+  xxx {
+    out.add(String.valueOf(msg));
+  }
+}
+```
+if data too much, throw TooLongFrameException, user decide how to handle it
+
+## Encoder
+the same as decoder
+
+MessageToByteEncoder
+- encode
+MessageToMessageEncoder
+
+## Abstract codec
+### ByteToMessageCodec
+eg. byte -> POJO -> byte
+
+## length based protocols
+FixedLengthFrameDecoder
+LengthFieldBasedFrameDecoder
+
+
+# manage huge data
+use "zero-copy" function of NIO
+use interface FileRegion
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
