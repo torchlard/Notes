@@ -347,9 +347,14 @@ use "zero-copy" function of NIO
 use interface FileRegion
 
 
+# theory
+task --> In eventLoop? ---yes--> execute
+      |                 ---no--> queue
+Channel.eventLoop()
+  .execute(Task1)
 
-
-
+Don't block IO thread
+if you need blocking calls, use EventExecutor
 
 
 
