@@ -308,15 +308,77 @@ construct criteria queries, compound selection, expression, predicate, ordering
 define functionality that specific to top-level queries
 
 
+# Query
+## query method
+alias of same method
+- find..By
+- read..By
+- query..By
+- get..By
 
-# error
-PathVariable: boolean can pass 0|1|true|false in url 
-query cannot use "`"
-inside query need to use class names and field names in Java
+return long, count rows
+- count..By
 
-reqeust param: cannot parse json directly, need form
+prefix = ^(find|read|get|query|stream|count|delete|remove)((\\p{Lu}.*?))??By
 
-for native query, parameter will auto add quote => dynamic sql not possible
+## keyword method
+### find
+findByLastname(And|Or)Firstname
+
+findByStartDate(After|Before)   >,<
+findByAge(LessThan|LessThanEqual|GreaterThan|GreaterThanEqual)  <,<=,>,>=
+findByStartDateBetween
+
+findByFirstname(Like|NotLike|StartingWith|EndingWith|Containing) = like,not like, %?, ?%, %?%
+findByAge(In|NotIn) (Collection<Age> ages)
+findByAgeOrderByLastname(Desc)
+
+find(Top|First)3BySex
+
+### count
+countByAgeIn
+
+
+### All keywords
+```java
+BETWEEN(2, "IsBetween", "Between"),
+IS_NOT_NULL(0, "IsNotNull", "NotNull"),
+IS_NULL(0, "IsNull", "Null"),
+LESS_THAN("IsLessThan", "LessThan"),
+LESS_THAN_EQUAL("IsLessThanEqual", "LessThanEqual"),
+GREATER_THAN("IsGreaterThan","GreaterThan"),
+GREATER_THAN_EQUAL("IsGreaterThanEqual", "GreaterThanEqual"),
+BEFORE("IsBefore", "Before"),
+AFTER("IsAfter", "After"),
+NOT_LIKE("IsNotLike", "NotLike"),
+LIKE("IsLike", "Like"),
+STARTING_WITH("IsStartingWith","StartingWith", "StartsWith"),
+ENDING_WITH("IsEndingWith", "EndingWith", "EndsWith"),
+NOT_CONTAINING("IsNotContaining", "NotContaining", "NotContains"),
+CONTAINING("IsContaining", "Containing", "Contains"),
+NOT_IN("IsNotIn", "NotIn"),
+IN("IsIn", "In"),
+NEAR("IsNear", "Near"),
+WITHIN("IsWithin", "Within"),
+REGEX("MatchesRegex", "Matches", "Regex"),
+EXISTS(0, "Exists"),
+TRUE(0, "IsTrue", "True"),
+FALSE(0, "IsFalse","False"),
+NEGATING_SIMPLE_PROPERTY("IsNot", "Not"),
+SIMPLE_PROPERTY("Is", "Equals")
+```
+
+## return type
+void, primitive, T
+Iterator<T>, Collection<T>, List<T>, Stream<T>
+
+Optional<T>
+Future<T>, CompletableFuture<T>, ListenableFuture: need @Async, work in multithreading
+
+Slice, Page<T>
+GeoResult<T>, GeoResults<T>, GeoPage<T>
+
+
 
 # class diagram
 ## Repository interface 

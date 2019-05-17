@@ -68,4 +68,10 @@ gradle run --console=plain
 
 
 
+# Windows
+1. download zip folder
+2. unzip to C:\
+3. set GRADLE_HOME to gradle\bin
+
+
 
