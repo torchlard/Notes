@@ -379,6 +379,38 @@ Slice, Page<T>
 GeoResult<T>, GeoResults<T>, GeoPage<T>
 
 
+## Annotation style query
+Spel
+- @Query, @Procedure, @Param, @Nullable, @Modifying, @QueryHints
+
+
+
+## native query
+`order by ?` not working, because ? quoted
+
+must use JPQL to apply Sort and PageRequest to SQL
+```java
+// JPQL (must use entity definition)
+@Query("select t from Teacher2 t where t.age > ?1")
+List<T> getSth4(int x, PageRequest page);
+
+// SQL
+@Query(value="select * from teacher where age>?1", nativeQuery=true)
+List<T> getSth(int x);
+
+// need @Transactional
+
+@Modifying
+@Query("update Teacher2 t set t.age = ?1 where id=?2")
+void setAge1(int age, int id);
+```
+
+## preference
+priority: @Query > @NamedQuery > method defined query
+recommand use: @Query > method defined query > @NamedQuery
+
+
+
 
 # class diagram
 ## Repository interface 
