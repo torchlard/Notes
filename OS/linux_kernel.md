@@ -2,6 +2,7 @@
 ## monolithic kernel 
 no access protection between various kernel subsystem
 logical separation between subsystem, especially core and device driver
+
 ### modular design
 component enable/disable at compile time
 loadable kernel modules at runtime
@@ -18,7 +19,7 @@ common: RAM -> low address, graphics card memory -> high address
 virtual address space: protected mode / paging enabled / virtual memory module activated
 
 process space: virtual address space associated with process (continuous)
-kernel spce: memory view of kernel code, create mapping prevent direct access
+kernel space: memory view of kernel code, create mapping prevent direct access
 
 ## execution context
 special execution context run in interrupt mode
@@ -55,7 +56,7 @@ system call are not function call, but instruction that
 3. user stack, return addr, register saved on kernel stack
 4. system call dispatcher: verify system call num, run kernel fn associated with system call
 5. user space register restored, get result of system call
-6. suer space application resume
+6. user space application resume
 
 system call identified by numbers, param: machine word -> max 6 params
 system lib offer functions implement actual system calls
@@ -101,9 +102,15 @@ introduce vsyscall in kernel address space, allow user mode read+execute
 
 
 
-
-
-
+# process
+## systemd (pid=1)
+system's first process, only 1 not fork
+- after kernel space initialization, act as daemon process to monitor all other processes
+  
+## kthreadd (pid=2)
+created by systemd, manage and schedule all kernel threads
+- maintain linked list of kernel threads
+- always run in kernel space
 
 
 
