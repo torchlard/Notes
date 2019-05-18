@@ -12,7 +12,7 @@ data navigation: data navigation between objects different
 
 ## architecture
 Entity manager factory
-- facotry class of EntityManager
+- factory class of EntityManager
 Entity Manager
 - interface, manage persistence operations on objects
 - factory for Query instance
@@ -98,7 +98,6 @@ public Address getAddress(){
 }
 ```
 
-
 @UniqueConstraint: unique constraint for primary, secondary table
 
 @ManyToMany 
@@ -114,11 +113,8 @@ public Address getAddress(){
 @OneToOne
 @NamedQueries | NamedQuery
 
-
 @PrimaryKeyJoinColumn
 - itself as foreign key and primary key in table at same time
-
-
 
 # setting
 spring.jpa.properties.hibernate.hbm2ddl.auto
@@ -127,8 +123,25 @@ spring.jpa.properties.hibernate.hbm2ddl.auto
 - validate
 - update
 
-## update
+## spring boot integration (mariadb)
+spring.datasource.url=jdbc:mariadb://localhost:3306/xx_db
+spring.datasource.username=xxxx
+spring.datasource.password=xxxxxx
+spring.datasource.driver-class-name=org.mariadb.jdbc.Driver
 
+spring.datasource.tomcat.max-wait=20000
+spring.datasource.tomcat.max-active=50
+spring.datasource.tomcat.max-idle=20
+spring.datasource.tomcat.min-idle=15 
+
+hibernate.dialect=org.hibernate.dialect.MariaDBDialect
+spring.jpa.hibernate.naming.physical-strategy=org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+spring.jpa.show-sql=true
+spring.output.ansi.enabled=ALWAYS
+spring.jpa.properties.hibernate.id.new_generator_mappings=false
+
+
+## update
 ### entity changes
 if entity name change => table generated not delete, gen new table
 entity index change => 
@@ -169,9 +182,6 @@ eg. unique, nullable, length
 if not set these attr before
 - later you add/delete attr => not affect db
 - as long as column name unchange
-
-
-
 
 
 # implement
@@ -226,7 +236,7 @@ EntityManagerFacotry emfactory = Persistence.createEntityManagerFactory("Eclipse
 EntityManager entityManager = emfactory.createEntityManager();
 
 Qeury query = entityManager.createQuery("select e from Employee e orderby e.ename ASC" );
-List<Employee> lsit = (List<Employee>)query.getResultList();
+List<Employee> list = (List<Employee>)query.getResultList();
 
 for(Employee e: list){
   System.out.println("employee id: " + e.getEid());
@@ -284,9 +294,8 @@ hql is object oriented, from + class name + class object + where + class field
 sql is table oriented, from + table name + where + table field
 
 
-
 # Specification
-build around `Specification` interface , 
+build around `Specification` interface, 
 only defined 
 ```java
 Predicate toPredicate(Root<T> root, CriteriaQuery<?>)
@@ -299,15 +308,147 @@ construct criteria queries, compound selection, expression, predicate, ordering
 define functionality that specific to top-level queries
 
 
+# Query
+## query method
+alias of same method
+- find..By
+- read..By
+- query..By
+- get..By
 
-# error
-PathVariable: boolean can pass 0|1|true|false in url 
-query cannot use "`"
-inside query need to use class names and field names in Java
+return long, count rows
+- count..By
 
-reqeust param: cannot parse json directly, need form
+prefix = ^(find|read|get|query|stream|count|delete|remove)((\\p{Lu}.*?))??By
 
-for native query, parameter will auto add quote => dynamic sql not possible
+## keyword method
+### find
+findByLastname(And|Or)Firstname
+
+findByStartDate(After|Before)   >,<
+findByAge(LessThan|LessThanEqual|GreaterThan|GreaterThanEqual)  <,<=,>,>=
+findByStartDateBetween
+
+findByFirstname(Like|NotLike|StartingWith|EndingWith|Containing) = like,not like, %?, ?%, %?%
+findByAge(In|NotIn) (Collection<Age> ages)
+findByAgeOrderByLastname(Desc)
+
+find(Top|First)3BySex
+
+### count
+countByAgeIn
+
+
+### All keywords
+```java
+BETWEEN(2, "IsBetween", "Between"),
+IS_NOT_NULL(0, "IsNotNull", "NotNull"),
+IS_NULL(0, "IsNull", "Null"),
+LESS_THAN("IsLessThan", "LessThan"),
+LESS_THAN_EQUAL("IsLessThanEqual", "LessThanEqual"),
+GREATER_THAN("IsGreaterThan","GreaterThan"),
+GREATER_THAN_EQUAL("IsGreaterThanEqual", "GreaterThanEqual"),
+BEFORE("IsBefore", "Before"),
+AFTER("IsAfter", "After"),
+NOT_LIKE("IsNotLike", "NotLike"),
+LIKE("IsLike", "Like"),
+STARTING_WITH("IsStartingWith","StartingWith", "StartsWith"),
+ENDING_WITH("IsEndingWith", "EndingWith", "EndsWith"),
+NOT_CONTAINING("IsNotContaining", "NotContaining", "NotContains"),
+CONTAINING("IsContaining", "Containing", "Contains"),
+NOT_IN("IsNotIn", "NotIn"),
+IN("IsIn", "In"),
+NEAR("IsNear", "Near"),
+WITHIN("IsWithin", "Within"),
+REGEX("MatchesRegex", "Matches", "Regex"),
+EXISTS(0, "Exists"),
+TRUE(0, "IsTrue", "True"),
+FALSE(0, "IsFalse","False"),
+NEGATING_SIMPLE_PROPERTY("IsNot", "Not"),
+SIMPLE_PROPERTY("Is", "Equals")
+```
+
+## return type
+void, primitive, T
+Iterator<T>, Collection<T>, List<T>, Stream<T>
+
+Optional<T>
+Future<T>, CompletableFuture<T>, ListenableFuture: need @Async, work in multithreading
+
+Slice, Page<T>
+GeoResult<T>, GeoResults<T>, GeoPage<T>
+
+
+## Annotation style query
+Spel
+- @Query, @Procedure, @Param, @Nullable, @Modifying, @QueryHints
+
+
+
+## native query
+`order by ?` not working, because ? quoted
+
+must use JPQL to apply Sort and PageRequest to SQL
+```java
+// JPQL (must use entity definition)
+@Query("select t from Teacher2 t where t.age > ?1")
+List<T> getSth4(int x, PageRequest page);
+
+// SQL
+@Query(value="select * from teacher where age>?1", nativeQuery=true)
+List<T> getSth(int x);
+
+// need @Transactional
+
+@Modifying
+@Query("update Teacher2 t set t.age = ?1 where id=?2")
+void setAge1(int age, int id);
+```
+
+## preference
+priority: @Query > @NamedQuery > method defined query
+recommand use: @Query > method defined query > @NamedQuery
+
+
+
+
+# class diagram
+## Repository interface 
+Repository
+-CrudRepository
+--PagingAndSortingRepository
+---JpaRepository (flush, deleteInBatch, findAll)
+++++SimpleJpaRepository
++++++QueryDslPredicateExecutor
+
+---KeyValueRepository
+++++SimpleKeyValueRepository
++++++QuerydslKeyValueRepository
+
+## Executors
+QueryByExampleExecutor
+JpaSpecificationExecutor
+
+## javax.persistence
+EntityManagerFactory(javax.persistence)
+-HibernateEntityManagerFactory(org.hibernate.jpa)
+++EntityManagerFactoryImpl(org.hibernate.jpa.internal)
+
+
+## low level package
+EntityManager (javax.persistence)
+EntityManagerImpl (org.hibernate.jpa.internal)
+
+## Page
+Iterable <-- Slice <-- Page
+
+### Slice
+getNumber, getSize, getSort, 
+Pageable(page number, page size, prev, next)
+- nextPageable, previousPageable
+
+### Page
+getTotalPages, getTotalElements
 
 
 
