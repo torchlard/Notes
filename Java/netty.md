@@ -356,7 +356,22 @@ Channel.eventLoop()
 Don't block IO thread
 if you need blocking calls, use EventExecutor
 
+## scheduled job
+1. call job execution after certain delay
+2. task added to EventLoop's Schedule-Task-Queue
+3. if immediate execute, EventLoop check each instance
+4. if need execute, run immediately
+5. wait for next call
 
+- all eventLoop distributed by EventLoopGroup
+- eventLoop distribute pipeline events assigned to it, bind to 1 thread
+- pipeline bind to EventLoop
+
+may affect usage of ThreadLocal
+
+## aim
+serve Channel's IO and events with least number of EventLoop (thread)
+- shared among channels, no need each Channel new Thread
 
 
 

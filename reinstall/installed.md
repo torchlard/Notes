@@ -10,7 +10,17 @@ echo "deb [ arch=amd64 ] https://repo.mongodb.org/apt/ubuntu bionic/mongodb-org/
 sudo apt-get update
 sudo apt-get install -y mongodb-org
 ## nodejs
+sudo apt-get install npm
+sudo npm i -g n yarn typescript
+sudo n latest
 
+## gradle
+curl -s "https://get.sdkman.io" | bash
+// config .zshrc using .bashrc
+sdk install gradle 5.4.1
+
+
+## others
 sbt
 scala
 mono-4.0-gac
@@ -22,8 +32,10 @@ gradle
 
 # make qt follow system wide gtk theme
 <!-- 1. install qtconfig-qt4 -->
-sudo apt-get install qt5-style-plugins
-sudo sh -c "echo 'QT_QPA_PLATFORMTHEME=gtk2' >> /etc/environment"
+sudo apt-get install qt5-style-plugins qt5ct
+sudo sh -c "echo 'QT_QPA_PLATFORMTHEME=qt5ct' >> /etc/environment"
+
+setup config
 
 # gnome fractional scaling
 gsettings set org.gnome.mutter experimental-features "['x11-randr-fractional-scaling']"
@@ -31,8 +43,8 @@ gsettings set org.gnome.mutter experimental-features "['x11-randr-fractional-sca
 # copy /usr/share/icons
 sudo cp -r /media/lkit/7ac42414-61e5-4f3c-8c00-bee4add272d3/usr/share/icons/Papirus* /usr/share/icons
 
-
-
+# firefox dark mode
+shadowfox
 
 
 
