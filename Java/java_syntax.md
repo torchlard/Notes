@@ -364,7 +364,32 @@ extends Observable class to be objects that can be observed
 - define functions to set data
 
 
+# Exception
+Throwable -> Exception -> RuntimeException
+                       -> IOException
 
+## checked exception
+exception that must be either caught or declared in method in which it is thrown
+- eg. java.io.IOException
+```java
+public void ioOperation(boolean isResourceAvailable){
+  if(!isResourceAvailable){
+    throw new IOException();
+  }
+}
+```
+
+## unchecked exception
+Exception that can be thrown without being caught or declared
+
+## runtime exception
+kind of unchecked exception
+
+### how to deal it
+if occur in backend
+1. log it and return
+2. rethrow it
+3. construct new exception by passing current one in constructor
 
 
 

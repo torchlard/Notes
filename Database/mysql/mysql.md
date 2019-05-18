@@ -321,10 +321,16 @@ if condition in where and return data in same index, no need to query table agai
 ===========================
 # import file
 `mysql -u <user> -p<password> <dbname> < /path/to/file.sql`
+source db.sql
 
 # import sql in docker
 docker exec -i mysql-container mysql -u 'user' -p 'password' 'name_db' < 'data.sql'
 
+# rename database
+<!-- rename from testdb to newdb -->
+mysql -u root -p"123456" testdb -sNe 'show tables' | while read table; do mysql -u root -p"123456" -sNe "alter table testdb.$table RENAME TO newdb.$table"; done
 
+# dump only schema
+mysqldump -u root -h localhost --no-data -p database > db.sql
 
 

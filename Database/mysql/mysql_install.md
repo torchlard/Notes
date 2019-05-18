@@ -4,8 +4,8 @@ sudo apt-get --purge remove "mysql*"
 sudo apt-get --purge remove "mariadb*"
 
 ## clear everything in
-/var/lib/mysql
-/etc/mysql
+sudo rm -rf /var/lib/mysql
+sudo rm -rf /etc/mysql
 
 # restart wsl
 net stop LxssManager
@@ -55,8 +55,59 @@ Reload the apparmor profiles
 sudo /etc/init.d/apparmor reload -->
 
 9. Then start mysql:
+sudo service mysql start
 
-start mysql
+
+# change mariadb root password
+For MariaDB:
+
+$ sudo systemctl stop mariadb
+
+##
+Next, restart the database server without permission checking using the following command:
+
+$ sudo mysqld_safe --skip-grant-tables &
+
+Here, the --skip-grant-tablesoption allows you to connect without a password and with all privileges. 
+If you start your server with this option, it also enables --skip-networkingoption which is used to prevent the other clients from connecting to the database server. 
+And, the ampersand (&) symbol is used to run the command in background, so you could type the other commands in the following steps. 
+Please be mindful that the above command is dangerous and your database server becomes insecure. You should run this command only for a brief period to reset the password.
+
+##
+Next, login to your MySQL/MariaDB server as root user:
+
+$ mysql
+
+- At the mysql> or MariaDB [(none)]> prompt, run the following command to reset the root user password:
+
+UPDATE mysql.user SET Password=PASSWORD('NEW-PASSWORD') WHERE User='root';
+
+- Replace NEW-PASSWORD in the above command with your own password.
+- Then, type following commands to exit from the mysql console.
+
+FLUSH PRIVILEGES;
+exit
+
+##
+Finally, shutdown the running database server that you started earlier with --skip-grant-tablesoption. To do so, run:
+
+$ sudo mysqladmin -u root -p shutdown
+
+You will be asked to enter your mysql/mariadb root user password that you set in the previous step.
+
+Now, start mysql/mariadb service normally using command:
+
+$ sudo systemctl start mysql
+
+For MariaDB:
+
+$ sudo systemctl start mariadb
+
+Verify if the password has really been changed using the following command:
+
+$ mysql -u root -p
+
+
 
 
 

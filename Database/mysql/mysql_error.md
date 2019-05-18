@@ -87,8 +87,9 @@ mysqladmin -u root -p password '123456'
 
 
 # Can't connect to local MySQL server through socket '/var/run/mysqld/mysqld.sock' (2)
+sudo service mysql restart
 
-
+#  Lock wait timeout exceeded; try restarting transaction
 
 
 
