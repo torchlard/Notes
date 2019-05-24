@@ -126,6 +126,24 @@ method level security, support Spring EL
 authorize before entering method
 
 
+# starter
+avoid complex config, intergrated bootstrap jar
+- no need worry about many jar dependency
+- auto discover Bean under classpath and weave into bean
+eg. to use jpa, only need "spring-boot-starter-data-jpa"
+
+## spring-boot-actuator
+external supporting functions
+- endpoints, application states monitoring
+- Health Indicators
+- metrics
+- remote shell
+
+## spring-boot-tools
+normal tools, like spring-boot-gradle-plugin, spring-boot-maven-plugin
+
+## spring-bot-cli
+if not using maven/gradle, can use cli
 
 
 

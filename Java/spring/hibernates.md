@@ -82,6 +82,62 @@ once close hibernate session, persistent instance detach
 
 
 
+# type
+## primitive
+integer                               --  INTEGER
+long                                  --  BIGINT
+short                                 --  SMALLINT
+float                                 --  FLOAT
+double                                --  DOUBLE
+big_decimal --  java.math.BigDecimal  --  NUMBERIC
+character   --  java.lang.String      --  CHAR(1)
+string      --  java.lang.String      --  VARCHAR
+byte        --  byte/java.lang.Byte   --  TINYINT    
+boolean     --  boolean               --  BIT
+
+## date time
+date          --  java.util.Date / java.sql.Date      --  DATE
+time          --  java.util.Date / java.sql.Time      --  TIME
+timestamp     --  java.util.Date / java.sql.Timestamp --  TIMESTAMP
+calendar      --  java.util.Calendar                  --  TIMESTAMP
+calendar_date --  java.util.Calendar                  --  DATE
+
+## bianry and large object
+binary
+text
+serializable
+clob
+blob
+
+## JDK related
+class     --  VARCHAR
+locale    --  VARCHAR
+timezone  --  VARCHAR
+currency  --  VARCHAR
+
+
+# collections mapping
+java.util.Set
+java.util.SortedSet
+java.util.List
+java.util.Collection
+java.util.Map
+java.util.SortedMap
+
+`<primitive-array>` for Java primitive values, `<array>` for everything else
+
+# HQL
+object-oriented query language
+adv: 
+high db portability, take advantage of Hibernate's SQL generation and caching strategies
+
+Keywords like (SELECT,FROM,WHERE) not case-sensitive; table,column name case-sensitive
+
+
+
+
+
+
 
 
 
