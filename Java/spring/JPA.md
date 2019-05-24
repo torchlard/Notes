@@ -419,7 +419,7 @@ Repository
 --PagingAndSortingRepository
 ---JpaRepository (flush, deleteInBatch, findAll)
 ++++SimpleJpaRepository
-+++++QueryDslPredicateExecutor
++++++QueryDslJpaRepository
 
 ---KeyValueRepository
 ++++SimpleKeyValueRepository
@@ -449,6 +449,25 @@ Pageable(page number, page size, prev, next)
 
 ### Page
 getTotalPages, getTotalElements
+
+
+
+# @MappedSuperclass
+parent class as @Entity, 
+only produce 1 table after multiple class inheritance
+
+# annotations
+## @where
+- eg. want to implement soft delete
+@where(clause = "deleted = false")
+- will be added to any query/subquery to entity
+
+@where condition won't be reevaluated until flush entity to db, evict from context
+
+## @Formula
+no need to recalculate entity field each time access 
+
+
 
 
 

@@ -41,7 +41,7 @@ anonymous bean / inner bean
 
 give bean more than one name for variety of aliases
 
-## meaning
+### meaning
 all properties private
 default constructor
 provide getter, setter
@@ -68,7 +68,37 @@ component technology => reusable
 
 EJB: very complicated kind of bean with many requirement
 
-## Tags
+## @Component VS @Bean
+@Component, @Service, @Repository
+- for type
+- for auto-detect, auto-configure beans using classpath scanning
+- implicit one bean per class
+- control of wiring limited, purely declarative
+
+@Bean
+- for method
+- explicitly declare single bean, rather than spring auto ddo it
+- let you create and configure beans
+
+
+# Stereotype annotation
+aim: automatic bean detection / discovery => spring managed component
+
+## @Repository
+in persistence layer/DAO layer
+notify spring class contain logic to access data
+- unchecked exception -> DataAccessException
+
+## @Service
+notfiy that class contains business logic
+specification of @component (no additional behavior over @Compoennt)
+
+## @Controller
+for persentation layer (MVC controller)
+
+
+
+# Tags
 Autowired: auto link bean from one bean (~ require)
 Inject
 Resource
@@ -432,6 +462,12 @@ cater for NoSQL => 'Sprint Data' project
 
 
 
+# annotation
+## @AliasFor
+1. explicit alias within annotation
+2. for attributes in meta-annotation
+- fine-grained control of which attributes overridden within annotation heirarchy
+3. >=1 attributes within annotation declared
 
 
 
