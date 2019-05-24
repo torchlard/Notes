@@ -68,6 +68,19 @@ instance of persistence class, not associated with session
 - persistent
 make instance persistent by associating with Session
 instance = representation in db, identifier value, associate with Session
+- detached
+once close hibernate session, persistent instance detach
+
+
+
+
+
+
+
+
+
+
+
 
 
 

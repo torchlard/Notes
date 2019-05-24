@@ -108,6 +108,15 @@ Verify if the password has really been changed using the following command:
 $ mysql -u root -p
 
 
+# mariadb installed without init password
+$ sudo mysql -u root
+
+[mysql] use mysql;
+[mysql] update user set plugin='' where User='root';
+[mysql] flush privileges;
+[mysql] \q
+
+$ sudo mysql_secure_installation
 
 
 
