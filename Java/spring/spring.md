@@ -470,6 +470,32 @@ cater for NoSQL => 'Sprint Data' project
 3. >=1 attributes within annotation declared
 
 
+## AuditorAware
+@CreatedBy
+@CreatedDate
+@lastModifiedBy
+@lastModifiedDate
+
+```java
+@Entity
+@Data
+@EntityListener({AuditingEntityListener.class})
+public class Person {
+  @CreatedBy
+  @Column(name="xxx")
+  private String createdBy;
+}
+
+
+@Component("xxx")
+public class AuditorAwareImpl implements AuditorAware<String>{
+  @Override
+  public Optional<String> getCurrentAuditor(){
+    ...
+  }
+}
+```
+
 
 
 
