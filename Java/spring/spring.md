@@ -469,6 +469,39 @@ cater for NoSQL => 'Sprint Data' project
 - fine-grained control of which attributes overridden within annotation heirarchy
 3. >=1 attributes within annotation declared
 
+## @ConfigurationProperties
+- @ConfigurationProperties(prefix="abc")
+map to certain "xx.properties" file
+```
+abc.hostName
+abc.port
+```
+
+## AuditorAware
+@CreatedBy
+@CreatedDate
+@lastModifiedBy
+@lastModifiedDate
+
+```java
+@Entity
+@Data
+@EntityListener({AuditingEntityListener.class})
+public class Person {
+  @CreatedBy
+  @Column(name="xxx")
+  private String createdBy;
+}
+
+
+@Component("xxx")
+public class AuditorAwareImpl implements AuditorAware<String>{
+  @Override
+  public Optional<String> getCurrentAuditor(){
+    ...
+  }
+}
+```
 
 
 
