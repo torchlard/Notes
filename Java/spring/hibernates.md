@@ -126,6 +126,10 @@ Keywords like (SELECT,FROM,WHERE) not case-sensitive; table,column name case-sen
 ## question
 when data fetch? how to fetch?
 
+## default
+EAGER: @Basic, @ManyToOne, @OneToOne
+LAZY: @OneToMany, @ManyToMany, @ElementCollection
+
 ## strategy
 ### static 
 > done in mapping
@@ -138,6 +142,9 @@ subselect (EAGER/LAZY)
 - get all entities get from previous query/fetch 
 batch (EAGER/LAZY)
 - optimization, get batch of entity instances
+
+if use direct fetching (eg. entityManager.find(Employee.class, 1L)), auto add join to SQL
+if use entity query fetch, cannot override SQL, so use secondary select 
 
 ### dynamic
 fetch profiles
@@ -166,10 +173,15 @@ lazy attribute
 - an attribute/single-valued association fetch when instance variable accessed
 
 
+# Entity Graph
+to load entity association, static meta configuration (not flexible)
+problem: cannot switch between LAZY and EAGER at runtime
+goal: improve runtime performance when loading entity's related association and basic fields
 
 
 
-
+# N+1 problem
+issue N subqueries to get associated N entities of parent entity
 
 
 
