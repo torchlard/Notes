@@ -93,6 +93,9 @@ sudo service mysql restart
 
 
 
+# The user specified as a definer does not exist
+
+
 
 
 
