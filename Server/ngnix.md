@@ -10,10 +10,28 @@ validate nginx.conf, manage worker process
 each worker manage a thread, avoid switching thread
 manage connection and request
 worker process ~ CPU number by default
+- each worker has own connection pool (max=worker_connections)
 
 ## hot deploy
 nginx -s reload
 nginx -t: check config
+
+
+# concept
+## connection
+abstraction of TCP, include socket, read/write event
+
+## lifecycle
+1. parse config file, get ip,port
+2. in master process, set socket(bind ip,pot -> listen)
+3. fork multiple child processes, let processes compete for accept new connection
+4. client connect to nginx, one of child process accept success, get connected socket
+5. construct strcut ngx_connection_t 
+6. set RW event function
+7. close connection
+
+use linked list free_connnections keep all idle ngx_connection_t
+- each time get connection, get one from linked list
 
 # main components
 ## Ngnix
@@ -27,7 +45,7 @@ for error debugging
 
 # mechanism
 use Linux epoll model
-event driven, check if event if ready; if OK, put in epoll queue
+event driven, check if event is ready; if OK, put in epoll queue
 
 # introduction
 high performance HTTP and reverse proxy server
@@ -71,6 +89,24 @@ HTTP Access, HTTP FastCGI, HTTP proxy, HTTP rewrite
 HTTP upstream request hash, notice, HTTP Access key
 
 very modular design
+
+## module types
+### event module
+event handling framework
+eg. ngx_events_module, ngx_event_core_module, ngx_epoll_module
+
+### phase handler
+eg. ngx_http_static_module
+
+### (output) filter
+process output content, eg. modify images, add footbar
+
+### upstream
+reverse proxy, redirect request
+
+### load-balancer
+implement specific algorithm, choose one among all servers
+
 
 # nginx config
 config location: /etc/nginx/conf.d/xx.conf
@@ -183,6 +219,85 @@ server {
   }
 }
 ```
+
+# request handling process
+1. init HTTP Request object
+2. process header
+3. process body
+4. manager related header (URL/location)
+5. call each phase handler
+
+## phase handler
+tasks
+1. get location config
+2. produce response
+3. send response header
+4. send response body
+
+NGX_HTTP_:
+- post read
+- server rewrite
+- find config
+- rewrite (location request)
+- post rewrite
+- preaccess (access privilege validation prepare)
+- access
+- post access
+- try files
+- content
+- log
+
+in content phase, dispatch request to an appropriate content handler
+if specified content handler, run 
+eg. perl, flv, proxy_pass, mp4 ...
+
+#
+## location
+==if no content handler, then try==
+
+random_index on:
+random send a file
+
+index:
+send file specified by index
+
+autodindex on:
+send file list under that path
+
+gzip_static on:
+send .gz file if exists
+
+if request static file, then send file content
+
+## filter
+after content generation phase, send to filter module
+
+1. server-side includes
+2. XSLT filtering
+3. image scaling
+4. gzip compression
+
+
+# command scope
+## main
+config irrelevant to business logic
+eg. worker process, user identity
+
+## http
+http related config
+
+## server
+support multiple virtual host, each host one config
+
+## location
+in http, config for certain URL
+
+## main
+use SMTP/IMAP/POP3 proxy, share some config
+
+
+
+
 
 
 
