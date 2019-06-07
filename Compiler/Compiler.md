@@ -703,15 +703,57 @@ good criteria
 - convenient translate to real machine lang, for all target machine
 - each construct clear, simple meaning; optimization easily implemented
 
-IR have individual components describe only extermely simple things
+individual components describe simple things
 - single fetch, store, add, move, jump
 - translate to right set of abstract machine instruction
 
+const(i)
+name(n): symbolic const
+temp(t): ~register, unlimited 
+binop(o,e1,e2): binary operation o to operands e1,e2
+mem(e): wordSize bytes of memory, start from address e
+call(f,l): apply function f to argument list l
+eseq(s,e): statement s evaluated for side effect; e evaluated for result
+move(temp t, e): evaluate e, move to t
+move(mem(e1), e2): evaluate e1, yield addr a; evaluate e2, store result into wordSize mem start at a
+exp(e): eval e, discard result
+jump(e,labs): jump to addr e
+cjump(o,e1,e2,t,f): 
+- eval e1,e2 in order; yield value a,b
+- compare a,b using operator o
+- true -> t; false -> f
+seq(s1,s2): statement s1, then s2
+label(n): const value of name n to be current machine code addr
+
+
 ## translation
 1. kind of expressioin
-A_exp translate to:
-- eg. expression return nothing / while exp => T_stm
-- others maybe T_exp
+```
+example: a > b | c < d 
+
+label z = newLabel();
+stm s1 = seq(cjump(gt, a, b, NULL_t, z),
+            seq(label(z),
+              cjump(lt, c, d, NULL_t, NULL_f)
+          ));
+==>
+
+```
+target: to fill NULL_t, NULL_f with destinations
+
+Tr_exp is abstract data type, Ex/Nx constructors visible only within Translate
+manipulation of MEM should all done in Translate module, not in Semant
+
+Frame holds all machine-dependent definitoins 
+add to frame-pointer register FP
+
+
+
+
+
+
+
+
 
 
 

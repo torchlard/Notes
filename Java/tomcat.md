@@ -39,8 +39,12 @@ receive dispatch, run servlet service
 - others like authentification, session update
 
 
-
-
+# Demo
+## servlet processor
+URLClassLoader: url array, point to locaiton of servlet classes
+- end with "/" => directory
+- else => jar
+repository: location to check servlet class
 
 
 

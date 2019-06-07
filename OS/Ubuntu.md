@@ -46,5 +46,9 @@ usermod -a -G examplegroup exampleusername
 3. add line "QT_QPA_PLATFORMTHEME=gtk2" in /etc/environment
 
 
+# change gnome key binding
+gsettings get org.gnome.desktop.wm.keybindings switch-to-workspace-up
+gsettings set org.gnome.desktop.wm.keybindings switch-to-workspace-up "['<Super>Page_Up']"  
+
 
 
