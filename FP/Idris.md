@@ -1,3 +1,6 @@
+# compile and run
+idris Hello.idr -o Hello; ./Hello
+
 # console usage
 use contrib library
 `idris -p contrib`
