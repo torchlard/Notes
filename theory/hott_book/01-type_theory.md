@@ -28,7 +28,7 @@ VS propositional equality
 "f: A -> B" = f has type (A -> B)
 
 ## context
-assume x,y: A, p: x =(A) y; => construct an element p^-1: y =(A) x
+assume x,y: A, p:x =[A] y; => construct an element p^-1: y =[A] x
 context = collection of all such assumptions
         = ordered list of assumption
 
@@ -40,8 +40,9 @@ type theory: rules which contains all information, axiom not necessary
 - At the end, need extra univalence axiom
 
 # function types
-in type thory, function not defined as functional relations, but are primitive concept
-construt element of A -> B
+in type theory, function not defined as functional relations, but are primitive concept
+
+ways to construct element of A -> B
 1. direct definition
 2. λ-calculus
 
@@ -264,6 +265,8 @@ rec[2](C, c0, c1, 0[2]) = c0
 rec[2](C, c0, c1, 1[2]) = c1
 
 ind[2]: Π[C:2->U] C(0[2]) -> C(1[2]) -> Π[x:2] C(x)
+ind[2] (C,c0,c1,0[2]) = c0
+ind[2] (C,c0,c1,1[2]) = c1
 
 A+B = Σ[x:2] rec[2](U,A,B,x)
 (a,b) = ind[2](rec[2] (U,A,B),a,b)]
@@ -286,6 +289,10 @@ add(succ(m),n) = succ(add(m,n))
 rec[N]: Π[C:U] C- > (N -> C -> C) -> N -> C
 rec[N](C,c0,cs,0) = c0
 rec[N](C,c0,cs,succ(n)) = succ(add(m,n))
+
+ind[N]: Π[C:N->U] C(0) -> (Π[n:N]C(n) -> C(succ(n))) -> Π[n:N]C(n)
+ind[N] (C,c0,cs,0) = c0
+ind[N] (C,c0,cs,succ(n)) = cs(n, ind[N](C,c0,cs,n))
 ```
 
 link to classical notion of proof by induction
@@ -320,7 +327,146 @@ proof by contradiction is not allowed
 "if not A and not B, then not (A or B)"
 (A -> 0) x (B -> 0) -> (A + B -> 0)
 
-## higher
+## semigroup
+`Σ[A:U] Σ[m:A->A->A] Π[x,y,z:A] m(x,m(y,z)) = m(m(x,y),z)`
+extract carrier A, operation m, and witness of the axiom
+
+## higher order logic
+we can use universe to represent "higher order logic"
+- quantify over all propositions OR over all predicates
+- `( Π[P:A->U[i]] P(a) -> P(b) ): U[i+1]`
+
+## proof-relevant nature of logic
+"A if and only if B" => (A->B) x (B->A)
+but A and B exhibit different behavior (eg. N iff 1, N and 1 are different)
+A and B merely logically equivalent (NOT equivalence of types)
+
+"A is inhabited" = we have given a particular element of A, but not give name to that element
+`~0 = (0->0)` is inhavited by id0
+
+
+# Identity type
+family `Id[A]: A -> A -> U` (not the same as identity funciton `id[A]`)
+if `a =[A] b`, then a and b are equal
+
+homotopical interpretation: regrad witness of a=b as 
+- paths   OR
+- equivalence between a and b in space A ?
+
+given type A:U and a,b:A, we can form type `(a =[A] b):U` in the same univarse
+
+## construct element of a=b
+know that a,b are the same
+reflexivity `refl: Π[a:A](a =[A] a) `
+- constant path at point a
+
+if a,b are judgmentally equal, then `refl[a]: a =[A] b`
+
+## indiscernibility(不可分辨) of identicals
+```
+for every family C: A->U
+there's fn f: Π[x,y:A] Π[p:x=[A]y] C(x) -> C(y)
+such that   f(x,x,refl[x]) = id[C(x)]
+```
+every family of types C respects equality,
+in sense that applying C to equal elements of A => function between resulting types
+
+indiscernibility of identicals = recursion principle for identity type
+- gives specified map from `x =[A] y`  to certain other reflexive,binary relations on A
+- naemly those of form C(x)->C(y) for some unary predicate C(x)
+~~ rec[N] gives specified map N->C for other type C
+
+we consider not only allow equals to be substituted for equals, 
+but also consider evidence p for equality
+
+
+## Path induction
+```
+given family  C: Π[x,y:A] (x =[A] y) -> U
+given function  c: Π[x:A] C(x,x,refl[x])
+
+there is  f: Π[x,y:A] Π[p:x=[A]y] C(x,y,p)
+such that   f(x,x,refl[x]) = c(x)
+
+--combine all--
+ind[=A]: Π[C:Π[x,y:A] (x =[A]y)->U] (Π[x:A] C(x,x,refl[x])) -> Π[x,y:A] Π[p:x=[A]y] C(x,y,p)
+ind[=A] (C,x,x,refl[x]) = c(x)
+
+```
+we evaluate c at pair x,x; we get true proposition => reflexive
+
+for natural element, either 0 / succ(n), prove some number => deduce to all
+path induction => every path is of form refl[a]
+- if we prove property fro reflexivity path, then we proved for all paths
+
+for homotopy interpretation, there may be many different ways a,b identified
+- many different elements of identity type
+
+identity family (not identity type) inductively defined
+
+## based path induction
+fix an element a:A
+```
+C: Π[x:A] (a =[A] x) -> U
+c: C(a, refl[a])
+
+f: Π[x:A] Π[p:a=x] C(x,p)
+f(a,refl[a]) = c
+```
+
+for a fixed a:A, the family of types (a =[A] y) as y varies over all elements of A
+- is inductively defined by element refl[a]
+
+associative law, commutative law are proven as propositional equality, not judgmental one
+
+## disequality
+`(x ≠[A] y) = ~(x =[A] y)`
+we cannot prove two things are equal by proving they're not unequal (double negation)
+
+
+## Versions of type theory
+in this version Martin-Lof's intuitionistic type theory
+3 variants:
+under NuPRL, Coq, Agda computer implementations
+
+- intensional version used here, not extensional version
+- extensional: no distinction between judgmental and propositional equality
+
+here admits proof-relevant interpretation of equality
+- more restricted variants impose uniqueness of identity proofs: 
+  - any 2 proofs of equality judgmentally equals
+  - this requirement selectively imposed in COQ/AGDA
+
+here taken induction principle as basic, pattern matching as derived from it
+- eg. Agda's pattern matching can prove Axiom K by default
+- otehr choice may allow deep pattern matching, 
+  - but not well-understood in higher inductive types
+
+ways to implement universe hierarchy
+1. include rule that if A:Ui then A:Uj
+2. introduce judgmental subtyping <: generated by Ui <: Uj
+3. include explicit coercion function ↑: Ui->Uj
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
