@@ -1,5 +1,3 @@
-λΦ≡ΣΠ
-
 # type theory VS set theory
 - set theory need first class logic embedded
 - type theory is its own deductive system 
@@ -221,11 +219,108 @@ eg. (x,y,z,w) = (x,(y,(z,w)))
 
 
 # Coproduct
+given A,B:U, introduce coproduct type A+B:U
+disjoint union in set theory
+
+empty type 0:U
+
+## construct element
+1. inl(a): A+B  for a:A   {left injection}
+2. inr(b): A+B  for b:B   {right injection}
+
+```
+f: A+B->C, need fn g0: A->C, g1: B->C
+f(inl(a)) = g0(a)
+f(inr(b)) = g1(b)
+
+rec[A+B]: Π[C:U] (A->C) -> (B->C) -> A+B -> C
+rec[A+B] (C, g0, g1, inl(a)) = g0(a)
+rec[A+B] (C, g0, g1, inr(b)) = g1(b)
+
+construct depednent type function f: Π[x:A+B] C(x)
+assume C: (A+B) -> U
+g0: Π[a:A] C(inl(a))
+g1: Π[b:B] C(inr(b))
+
+ind[A+B]: Π[C:(A+B)->U]  Π[a:A]C(inl(a)) -> Π[b:B]C(inr(b)) -> Π[x:A+B]C(x)
+
+empty type:
+ind[0]: Π[C:0->U] Π[z:0] C(z)
+```
+
+# boolean type
+boolean type 2:U => exactly 2 elements `0[2],1[2]: 2`
+
+1. can construct type out of coproduct & unit types as 1+1
+2. derive binary coproducts from Σ-type and 2
+
+```
+f: 2 -> C
+f(0[2]) = c0
+f(1[2]) = c1
+
+rec[2]: Π[C:U] C -> C -> 2 -> C
+rec[2](C, c0, c1, 0[2]) = c0
+rec[2](C, c0, c1, 1[2]) = c1
+
+ind[2]: Π[C:2->U] C(0[2]) -> C(1[2]) -> Π[x:2] C(x)
+
+A+B = Σ[x:2] rec[2](U,A,B,x)
+(a,b) = ind[2](rec[2] (U,A,B),a,b)]
+```
+using induction principle, we can deduce that every elem of 2 is either 1[2] or 0[2]
+
+# natural number
+1 = succ(0), 2 = succ(1), ...
+define functions by recursion and perform proofs by induction
+
+f: primitive recursion
+```
+f(0) = c0
+f(succ(n)) = c[s](n, f(n))
+
+add(0,n) = n
+add(succ(m),n) = succ(add(m,n))
+==>
+
+rec[N]: Π[C:U] C- > (N -> C -> C) -> N -> C
+rec[N](C,c0,cs,0) = c0
+rec[N](C,c0,cs,succ(n)) = succ(add(m,n))
+```
+
+link to classical notion of proof by induction
+property of natural numbers represented by family of types P: N -> U
+- if we can prove P(0), and if ∀n we can prove P(succ(n)) assuming P(n)
+- then we have P(n) ∀n
+
+whenever introduce new inductive definition, always begin by deriving its induction principle
+- appropriate sort of "pattern matching" justified as shorthand for induciton principle
 
 
+# proposition as types
+regard elements of type as evidence OR witnesses that propositioin is true
+- we present proofs in ordinary mathematical prose
+- no difference from reasoning of classicl set theory, predicate logic, axioms of set theory
 
+proposition NOT merely True/False, but collection of all possible witnesses of its truth
+- proofs are mathematical objects in their own right
+- on par with objects eg. numbers, groups
 
+True: 1
+False: 0
+A and B: AxB
+A or B: A+B
+if A then B: A -> B
+A iff B: (A -> B) x (B -> A)
+Not A: A -> 0
 
+proof by contradiction is not allowed
+
+## de Morgan's laws
+"if not A and not B, then not (A or B)"
+(A -> 0) x (B -> 0) -> (A + B -> 0)
+
+## higher
 
 
 
