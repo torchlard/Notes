@@ -60,6 +60,21 @@ Agda not even have numbers built in
 declare functions where arguments can appear anywhere within a term
 
 
+### 
+binary relation is said to be reflexive if every value relates to itself
+
+
+# time complexity
+represent naturals for m+n:
+zero, suc: prop to m
+integers in Haskell: prop. to log(max(m,n))
+
+naturals for m*n
+zero,suc: prop. to m*n
+integers in Haskell: prop. to log(m+n)
+
+
+
 
 
 
