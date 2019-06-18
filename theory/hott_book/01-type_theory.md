@@ -131,7 +131,7 @@ express how eliminator act on constructor
 5. (optional) uniqueness principle
 uniqueness of maps into or out of that type
 every element of type uniquely determined by results of applying eliminator to it
-- reconstructed from results by applying constructor
+   - reconstructed from results by applying constructor
 propositional uniqueness principle: if provable as propositional equality from other rules of type 
 
 ##
