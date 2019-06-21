@@ -92,8 +92,18 @@ set(index, elem)
 LinkedList<Integer> l = new LinkedList<>(List.of(1,3,5));
 Integer[] a2 = l.toArray(new Integer[l.size()]);
 // [1,3,5]
-
 ```
+
+### LinkedHashMap VS HashMap
+#### same
+1. both not synchronized (Collections.synchronizeMap() to sync)
+2. iterator fail fast
+3. performance similar
+
+#### diff
+1. Hashmap no order, LinkedHashMap has insertion order
+2. LinkedHashMap need more memory for ordering
+
 
 ## Stack
 -- peek [-------]
