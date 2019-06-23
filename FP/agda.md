@@ -421,7 +421,170 @@ id = λ {A} -> id A
 give expression e explicitly for y, not x
 `subst C {y = e} eq cx`
 
+```
+∀ {x : A} -> B   same-as  {x : A} -> B
+∀ {x} -> B   same-as  {x : _} -> B
+∀ {x y} -> B  same-as ∀ {x} -> ∀ {y} -> B
+```
 
+
+# instance argument
+special kind of implicit argument that 
+- solved by special instance resolution algorithm
+- rather than unification algorithm for normal implicit arguments
+
+instance arg = haskell typeclass constraints
+
+instance arg resolved of its type
+- named type: data type / record type
+- variable type: previously bound variable of type Set 
+
+unique instance of required type built from declared instances and current context
+
+## usage
+syntax `{{x : T}}, | x : T |`
+
+`_==_ : {A : Set} {{eqA : Eq A}} -> A -> A -> Bool`
+
+for some suitable type `Eq`
+```haskell
+-- restrict A to have property of Eq
+-- similar to haskell  (==) :: (Eq a) => a -> a -> Bool
+elem : {A : Set} {{eqA : Eq A}} -> A -> List A -> Bool
+elem x (y ∷ xs) = x == y || elem x xs
+-- equivalent to
+elem {{eqA}} x (y ∷ xs) = _==_ {{eqA}} x y || elem {{eqA}} x xs
+elem x []       = false
+```
+
+## declare instance
+```
+instanece
+  ListMonoid : ∀ {a} {A : Set a} -> Monoid (List A)
+  ListMonoid = record { mempty = []; _<>_ = _++_ }
+
+-- equivalent
+
+instnace
+  ListMonoid : ∀ {a} {A : Set a} -> Monoid (List A)
+  mempty {{ListMonoid}} = []
+  _<>_   {{ListMonoid}} xs ys = xs ++ ys
+
+```
+
+
+# Universe Levels
+Russell's paradox: collection of all sets is not itself a set
+assume ∃ set U, then form subset A ⊆ U of all set that not contain themselves
+=> contradiction
+
+so we have `Bool : Set, Nat : Set`, but not `Set : Set`
+in agda, given Set1 such that `Set : Set1`
+- elements of Set1 are potentially larger when `A : Set1`
+- A = larger set
+=> Set2 : Set1, Set3 : Set 2, ...
+
+universe: type whose elements are type
+=> infinite number of universe
+
+Set = Set[0] (default one)
+Set[n], where n = level of universe
+
+## universe polymorphism
+- avoid define too many special List
+- make sure every Agda expression has a type, including `Set`, `Set₁`
+use special primitive type Level, whose elements are possible levels of universes
+
+Setₙ = Set n, where n : Level
+
+Nat × Nat : Set
+Nat × Set : Set₁
+Set × Set : Set₁
+
+## Setω
+```
+data Unit (n : Level) : Set n where
+  <> : Unit n
+```
+what is type of  `(n : Level) -> Set n` ?
+we cannot have  `Universe : Universe`
+- so assign type `Setω` to it
+
+```
+largeType : Setω
+largeType = (n : Level) -> Set n
+```
+
+# Without K
+add restrictions to Agda's typechecking algorithm
+- compatible with theory that not support uniqueness of identity proof, eg. HoTT
+`{-# OPTIONS --without-K #-}`
+
+## termination checking
+restrict structural descent to arguments ending in data types / Size
+
+
+
+# Function
+## dot pattern (inaccessible pattern)
+when the only type-correct vlaue of arg determined by patterns given for other arg
+
+```haskell
+data Square : Nat -> Set where
+  sq : (m : Nat) -> Square (m * m)
+
+root : (n : Nat) -> Square n -> Nat
+root .(m * m) (sq m) = m  
+
+-- another legal def
+root : (n : Nat) -> Square n -> Nat
+root n (sq m) = m
+  -- equiv to
+root _ (sq m) = let n = m * m in m
+```
+by matching argument of type `Square n` forced to equal to m*m
+
+## Absurd pattern
+used when none of constructors for particular arg is valid
+```haskell
+data Even : Nat -> Set where
+  even-zero : Even zero
+  even-plus2 : (n : Nat) -> Even n -> Even (suc (suc n))
+
+one-not-even : Even 1 -> i
+one-not-even ()  
+```
+## As-pattern (@-pattern)
+used to name a pattern
+
+```
+module _ {A : Set} (_<_ : A -> A -> Bool) where
+  merge : List A -> List A- > List A
+  merge xs [] = xs
+  merge [] ys = ys
+  merge xs@(x ∷ xs1) ys@(y ∷ ys1) =
+    if x < y then x ∷ merge xs1 ys
+             else y ∷ merge xs ys1
+```
+
+# Mutual recursion
+placing type signatures of all mutually recursive function before their definitions
+```
+f : A
+g : B[f]
+f = a[f, g]
+g = b[f, g].
+```
+
+Old syntax (avoid)
+```
+mutual
+  f : A
+  f = a[f, g]
+
+  g : B[f]
+  g = b[f, g]
+```
 
 
 

@@ -21,3 +21,6 @@ git reset --hard HEAD
 
 
 
+MAlonzo/Code/Qhello.hi: needs merge
+MAlonzo/Code/Qhello.o: needs merge
+hello.agdai: needs merge
