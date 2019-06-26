@@ -317,6 +317,30 @@ if condition in where and return data in same index, no need to query table agai
 - full index may not better than full table all time time, depend on data position
 
 
+# window function
+allow calculations performed across set of rows related to current row
+
+eg. we want to find avg of rating for each release_year & rank of row within each year
+```sql
+SELECT
+  f.*, 
+  avg(rating) OVER (PARTITION BY release_year) AS year_avg
+  RANK() OVER (PARTITION BY release_year ORDER BY rating desc) AS pos
+FROM film f
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 ===========================
 # import file
