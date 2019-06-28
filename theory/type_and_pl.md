@@ -166,6 +166,17 @@ beta-reduction = operation of rewriting a redex according to above rule
 (λx.x) y => y   {substitute y into x}
 (λx. x (λx.x)) (u r) => u r (λx.x)
 
+
+## conversion
+α-conversion: rename bound variables in expression (avoid name collision)
+
+β-reduction
+
+η-conversion: express idea of extensionality
+- two function are same iff give same result for all arguments
+- converts between `λx.(f x)` and `f`
+- same concept of local completeness in natural deduction
+
 ### reduction(evaluation) strategy
 ```
 beta-rduction:
@@ -253,19 +264,82 @@ fst (pair v w) = v
 snd (pair v w) = w
 
 ## Church number
-c0 = λs.λz. z
+c0 = λs.λz. z = false
 c1 = λs.λz. s z
+c2 = λs.λz. s (s z)
+...
+
+each number n represented by combinator cn that takes two arguments (s,z)
+- applies `s` n times to z
+
+succ = λn. λs. λz. s (n s z)
+- combinator that takes Church numberal n, return another Church numeral
+
+(note: λx.λy. = \xy.)
+proof. succ 1 = 2
+```
+succ 1
+= \nsz. s (n s z) 1
+= \nsz. s (n s z) (\s'z'. s' z')
+= \sz. s ((\s'z'. s' z') s z)
+= \sz. s ((\z'. s z') z)
+= \sz. s (s z)
+= 2
+```
+### arithmetic
+succ = \nsz. s (n s z)
+plus = \mnsz. m s (n s z)
+- takes two Church numerals m,n
+
+plus = \mn. n succ m  {m + n}
+sub = \mn. n pred m  {m - n}
+  
+times = \mn. m (plus n) c0
+- apply function that adds n to its arg, iterated m times, to 0
+- add m copies of n
+
+iszero = \m.m(\x.false) true
+
+subtraction:
+// init a pair of zeros
+zz = pair c0 c0
+// generate (c0,c1), (c1,c2), ...
+ss = \p. pair (snd p) (plus c1 (snd p))
+// define precedence as first elem of pair
+// such that number m can refer to first elem of m-th pair generated
+prd = \m. fst (m ss zz)
+
+### enrich calculus
+use primitive boolean and numbers
 
 
+realeq = \mn. (equal m n) true false
+
+realnat = \m. m (\x. succ x) 0
+- convert Church numeral into primitive nuber
+
+## recursion
+some terms cannot be evaluated to normal form
+eg. divergent combinator
+omega = (\x. x x) (\x. x x)
+- reducing redex yeilds exact omega again
+
+diverge = terms with no normal form
+
+useful generalization -> fixed-point combinator
+fix = \f. (\x. f(\y. x y y)) (\x. f(\y. x x y))
 
 
+# typed lambda calculus
+functions can be applied only if capable of accepting given input's type of data
+- weaker, less expressive than untyped lambda calculus
+
+typed lambda calculus can prove more things
 
 
-
-
-
-
-
+# simply typed lambda calculus
+every evaluation strategy terminates for every simply typed lambda calculus
+- evaluation of untype lambda terms need not terminate
 
 
 
