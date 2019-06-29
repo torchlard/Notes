@@ -327,7 +327,91 @@ omega = (\x. x x) (\x. x x)
 diverge = terms with no normal form
 
 useful generalization -> fixed-point combinator
-fix = \f. (\x. f(\y. x y y)) (\x. f(\y. x x y))
+`fix = \f. (\x. f(\y. x y y)) (\x. f(\y. x x y))`
+
+simpler call-by-name Y combinator
+`Y = \f. (\x. f (x x)) (\x. f (x x))`
+
+recursive definition should be "unrolled" at point where it occurs
+```
+if n=0 then 1
+else n* (if n=0 then 1
+         else (n-1) * (if ...) )
+```
+g = \f.(body containing f)
+h = fix g
+
+eg.
+```
+g = \fct,n. if realeq n c0 then c1 else (times n (fct (prd n)))
+factorial = fix g
+```
+each time we make recursive call using fct, we unroll one more copy of body of g
+- with new copy of fct that ready to unroll again
+
+
+# Nameless representation of terms
+## ways to rename bound variables
+1. represent variables symbolically
+  - implicit renaming -> explicitly replace
+2. represent variables symbolically
+- names of all bound variables, free variables must be different
+- Barendregt convention
+- not stable under substitution/beta-reduction
+3. canonical representation of variables
+- terms not require renaming
+4. avoid renaming, eg. explict substitution
+5. avoid variables, eg. use combinators directly
+- combinatory logic
+
+## terms and context
+variable occurrences point directly to their binders, not refer by name
+- named variables -> natural numbers
+- k = variable bound by k-th enclosing λ
+`λx.λy. x (y x) = λ.λ. 1 (0 1)`
+(de Bruijn terms, de Bruijn indices)
+
+### definition
+let T = smallest family of sets {T0,T1,T2, ...}
+1. k ∈ Tn, where 0≤k<n
+2. if t1 ∈ Tn and n > 0, then λ.t1 ∈ T[n-1]
+3. if t1,t2 ∈ Tn, then (t1 t2) ∈ Tn
+
+Tn = n-terms
+elements of Tn have a most n free vairables, numbered between 0 and n-1
+
+choose once for all assignment of number to all free variables
+eg.
+x->4, y->3, z->2, a->1, b->0
+x (y z) = 4 (3 2)
+λw. y w = λ. 4 0
+
+## shifting and substitution
+define substitution ([k->s]t) on nameless terms
+shifting = renumbers indices of free variables in a term
+
+## evaluation
+(λx.λy.λz. y z x) (λa.a) = (λy.λz. y (λa.a) x)
+(λ.1 0 2) (λ.0) = 0 (λ.0) 1
+
+
+# Typed arithmetic expression
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 # typed lambda calculus
