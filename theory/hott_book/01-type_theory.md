@@ -93,20 +93,29 @@ constant type family = `(λ(x: A).B): A -> U`
 dependent function = functions whose codomain type vary depending on element of domain 
 
 given A:U, family B:A->U, construct dependent function type
-`Π(x:A) B(x):U` = `Π(x:A),B(x)` = `Π(x:A) B(x)`
+`Π[x:A] B(x):U` = `Π[x:A] B(x)`
 
 if B is constant family, then `Π(x:A) B ≡ (A -> B)`
-λ-abstarction: `λx.Φ : Π(x:A) B(x)`
+λ-abstarction: `λx.Φ : Π[x:A] B(x)`
+
+idₐ(x) = x
+id = `λ[A:U].λ[x:A].x`
+id : `Π[A:U] A -> A`
 
 eg. function returns "largest" element of nonempty finite type
-`fmax: Π(n:N) Fin(n+1)` = `fmax(n) = n_(n+1)`
+`fmax: Π[n:N] Fin(n+1)` = `fmax(n) = n[n+1]`
 
 ## polymorphic function
 takes type as one of its arguments, act on element of that type
-`id: Π(A:U) A->A`   define `id_A(x) = x`
+`id: Π[A:U] A->A`   define `id[A(x)] = x`
 
-`swap: Π(A:U) Π(B:U) Π(C:U) (A->B->C) -> (B->A->C)`
+`swap: Π[A:U] Π[B:U] Π[C:U] (A->B->C) -> (B->A->C)`
 define as `swap(A,B,C,g) = λb.λa.g(a)(b)`
+`swap[A,B,C](g)(b,a) = g(a,b)`
+
+since B may depends on A, C may depends on B,
+ie. `B : A->U, C : Π[x:A] B(x)->U`
+`Π[x:A] Π[y:B(x)] C(x,y)`
 
 another possibility: `Π(x:A) Π(y:B(x)) C(x,y)`
 given a:A, b:B(a) => `f(a)(b): C(a,b)`
@@ -146,6 +155,8 @@ pr2: A x B -> B  ` `  pr2((a,b)) = b
 we can invoke function definition once, in universal case => apply resulting fn in other cases
 
 define `rec[AxB]: Π[C:U](A->B->C) -> AxBxC`  by `rec[AxB](C,g,(a,b)) = g(a)(b)`
+where C=result type, A,B=two possible types, g=projection function
+
 then `pr1 = rec[AxB](A, λa.λb.a)`, `pr2 = rec[AxB](B, λa.λb.b)`
 recursor = `rec[AxB]`
 
