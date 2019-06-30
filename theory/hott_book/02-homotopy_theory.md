@@ -13,7 +13,7 @@ function = giving a point in X at each moment in time
 
 coarse notion of equality of path: homotopy
 homotopy between pair of continuous map  f: X1 -> X2, g: X1 -> X2
-continuous map H: X1 x [0,1] -> X2 
+continuous map H: X1 × [0,1] -> X2 
 - satisfying H(x,0) = f(x)  and  H(x,1) = g(x)
 
 in specific case of path p,q  from x to y
@@ -28,7 +28,7 @@ collection of objects -> collection of morphisms between objects
 -> morphism between morphisms -> ...
 with complex algebraic structure => k-morphism (morphism at level k)
 
-morphism at each level has identity,composition,inverse operations
+morphism at each level has (identity, composition, inverse) operations
 
 weakness of ∞-groupoid from paths form a group only up to homotopy,
 - with (k+1)-path serving as homotopies between k-paths
@@ -37,11 +37,11 @@ homotopy hypothesis/theorem = fundamental ∞-groupid construction adjoint to
 geometric realization of ∞-groupoid as space
 
 in hott each type can seen to have structure of ∞-groupoid
-for any x,y:A, we have identity type `x =[A] y` OR `id[A](x,y)`
+for any x,y:A, we have identity type `x =ₐ y` OR `idₐ(x,y)`
 - we can do same iteration on identity type => go higher dimension
 
 p: x =[A] y   , path from x(start point) to y(end point)
-parallel: two paths p,q: x=[A]y with same start,end pts 
+parallel: two paths p,q: x=ₐy with same start,end pts 
 => 2-dimensional path
 
 classical homotopy theory: analytic (space and paths are made of points)

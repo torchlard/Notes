@@ -154,8 +154,10 @@ pr2: A x B -> B  ` `  pr2((a,b)) = b
 
 we can invoke function definition once, in universal case => apply resulting fn in other cases
 
-define `rec[AxB]: Π[C:U](A->B->C) -> AxBxC`  by `rec[AxB](C,g,(a,b)) = g(a)(b)`
+### recursor
+define `rec[AxB]: Π[C:U](A->B->C) -> AxB -> C`  by `rec[AxB](C,g,(a,b)) = g(a)(b)`
 where C=result type, A,B=two possible types, g=projection function
+(just ignore C in rec(C, ...))
 
 then `pr1 = rec[AxB](A, λa.λb.a)`, `pr2 = rec[AxB](B, λa.λb.b)`
 recursor = `rec[AxB]`
@@ -181,9 +183,10 @@ by `ind[AxB] (C,g,(a,b)) = g(a)(b)`
 
 dependent funciton defined on pairs being obtained from induction principle of cartesian product
 recursor = special case of induction where family C = const
-induction = (dependent) eliminator
+induction = dependent eliminator
 recursion = non-dependent eliminator
 
+### unit type
 define `ind[1]: Π[C:1->U] C(*) -> Π[x:1] C(x)` by `ind[1](C,c,*) = c`
 only inhabitant is *, so to construct `uniq[1]: Π[x:1] x = *` by `uniq[1](*) = refl[*]`
 or using induction `uniq[1] = ind[1](λx.x = *, refl[*])`
@@ -191,9 +194,9 @@ or using induction `uniq[1] = ind[1](λx.x = *, refl[*])`
 
 # dependent pair type Σ
 generalize product type to allow 2nd component of pair vary by choice of 1st component
-given A:U, B:A->U  `Σ[x:A]B(x)`
+given `A:U, B:A->U`  `Σ[x:A]B(x)`
 have `(a,b): Σ[x:A] B(x)` given `a:A, b:B(a)`
-`Σ[x:A]B = A x B`
+if B is const,`Σ[x:A]B = A x B`
 
 ```
 pr1: Σ[x:A]B(x) -> A
@@ -208,9 +211,10 @@ f((a,b)) = g(a)(b)
 pr2: Π[p:Σ[x:A] B(x)] B(pr1(p))
 pr2((a,b)) = b
 
+rec[Σ[x:A] B(x)]: Π[C:U] (Π[x:A] B(x) -> C) -> (Σ[x:A] B(x)) -> C
 ind[Σ[x:A] B(x)]: Π[C: Σ[x:A]B(x)->U] (Π[a:A]Π[b:B(a)] C((a,b))) -> Π[p:Σ[x:A]B(x)] C(p)
 ```
-if dependent fn g, assign each a:A depdendnet pair (b,r), where b:B, r:R(a,b)
+if dependent fn g, assign each a:A dependent pair (b,r), where b:B, r:R(a,b)
 then f:A->B; dependent fn assign to a:A that R(a,f(a))
 
 type-theoretic axiom of choice can be proven directly from rules of type theory
@@ -248,7 +252,7 @@ rec[A+B]: Π[C:U] (A->C) -> (B->C) -> A+B -> C
 rec[A+B] (C, g0, g1, inl(a)) = g0(a)
 rec[A+B] (C, g0, g1, inr(b)) = g1(b)
 
-construct depednent type function f: Π[x:A+B] C(x)
+construct dependent type function f: Π[x:A+B] C(x)
 assume C: (A+B) -> U
 g0: Π[a:A] C(inl(a))
 g1: Π[b:B] C(inr(b))

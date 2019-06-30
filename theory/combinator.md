@@ -1,11 +1,42 @@
-# fixed pointc ombinator
+# combinator
+closed lambda expression, no free variables
+
+## examples
+I combinator:
+I x = x
+
+K combinator:
+(K x) y = x
+
+S combinator:
+(S x y z) = (x z (y z))
+- x is applied to y after first substituting z into each of them
+
+
+((S K K) x) = (I x)
+but (S K K) itself not equal to I
+terms are extensionally equal
+
+## compose
+compose = \g -> \f -> \x -> g (f x) 
+
+g (f x) = (K g x) (f x)
+g f = S (K g) f
+g = S (K g)
+g = (K S g) (K g)
+_ = S (K S) K
+
+compose = S (K S) K
+
+
+## fixed pointc ombinator
 fixed point of function = mapped to itself
 
 fixed-point combinator = higher order function that return some fixed point
 
 fix f = f (fix f) = f(f(...f(fix f)))
 
-## Y combinator
+### Y combinator
 in lambda calculus, there's some combinator satisfy defintion of fixed-point conbinator
 Y combinator = implementation of fixed-point combinator in lambda calculus
 
@@ -41,31 +72,6 @@ not possible to decide if 2 functions are extensionally equal
 
 funcitonal itself
 Church numeral 3: λf.λx.f(f(f x))
-
-
-
-# combinator
-closed lambda expression, no free variables
-
-## examples
-I combinator:
-I x = x
-
-K combinator:
-(K x) y = x
-
-S combinator:
-(S x y z) = (x z (y z))
-- x is applied to y after first substituting z into each of them
-
-
-((S K K) x) = (I x)
-but (S K K) itself not equal to I
-terms are extensionally equal
-
-
-
-
 
 
 
