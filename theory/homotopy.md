@@ -26,6 +26,33 @@ homotopic is equivalence relation on set of all continuous functions X -> Y
 if f1.g1 : X -> Y, f2.g2 : Y -> Z are homotopic,
 then f2 ∘ f1 and g2 ∘ g1 : X -> Z are also homotopic
 
+### example
+if f,g: R -> R² given by f(x) = (x,x³) AND g(x) = (x,eˣ),
+then H : R × [0,1] -> R² given by H(x,y) = (x, (1-t)x³ + teˣ) is homotopy between them
+
+id[Bⁿ] : Bⁿ -> Bⁿ be identity function on unit n-disk
+ie. Bⁿ = {x ∈ Rⁿ | ‖x‖ ≤ 1} 
+let c0 : Bⁿ -> Bⁿ be constant function c0(x) = 0 send evey point to origin
+- then homotopy between them
+H : Bⁿ × [0,1] -> Bⁿ 
+H (x,t) = (1-t)x
+
+## homotopy equivalence
+for X,Y:space, homotopy equivalent / same homotopy type 
+- IF ∃ continuous map f:X->Y, g:Y->X 
+- such that g∘f homotopic to identity map id[x], f∘g homotopic to id[y]
+
+homeomorphism => homotopy equivalence (revese not true)
+- need bijection
+
+### example
+Rⁿ with a point, denoted Rⁿ≃{0}
+existence of homotopy H : I x Rⁿ -> Rⁿ between id[gⁿ] and p₀  
+
+
+
+
+
 
 
 # topological space
