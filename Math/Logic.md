@@ -6,7 +6,8 @@ use to infer theorems from axioms according to set of rules (logical calculus)
 example: axiomatic system, formal ethics, lambda calculus, proof calculus
 
 # zeroth order logic (propositional logic)
-deals with propositions and argument flow
+deals with propositions and argument flow, only covers proposition
+
 
 ## basic and derived argument form
 negation, double negation, conjunction, biconditional
@@ -16,16 +17,19 @@ law of non-contradiction, importation ...
 ## soundness, completeness
 
 
-
-
 # first order logic (predicate logic)
-particular formal system of logic
+covers proposition, predicates, quantification
 syntax involve only finite expressions as well-formed formulas
 - use quantifier, eg. ∃x usch that x is Socrates and x is a man (instead of Socrates is a man)
 - semantics characterized by limitation of all quantifiers to fixed domain of discourse
 
-distinguish from propositional logic (no quantifiers / relations)
-- propositional logic as foundation
+## non-logical symbols
+represent predicates, functions, constants
+
+1. for n ≥ 0, Pⁿ₀,Pⁿ₁,Pⁿ₂...   
+represent relations between n elements
+2. for n ≥ 0, infinitely many n-ary function symbols
+
 
 
 # second order logic
