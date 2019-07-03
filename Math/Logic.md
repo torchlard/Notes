@@ -31,8 +31,42 @@ represent relations between n elements
 2. for n ≥ 0, infinitely many n-ary function symbols
 
 
-
 # second order logic
+first order logic quantifies only variables that range over individuals
+second order logic quantifies over relations, sets, functions
+1. S = variable range over sets of individuals, t=first order term, t ∈ S / S(t) 
+2. k ∈ N variables range over all k-ary relations on individuals, R (t1,...,tk): atomic formula
+3. k ∈ N variables range over all functions taking k elem of domain => retunr single element of domain
+
+Monadic second-order logic: restricted 2nd-order logic only quantifies over unary relations
+full second-order logic: no restriction
+
+## semantics
+establish meaning of each sentence
+
+standard/full semantics: quantifiers range over all sets or functions of appropriate sort
+- once domain of first order variable established, meaning of remaining quantifier fixed
+
+Henkin semantics: each 2nd-order variable particular domain to range over, proper subset of all sets 
+- prove Godel's compleness theorem, compactness theorem
+- not more rexpressive than first order logic
+
+## expressive power
+eg. need 2nd order to asseret least-upper-bound for sets of real numbers
+(∀ A) ( [(∃ w) (w ∈ A) ∧ (∃z)(∀u) (u ∈ A -> u ≤ z)]
+  -> (∃x) (∀y) (∀w) (w ∈ A -> w ≤ y) <-> (x ≤ y) )
+= every nonempty, bounded set A has a least upper bound
+
+possible to write formal sentences which says "domain is finite", "domain is of countable cardinality"
+- finite: every surjective function from domain to itself is injective
+- countable cardinality: there is bijection between every 2 infiinite subset of domain
+
+## deductive system
+set of inference rules and logical axioms that determine which sequences of formulas constitute valid proofs
+Lowenheim-Skolem theorem: 
+least-upper bound axiom: every nonempty internal set that has an internal upper bound has least internal upper bound
+
+
 
 # infinitary logic
 
