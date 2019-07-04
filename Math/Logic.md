@@ -30,6 +30,12 @@ represent predicates, functions, constants
 represent relations between n elements
 2. for n ≥ 0, infinitely many n-ary function symbols
 
+## many-sorted logic
+allows variables to have different sorts (domains) => typed first-order logic
+sorts = types (in data type)
+
+
+
 
 # second order logic
 first order logic quantifies only variables that range over individuals
@@ -65,6 +71,20 @@ possible to write formal sentences which says "domain is finite", "domain is of 
 set of inference rules and logical axioms that determine which sequences of formulas constitute valid proofs
 Lowenheim-Skolem theorem: 
 least-upper bound axiom: every nonempty internal set that has an internal upper bound has least internal upper bound
+
+
+# higher order logic
+more expressive, model-theoretic properties less well-behaved than lower order logic
+uderlying theory of simple types
+
+third-order logic = quantifies over sets of sets ... up to nth-order logic
+
+## semantics
+quantifies over higher-type objects range over all possible objects of that type
+eg. quantifier over sets of individuals over entire powerset of set of individuals
+- categorical axiomatizations of natural numbers
+- not admit effective, sound, complete proof calculus
+
 
 
 
