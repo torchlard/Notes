@@ -65,7 +65,36 @@ components
 3. DTO (data transfer object): Value object/domain
 
 
+# Resultset
+ResultSet object maintian cursor point to current row
+- initially positioned before first row
+- next method move cursor to next row, false if no more rows
+- default not updatable, cursor moves forwawrd only
 
+```java
+Statement stmt = conn.createStatement(
+  ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
+ResultSet rs = stmt.executeQuery("SELECT a,b from table2");
+// rs will be scrollable, won't show changes made by others
+// will be updatable
+```
+
+getter method: JDBC attempts to convert underlying data to Java type
+
+updater method
+```java
+rs.absolute(5); // move cursor to fifth row of rs
+rs.updateString("NAME", "ainsworth"); // update NAME column of row 5 to xx
+rs.updateRow();
+
+rs.moveToInsertRow();
+rs.updateString(1, "ainsworth");
+rs.updateInt(2,35); // update second column to be 35
+rs.updateBoolean(3, true);
+rs.insertRow();
+rs.moveToCurrentRow();
+
+```
 
 
 

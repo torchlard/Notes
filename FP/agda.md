@@ -3,13 +3,13 @@ Navigate to a suitable directory $HERE (replace appropriately) where you would l
 
 Download the tarball of v1.0.1 of the standard library. This can either be done manually by visiting the Github repository for the library, or via the command line as follows:
 
-wget -O agda-stdlib.tar https://github.com/agda/agda-stdlib/archive/v1.0.1.tar.gz
+`wget -O agda-stdlib.tar https://github.com/agda/agda-stdlib/archive/v1.0.1.tar.gz`
 
 Note that you can replace wget with other popular tools such as curl and that you can replace 1.0.1 with any other version of the library you desire.
 
 Extract the standard library from the tarball. Again this can either be done manually or via the command line as follows:
 
-tar -zxvf agda-stdlib.tar
+`tar -zxvf agda-stdlib.tar`
 
 [ OPTIONAL ] If using cabal then run the commands to install via cabal:
 
