@@ -34,6 +34,29 @@ represent relations between n elements
 allows variables to have different sorts (domains) => typed first-order logic
 sorts = types (in data type)
 
+## extensions
+compactness theorem: sentences with arbitrarily large finite models => also have infinite ones
+Lowenheim-Skolem theorem: 
+- if countable first-order theory has an infinite model
+- then ∀ infite cardinal number κ it has model of size κ
+=> cannot control cardinality of infinite models
+
+|                     | Compactness | Lowenheim-Sk. |
+| ------------------- | ----------- | ------------- |
+| First-order logic   | yes         | yes           |
+| +∃ finitely many    | no          | yes           |
+| +∃ uncountably many | yes         | no            |
+| + most              | no          | no            |
+
+## abstract model theory
+finitary extensions: retain effective finite syntax of first-order logic
+Qẋ̇∙φ(x) = Qxy∙φ(x), ψ(x) 
+- Q = generalized quantifier
+- φ form majority in universe (most)
+- most ψ are φ
+
+most A are B: there exists 1-1 correspondence between A-B and some subset of A∩B, but not vice versa
+finiteness may be expressed as 'either one, or two, or three...'
 
 
 
@@ -84,6 +107,7 @@ quantifies over higher-type objects range over all possible objects of that type
 eg. quantifier over sets of individuals over entire powerset of set of individuals
 - categorical axiomatizations of natural numbers
 - not admit effective, sound, complete proof calculus
+
 
 
 
@@ -142,17 +166,137 @@ for any set x, there is set y that contains every subset of x
 ZF + axoim of choice = ZFC
 
 
+# substructural logic
+logic lacking one of usual structural rules 
+(eg. weakening, contraction, exchange, associativity)
+
+## structural rule
+inference rule that doesn't refer to any logical connective (symbol connecting multiple sentences)
+
+```
+weakening: hypotheses/conclusion of sequent extended with additional member
+Γ ⊢ Σ       Γ ⊢ Σ 
+-------  , -------
+Γ,A ⊢ Σ    Γ ⊢ Σ,A
+
+contraction: two equal members on same side can be replaced by single member
+Γ,A,A ⊢ Σ    Γ ⊢ A,A,Σ 
+---------  , ---------
+Γ,A ⊢ Σ       Γ ⊢ A,Σ
+
+Exchange: 2 members on same side maybe swapped
+Γ1,A,Γ2,B,Γ3 ⊢ Σ    Γ ⊢ Σ1,A,Σ2,B,Σ3
+----------------  , ----------------
+Γ1,B,Γ2,A,Γ3 ⊢ Σ    Γ ⊢ Σ1,B,Σ2,A,Σ3
+
+```
+
+# classical logic
+most widely used
+1. law of excluded middle, double negation elimination
+2. law of non-contradiction, principle of explosion
+- from contradiction, anything follows
+
+3. monotonicity of entailment, idempotency of entailment
+- hypotheses of any derived fact may be freely extended with additional assumptions
+- contraction
+
+4. commutativity of conjunction
+- eg. P ∧ Q = Q ∧ P
+
+5. De Morgan duality
+- for any logical operator one can find its dual
+- duality provide different angle to llok at some mathematical objects
+- may hard to define in 1 concept, but dont easily in another concept
+
+# intuitionstic logic (constructive logic)
+systems of symbolic logic
+- semantic system offer concept of "constructive truth", rather than validity/provability
+
+weaker than classical logic, more conservative what reasoner to infer
+many tautologies in classical logic are not included
+- not include law of excluded middle, double negation elimination
+
+## syntax
+basic connectives: ->, ∧, ∨, ⊥
+¬A = (A -> ⊥)
+quantifier: ∃, ∀
+
+## sequent calculus
+LJ: simple restriction of system LK (for classical logic)
+in LK allow any num of formulas appear on concllusion side
+in LJ allow at most 1 formula in the position
+
+## Hibert-style calculus
+modus ponens?
+
+## equivalence
+ϕ <-> χ = (ϕ -> χ) ∧ (χ -> ϕ)
+IFF-1: (ϕ <-> χ) -> ((ϕ -> χ) ∧ (χ -> ϕ))
+
+## relation to classical logic
+obtain classical logic by adding these axioms:
+A ∧ ¬A  : law of excluded middle
+¬¬A -> A :  double negation
+((A -> B) -> A) -> A : Peirce's law
+(¬A -> ¬B) -> (B -> A) : law of contrapositive
+
+
+# Non-classical logic
+Computability logic: semantically constructed formal theory of computability
+many-value logic: allow truth values other than T/F
+Intuitionistic logic
+Linear logic: reject idempotency, entailment
+Modal logic: extends classical logic with non-truth-functional (modal) operator
+Paraconsistent logic: reject principle of explosion
+Quantum logic
+Relevance logicNon-reflexivve logic: (Schrodinger) reject/restric law of identity
+
+
+# Modal logic
+□ : necessity, ◇ : possible
+□p = in all possible worlds, p is the case
+◇p = in some possible world, p is the case
+
+Necessity: □p / ~◇~p
+Possibility: ◇p / ~□~p
+analyticity: □p ∨ □~p
+contingency: ◇p & ◇~p
+impossibility: ~◇p / □~p
+
+Require: 
+impossibility <-> analyticity <-> necessity <-> possibility <-> contingency
+
+contradiction:
+analyticity <-> contingency
+possibility <-> impossibility
+
+## kinds of possibility
+logical: fixed given the laws of logic
+nomological: fixed given actual laws of nature
+temporal: fixed given actual history of the world
+
+## formation rules
+any long propositional variable is well-formed formula (wff)
+if A is wff, ~A is wff
+let x: binary operator &,v,->,<=>, if A,B are wffs, (AxB) is wff
+
+##
+Model <W,R,a>
+W = set of possible worlds w0,w1,...
+a = assignment function that give truth value
+
+w0Rw1 = world w1 accessible to world w0
+
+`a[w0](□p) = 1` <=> ∀ w1 such that w0Rw1, `a[w1](p) = 1`
+`a[w0](◇p) = 1` <=> ∃ w1 such that w0Rw1, `a[w1](p) = 1`
 
 
 
-
-
-
-
-
-
-
-
+Godel:
+If theory is consistent and rich enough to contain Peano's axioms 
+for natural numbers, it's not complete
+=> we cannot proof statement T/F
 
 
 
