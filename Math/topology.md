@@ -46,16 +46,29 @@ Cantor set F = intersection of sets F[n], n ∈ N
 3. F has infinitely many points
 
 
-## Compat set
+## Compact set
 open cover of A: collection {Gₐ} of open sets in R whose union contains A
 `A ⊆ ∪[a] Gₐ`
 (finite) subcover of G: subcollection of set from G st. union of sets in G contains A (finitely many sets)
 
+K ⊂ R is compat : every open cover of K has a finite subcover
 
+Heine-Borel theorem: K ⊂ R is compact iff closed and bounded
+K ⊂ R is compat iff every sequence in K has subsequence that converges to point in K
 
+## Continuous functions
+global continuity: assume fn continuous in entire domain
 
+continuity of f: A -> R at point c ∈ A
+- ∀ ε-neighborhood V(f(c)) ∃ δ-neighborhood V(c) of point c st. 
+- if x ∈ V(c) ∩ A, then f(x) ∈ V(f(c))
 
+Global continuity theorem
+- let A ⊆ R, let f: A -> R, then
+- f is continuous at every point of A
+- ∀ open set G in R, ∃ open set H in R st. H ∩ A = f⁻¹(G) 
 
+if K is compact subset of R and f: K -> R is injective and continuous, then f^-1 is continuous on f(K)
 
 
 
