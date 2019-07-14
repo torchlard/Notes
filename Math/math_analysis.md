@@ -1,25 +1,3 @@
-# Concept
-## Metric space
-set where notion of distance(metric) between elements of set is defined
-ordered pair (M,d), where M is set, d is metric
-
-d : M x M -> R such that
-1. d(x,y) = 0 iff x=y
-2. d(x,y) = d(y,x)
-3. d(x,z) ≤ d(x,y) + d(y,z)
-
-eg. measure theory, functional analysis
-
-## Sequences and limits
-sequence = ordered list
-= function domain is coutable totally ordered set (eg. natural number)
-
-## property
-convergence: converge if it has a limit
-```
-lim aₙ = x
-n→∞
-```
 
 # Branch
 ## real analysis
