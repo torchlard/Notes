@@ -1,6 +1,35 @@
-## Sequences and limits
+# Cantor's theorem
+if A is any set, then there's no surjection of A onto set P(A) of all subsets of A
+=> unending progression of larger and larger sets
+
+# Lp metric
+Lp = (|x1|^p + |x2|^p + ... + |xn|^p )^(1/p)
+
+# Completeness property
+## suprema and infima
+bounded above if ∃u ∈ R st. s≤u ∀s∈S
+bounded below if ∃u ∈ R st. u≤s ∀s∈S
+bounded = both bounded below and above
+unbounded = not bounded
+
+## property
+R is complete ordered field
+completeness property of R:
+every nonempty set of real number that has an upper bound also has a supermum in R
+
+only 1 supremum(infimum) of given set S ⊆ R
+
+## density theorem
+if x and y are any real numbers with x < y, then ∃ r∈Q st. x < r < y
+
+## archimedean property
+if x ∈ R, then ∃ n ∈ N st. x < n
+
+
+# Sequences and limits
 sequence = ordered list
 = function domain is coutable totally ordered set (eg. natural number)
+= function f : N -> R, {xₙ}[∞, n=1], where xₙ = f(n)
 
 ## property
 convergence: converge if it has a limit
@@ -197,6 +226,8 @@ discrete metric:
 d(s,t) = 0 if s=t
        | 1 if s≠t
 
+let C[0,1] be set of all continuous functions on interval [0,1] to R
+
 ## neighborhood and convergence
 let (S,d) be metric space, ε>0
 ε-neighborhood of point x0 in S
@@ -214,19 +245,56 @@ sequence (xₙ) converge to x ∈ S
 let (S,d) be metric space, sequence (xₙ) in S 
 - for each ε>0, ∃ H ∈ N st. d(xₙ,xₘ)<ε ∀n,m ≥ H
 
+prev def: sequence is Cauchy seq iff converges to point of R => not true for metric space
 
+metric space (S,d) is complete 
+- if each Cauchy sequence in S converges to a point of S
 
+completeness property of R can be stated in terms of Cauchy seq, 
+Supermum property can be duduced as theorem
+==OR==
+convergence of Cauchy seq deduced as theorem, use completeness property
 
+### example
+if (xₙ) is seq of rational number that converges to √2,
+then it's Cauchy in Q, but not converge to a point of Q
+=> (Q,d) is not complete metric space
 
+## open sets and continuity
+subset G of S is open set 
+- if ∀ point x ∈ S ∃ neighborhood U of x st. U ⊆ G
+- F ⊆ S is closed set in S IF S\F is open set in S
 
+proof: replace (x-ε,x+ε) by ε-neighborhood 
 
+let metric space (S1,d1), (S2,d2)
+f: S1 -> S2 continuous at point c in S1
+- if ∀ ε-neighborhood of V(c) ∃ δ-neighborhood of c
+- st. if x ∈ Vδ(c), then f(x) ∈ Vε(f(c))
 
+## semimetrics
+d : S x S -> R that satisfies all metric conditions except one with weaker condition d(x,y)=0 if x=y
 
+semimetric space (S,d) 
+every metric is semimetric
 
+P1 = (x1,y1), P2 = (x2,y2)
+if d1(P1,P2) = |x1-x2| (not metric, since points with same x-coor have dist=0)
+dist(f,g) = ∫[b,a] |f-g|
 
+sequence in semimetric space not necessarily converge to unique limit
 
+## interior point
+if S is subset of Euclidean space, then x is interior point of S
+- if ∃ open ball centered at x completely contained in S
 
+any subset S of metric space X with metric d
+- x is interior point of S if ∃r>0 st. y ∈ S
+- whenever distance d(x,y) < r
 
+## exterior point
+exterior of subset S of topological space X, ext(S)
+complement of interior space
 
 
 
