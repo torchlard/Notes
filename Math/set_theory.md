@@ -77,7 +77,13 @@ describe order type of well-ordered set
 
 # index set
 set whose members label numbers of another set
+surjective function J->A 
+indexed collection called indexed family {Aⱼ}ⱼ ∈ J
 
+enumeration of set S gives an index set J ⊂ N, 
+where f: J -> S is particular enumeration of S
+
+coutably infinite set can be index by natural number
 
 
 

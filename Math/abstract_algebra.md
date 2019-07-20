@@ -9,7 +9,15 @@ f(x) = f(y) if and only if x=y
 every nonzero k has inverse in Z[0] if k is relatively prime to n
 - set of all such non-zero elements as U(n) = group of units
 
-## general linear group
+unitary group of degree n U(n)
+group of nxn unitary matrices, with group operation of matrix multiplication
+- subgroup of general linear group GL(n,C)
+
+Lie algebra of U(n) = n×n skew-Hermitian matrices, with Lie bracket given by commutator
+
+
+
+## general linear group 
 group if there exists inverse matrix A^-1 where (A^-1A) = (AA^-1) = I
 det A ≠ 0
 
@@ -20,9 +28,42 @@ Sopus Lie use group theory to study solution of patrial differential equations
 # gorup
 inverse, identity, associative
 
-## subgroup
+# symmetry
+let triangle be
+```
+ A
+B C  
+```
+id
+[A B C] 
+[A B C]
+
+rotate to right
+[A B C] // A->B, B->C, C->A
+[B C A] 
+
+
+# subgroup
 let G be a group
 a ∈ G, <a> = {a^k: k ∈ Z} is subgroup of G
+
+## proper subgroup
+proper subgroup of G
+= subgroup H which H ⊂ G, H ≠ G
+
+## normal subgroup
+subgroup N of group G called normal subgroup of G
+- invariant under conjugation by members of group that is a part
+N ⊲ G <=> ∀n ∈ N, ∀g ∈ G : gng⁻¹ ∈ N
+N ⊲ G <=> ∀g,h ∈ G, gh,hg ∈ N 
+
+
+### properties
+H ⊲ G, K ⊲ G containing H => H ⊲ K
+normality is not transitive relation
+G,H ⊲ G×H
+
+N1 ⊲ G1, N2 ⊲ G2 => N1×N2 ⊲ G1×G2
 
 
 ## cyclic subgroup
@@ -39,6 +80,132 @@ eg. both 1,5 generate Z[6]
 in Z[6], <2> = {0, 2, 4}, because 2^3 mod 6 = 2
 
 every cyclic group is abelian
+
+Z[n] = { integers r st. 1 ≤ r < n, gcd(r,n)=1 }
+
+### complex number
+Q*,R* has no interesting subgroups of finite order, C* has many
+eg. T = {z ∈ C : |z| = 1} 
+- circle group: unit circle in complex plane
+
+circle group is subgroup of C*
+subgroup of circle group: H = {1,-1,i,-i}
+z^n = 1 => nth roots of unity
+
+
+# permutation group
+## def
+permutation of set X form group Sx
+if X is finite set, assume X = {1,2,..,n}, write Sn 
+symmetric group on n letters: Sn
+
+1. Sn is group with n! elements, binary operation = composition of maps
+
+permutation group = subgroup of Sn
+
+## cycle notation
+[1 2 3 4 5 6] = (243)(56)
+[1 4 2 3 6 5]
+
+cycle of length 3 and length 2
+
+a = (1352), b = (256)
+=> 
+1->3, 3->5, 5->2, 2->1
+2->5, 5->6, 6->1
+=>
+1->3, 2->5->2
+3->3->5 ...
+ab = (1356)
+
+two cycles in Sx a=(a1,a2...), b=(b1,b2,...) are disjoint if ai ≠ bj ∀i,j
+eg. (135) and (27) are disjoint; (135) and (347) are not disjoint
+
+(135)(27) = (135)(27)
+(135)(347) = (13475)
+
+identity permutation = (1)
+
+## theorem
+every permutation in Sn can be written as product of disjoint cycles
+
+## transposition
+product of cycles of length 2
+
+(16)(253) = (16)(23)(25) = (16)(45)(23)(45)(25)
+
+if identity written as product of r transpositions, id = r1r2...rn, where n is even
+
+## alternating groups
+set of all even permutations An, alternating group on n letters
+
+num of even permutation in Sn (n ≥ 2) = num of odd permutations => order of An = n!/2
+
+## Dihedral group
+another special type of permutation group
+nth dihedral group = group of rigid motions of regular n-gon (Dn)
+
+number vertices of regular n-gon by 1,2...n
+Dn is subgroup of Sn, of order 2n
+
+operation: rotation, reflection
+
+group Dn, n ≥ 3, consist of all products of two elements r and s, satisfying
+r^n = id
+s^2 = id
+srs = r^-1
+
+(label n reflections s1,s2,..sn; sk = reflection that leaves vertex k fixed;
+r = rotation)
+
+eg. in case of rotation
+r = (1234)
+r^2 = (13)(24)
+r^3 = (1432)
+r^4 = id
+
+in case of reflection:
+s1 = (24)
+s2 = (13)
+
+remaining 2 elements:
+rs1 = (12)(34)
+r^3s1 = (14)(23)
+
+### cube example
+order of group of cube: 
+- to keep a side facing upward, there's 4 possible rotations
+- ordr = 6×4 = 24
+
+=> group of rigid motion of cube contains 24 elements
+
+
+# cosets
+let H be subgroup of G
+left coset of H :
+gH = {gh : h ∈ H} with g ∈ G
+
+right cosets: 
+Hg = {hg : h ∈ H}
+
+## example
+let H = {0,3} be subgroup of Z[6]
+cosets are :
+0+H = 3+H = {0,3}
+1+H = 4+H = {1,4}
+2+H = 5+H = {2,5}
+
+in commutative group, left and right cosets always identical
+
+
+
+
+
+
+
+
+
+
 
 # iosmorphism
 group (G,∙) and (H,∘) are isomorphic if bijective ϕ: G -> H

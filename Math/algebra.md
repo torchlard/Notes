@@ -11,6 +11,13 @@ ExprF (ExprF (ExprF a)) ...
 after infinitely many iteration we shoul get to fix point 
   where further iteration makes no difference
 
+# algebraic group
+group that is an algebraic variety
+
+eg. Finite groups, general linear group of invertible matrices over C,
+Jet gorup, Elliptic curves
+
+
 
 
 
