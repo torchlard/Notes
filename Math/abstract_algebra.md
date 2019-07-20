@@ -65,6 +65,18 @@ G,H ⊲ G×H
 
 N1 ⊲ G1, N2 ⊲ G2 => N1×N2 ⊲ G1×G2
 
+## unit modulo
+eg. Z[8]
+
+addition modulo = {0,1,2,3,4,5,6,7}
+for multiplication modulo, cannot have all eleme 0-7, since inverse not exist for all
+- only {1,3,5,7} meet requirement of group
+
+satisfy 
+1. 1 ≤ m < 8
+2. gcd(m,8) = 1
+
+unit modulo 8 = multiplication modulo 8
 
 ## cyclic subgroup
 `<a> = {na: n ∈ Z}`
@@ -195,25 +207,79 @@ cosets are :
 1+H = 4+H = {1,4}
 2+H = 5+H = {2,5}
 
+[G : H] = 3
 in commutative group, left and right cosets always identical
 
+## theorem
+let H be subgroup of G, g1,g2 ∈ G
+1. (g1)H = (g2)H
+2. H(g1⁻¹) = H(g2⁻¹)
+3. (g1)H ⊆ (g2)H
+4. g2 ∈ (g1)H
+5. (g1⁻¹)g2 ∈ H
+
+cosets of subgroup H partition larger group G
+
+define index of H in G = num of left cosets of H in G
+[G : H]
+num of left cosets = num of right cosets of H in G
+
+## Lagrange's theorem
+prop1: let H be subgroup of G, g ∈ G, 
+define ϕ: H -> gH by ϕ(h) = gh
+map ϕ is bijective => |H| = |gH|
+
+theorem: 
+let G be finite group, subgroup H, 
+|G|/|H| = [G : H] is num of distinct left cosets of H in G
+=> |H| must divide |G|
+- group G partitiond into [G : H] distinct left cosets, each left cosets has |H| elements
+- |G| = [G : H]|H|
+
+corollary1 : 
+let H,K be subgroup of finite group G st. G ⊃ H ⊃ K 
+=> [G : K] = [G : H][H : K]
+
+theorem2:
+two cycles τ,μ in Sn have same length <=> ∃σ ∈ Sn st. μ = στσ⁻¹
+
+## Euler's theorem
+let U(n) be group of units in Z[n], 
+then |U(n)| = ϕ(n)
 
 
+Euler ϕ-function
+ϕ : N -> N defind by ϕ(n)=1 for n=1
+for n>1, ϕ(n) = num of positive integers m 
+with 1 ≤ m < n, gcd(m,n)=1
+eg. |U(12)| = ϕ(12) = 4 = |{1,5,7,11}| relative prime to 12
 
+let a,n be int st. n > 0, gcd(a,n)=1
+then a^ϕ(n) ≡ 1 (mod n)
 
+special case of n=p => Fermat's little theorem
 
+## Fermat's little theorem
+let p be any prime number, suppose pXa
+then a^(p-1) ≡ 1 (mod p)
 
+example: calc 4^532 (mod 11)
+by theorem, 4 relative prime to 11, 
+so 4^(11-1) ≡ 1 (mod 11)
 
-
+4^532 
+= 4^(53x10+2) 
+= (4^10)^53 x 4^2 
+≡ 1^53 x 16 (mod 11)
+= 1x5 (mod 11) = 5 (mod 11)
 
 
 # iosmorphism
-group (G,∙) and (H,∘) are isomorphic if bijective ϕ: G -> H
-and  ϕ(a∙b) = ϕ(a)∘ϕ(b)
+group (G,∙) and (H,∘) are isomorphic if 
+bijective ϕ: G->H and ϕ(a∙b) = ϕ(a)∘ϕ(b)
 
-##
-let ϕ: H -> G be isomorphism of 2 groups
-1. ϕ^-1: H->G also isomorphism
+let ϕ: G->H be isomorphism of 2 groups
+1. ϕ⁻¹: H->G also isomorphism
 2. |G| = |H|
 3. if G is abelian, then H is abelian
 4. if G is cyclic, then H is cyclic
