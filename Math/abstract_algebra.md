@@ -285,7 +285,7 @@ let ϕ: G->H be isomorphism of 2 groups
 4. if G is cyclic, then H is cyclic
 5. if G subgroup of order n, then H subgroup of order n
 
-##
+## properties
 - all cyclic groups of infinite orders are isomorphic to Z
 - if G is cyclic group of order n, then G is isomorphic to Z[n]
 
@@ -294,7 +294,11 @@ The isomorphism of groups determines an equivalence relations on class of all gr
 => classify all groups up to isomorphism (instead of classifying all groups)
 => consider same if isomorphic
 
+## Cayley's theorem (representation theorem)
+if G is group, it's isomorphic to group of permutations on some set
+=> every gorup is permutation group
 
+aim: find an isomorphism of some group G that already know many
 
 
 
