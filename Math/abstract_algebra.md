@@ -4,7 +4,7 @@ f(x) = f(y) if and only if x=y
 
 # surjective
 ∀ x∈B, ∃z such that f(z) = x
-
+<!-- 
 ## group of units
 every nonzero k has inverse in Z[0] if k is relatively prime to n
 - set of all such non-zero elements as U(n) = group of units
@@ -13,8 +13,7 @@ unitary group of degree n U(n)
 group of nxn unitary matrices, with group operation of matrix multiplication
 - subgroup of general linear group GL(n,C)
 
-Lie algebra of U(n) = n×n skew-Hermitian matrices, with Lie bracket given by commutator
-
+Lie algebra of U(n) = n×n skew-Hermitian matrices, with Lie bracket given by commutator -->
 
 
 ## general linear group 
@@ -51,12 +50,6 @@ a ∈ G, <a> = {a^k: k ∈ Z} is subgroup of G
 proper subgroup of G
 = subgroup H which H ⊂ G, H ≠ G
 
-## normal subgroup
-subgroup N of group G called normal subgroup of G
-- invariant under conjugation by members of group that is a part
-N ⊲ G <=> ∀n ∈ N, ∀g ∈ G : gng⁻¹ ∈ N
-N ⊲ G <=> ∀g,h ∈ G, gh,hg ∈ N 
-
 
 ### properties
 H ⊲ G, K ⊲ G containing H => H ⊲ K
@@ -76,7 +69,7 @@ satisfy
 1. 1 ≤ m < 8
 2. gcd(m,8) = 1
 
-unit modulo 8 = multiplication modulo 8
+U(8) = unit modulo 8 = multiplication modulo 8
 
 ## cyclic subgroup
 `<a> = {na: n ∈ Z}`
@@ -163,18 +156,18 @@ Dn is subgroup of Sn, of order 2n
 operation: rotation, reflection
 
 group Dn, n ≥ 3, consist of all products of two elements r and s, satisfying
-r^n = id
-s^2 = id
-srs = r^-1
+rⁿ = id
+s² = id
+srs = r⁻¹
 
 (label n reflections s1,s2,..sn; sk = reflection that leaves vertex k fixed;
 r = rotation)
 
 eg. in case of rotation
 r = (1234)
-r^2 = (13)(24)
-r^3 = (1432)
-r^4 = id
+r² = (13)(24)
+r³ = (1432)
+r⁴ = id
 
 in case of reflection:
 s1 = (24)
@@ -299,6 +292,87 @@ if G is group, it's isomorphic to group of permutations on some set
 => every gorup is permutation group
 
 aim: find an isomorphism of some group G that already know many
+
+
+## kernel, image
+Ker ϕ = {x ∈ G | ϕ(x)=e'} 
+Im ϕ = {ϕ(x) | x ∈ G}
+
+
+## Direct product
+Cartesian product G × H
+
+a group sometimes isomorphic to direct product of 2 smaller groups
+- eaiser to study component groups
+
+### external direct product
+groups: (G,∙), (H,∘)
+(g1,h1)(g2,h2) = (g1∙g2, h1∘h2)
+
+Π[n.i=1]Gᵢ = G1 × G2 × ... × Gn
+G = G1 = G2 = ... = Gn
+
+eg. Z[n,2] is set of all binary n-tuples
+(00111010) + (10011010) = (...)
+
+#### theorem 1
+(g,h) ∈ G×H, if g,h have finite orders r,s, then order of (g,h) = least common multiple of r,s
+
+eg. (8,56) ∈ Z[12] × Z[60]
+gcd(8,12) = 4
+order of 8 = 12/4 = 3
+order of 56 = 60/4 = 15
+least common multiple of 3,15 = 15
+=> (8,56) has order 15 in Z[12]×Z[60]
+
+#### theorem 2
+group Z[m]×Z[n] is isomorphic to Z[mn] <=> gcd(m,n)=1
+
+eg. Z[2]×Z[3] ≅ Z[6]
+Z[2]×Z[3]:
+(0,0) (0,1) (0,2) (1,0) (1,1) (1,2)
+
+show that Z[2]×Z[3] is cyclic
+(1,1) is generator for Z[2]×Z[3]
+
+#### theorem 3
+Π[k,i=1]Z[nᵢ] ≅ Z[n₁n₂...nₖ]
+<=> gcd(ni,nj) = 1 for i≠j
+
+### internal direct product
+aim: break down a big group
+G be group with subgroup H,K:
+
+G = HK = {hk: h ∈ H, k ∈ K}
+H ∩ K = {e}
+hk = kh ∀k ∈ K, h ∈ H
+
+eg. U(8) = internal direct product of
+H = {1,3}, K = {1,5}
+
+#### theorem 1
+let G be internal direct product of subgroup H,K
+then G is isomorphic to H×K
+
+
+
+# Normal subgroup and factor group
+## normal subgroup
+subgroup N of group G called normal subgroup of G
+- invariant under conjugation by members of group that is a part
+N ⊲ G <=> ∀n ∈ N, ∀g ∈ G : gng⁻¹ ∈ N
+N ⊲ G <=> ∀g,h ∈ G, gh,hg ∈ N 
+N ⊲ G <=> gN = Ng ∀g ∈ G
+
+let G be ground, N ≤ G
+1. subgroup N is normal in G
+2. ∀g ∈ G, gNg⁻¹⊂N
+3. ∀g ∈ G, gNg⁻¹=N
+
+## factor group
+if N is normal subgroup of group G,
+then cosets of N in G from group G/N under operation (aN)(bN) = abN
+- group called factor/quotient group of G,N
 
 
 
