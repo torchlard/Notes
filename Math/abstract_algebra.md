@@ -157,7 +157,13 @@ if identity written as product of r transpositions, id = r1r2...rn, where n is e
 ## alternating groups
 set of all even permutations An, alternating group on n letters
 
-num of even permutation in Sn (n ≥ 2) = num of odd permutations => order of An = n!/2
+num of all permutation = n!
+
+num of even permutation in Sn (n ≥ 2) = num of odd permutations 
+=> order of An = n!/2
+
+An = ε : Sn -> {-1,1}
+
 
 ## Dihedral group
 another special type of permutation group
@@ -390,21 +396,45 @@ then cosets of N in G from group G/N under operation (aN)(bN) = abN
 let N be normal subgroup of An, where n ≥ 3, if N contains 3-cycle, then N = An
 for n ≥ 5, every normal subgroup N of A, contains 3-cycle
 
-
-
-
-
-
-
-
-
-
-
-
 ## simple groups
 groups with no non-trivial normal subgroups
-
 alternating group An is simple for n≥5
+
+all transpositions are odd
+
+# Homomorphism
+## group homomorphism
+natural generalization of isomorphism
+relax bijective requirement in isomorphism = homomorphism
+
+homomorphism (G,∙), (H,∘) is map ϕ : G -> H st.
+ϕ(g1∙g2) = ϕ(g1)∘ϕ(g2) for g1,g2 ∈ G
+
+range of ϕ in H = homomorphic image of ϕ
+
+eg. symmetric group Sn and group Z₂ are related by fact that 
+- Sn can be divided into even and odd permutations that 
+- exhibit group structure like Z[2]
+
+### proposition
+let ϕ: G1 -> G2
+1. if e is identity of G1, then ϕ(e) is identity of G2
+2. ∀g ∈ G1, ϕ(g⁻¹) = (ϕ(g))⁻¹
+3. if H1 ≤ G1, then ϕ(H1) ≤ G2
+4. if H2 ≤ G2, then ϕ⁻¹(H2) = {g ∈ G1: ϕ(g) ∈ H2} ≤ G1
+  - if H2 is noraml in G2, then ϕ⁻¹(H2) is normal in G1
+
+let ϕ: G -> H be group homomorphism, let e be identity of H
+ϕ⁻¹({e}) ≤ G, subgorup called kernel of ϕ 
+
+
+
+
+
+
+
+
+
 
 
 
