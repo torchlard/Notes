@@ -374,6 +374,19 @@ if N is normal subgroup of group G,
 then cosets of N in G from group G/N under operation (aN)(bN) = abN
 - group called factor/quotient group of G,N
 
+let N be normal subgroup of An, where n ≥ 3, if N contains 3-cycle, then N = An
+for n ≥ 5, every normal subgroup N of A, contains 3-cycle
+
+
+
+
+
+
+
+
+
+
+
 
 
 
