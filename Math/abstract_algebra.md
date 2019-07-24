@@ -108,6 +108,19 @@ symmetric group on n letters: Sn
 
 permutation group = subgroup of Sn
 
+## parity of permutation
+eg. odd permutation
+```
+a = (1 2 3 4 5) = (1 3 5)(2 4) = (1 5)(1 3)(2 4)
+    (3 4 5 2 1)
+```
+parity = (-1)^(number of inversion in a)
+in this case, a = odd
+
+identity permutation is even permutation
+eg. (1 2)(1 2)
+
+
 ## cycle notation
 [1 2 3 4 5 6] = (243)(56)
 [1 4 2 3 6 5]
@@ -388,7 +401,10 @@ for n ≥ 5, every normal subgroup N of A, contains 3-cycle
 
 
 
+## simple groups
+groups with no non-trivial normal subgroups
 
+alternating group An is simple for n≥5
 
 
 
