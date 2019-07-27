@@ -416,6 +416,8 @@ eg. symmetric group Sn and group Z₂ are related by fact that
 - Sn can be divided into even and odd permutations that 
 - exhibit group structure like Z[2]
 
+menaing: order of composition and mapping not matter
+
 ### proposition
 let ϕ: G1 -> G2
 1. if e is identity of G1, then ϕ(e) is identity of G2
@@ -427,7 +429,20 @@ let ϕ: G1 -> G2
 let ϕ: G -> H be group homomorphism, let e be identity of H
 ϕ⁻¹({e}) ≤ G, subgorup called kernel of ϕ 
 
+## isomorphism theorem
+can use factor group to study homomorphism
+with every homomorphism ϕ: G -> H we can associate normal subgroup of G, ker ϕ
+- every normal subgroup of G gives rise to homomorphism of groups
 
+### natural/canonical homomorphism
+ϕ : G -> G/H 
+ϕ(g) = gH
+
+### first isomorphism theorem
+ψ : G -> H is group homomorphism with K = kerψ
+then K is normal in G
+
+∃ unique isomorphism f : G/K -> ψ(G) st. ψ = fϕ
 
 
 
