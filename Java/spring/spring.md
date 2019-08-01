@@ -517,7 +517,7 @@ key:
 1. default strategy
 2. custom defined strategy
 
-assign 3 attrs: value, key, condition
+assign 3 attrs: value(to identify cache), key, condition
 
 ```java
 // only on cache1
@@ -538,14 +538,14 @@ public User find(int id){}
 @Cacheable(value={"users"}, key="#user.id", condition="#user.id %2 == 0")
 ```
 
+builtin
 ```
-#root.methodName
-#root.method.name
-#root.target
-#root.targetClass
-#root.args[0]
-#root.caches[0].name
-
+methodName: #root.methodName
+method: #root.method.name
+target: #root.target
+targetClass: #root.targetClass
+args: #root.args[0]
+caches: #root.caches[0].name
 ```
 ## @CachePut
 each time run this method, and put into cache

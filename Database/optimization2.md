@@ -1155,6 +1155,19 @@ merge algorithm:
 
 
 
+# batch update
+set connection URL `rewriteBatchedStatements=true`
+rewrite prepared statement for INSERT INTO multivalue inserts when executeBatch()
+
+```sql
+insert into x values (a1,b1,c1)
+insert into x values (a2,b2,c2)
+...
+=> 
+insert into x values (a1,b1,c1),(a2,b2,c2) ...
+```
+
+
 
 
 

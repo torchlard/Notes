@@ -340,6 +340,7 @@ Thread's action response to action of another thread
 4. no method for mutable object
 5. don't share references to mutable objects
 
+
 # Executor
 separate thread management and creation from rest of application
 
@@ -360,10 +361,10 @@ executor more likely use existing worker to run
 
 ## Thread pool
 newFixedThreadPool: simmple, fixed thread pool
-newCachedThreadPool: executor withexpandable thread pool
+newCachedThreadPool: executor with expandable thread pool
 newSingleThreadExecutor: executor execute single task a time
 
-## form/join
+## fork/join
 goal: use all available processing power
 worker thread run out of things can steal task from other threads
 
@@ -373,7 +374,7 @@ if (my portion of work small enough)
   do work directly
 else
   split work into two piece
-  invoke 2 peices, wwait for results
+  invoke 2 pieces, wwait for results
 ```
 
 ### join VS wait
@@ -390,8 +391,6 @@ ConcurrentMap: atomic operation under sub-interface of java.util.Map
 - ConcurrentHashMap
 ConcurrentNavigableMap: support approximate matches
 - ConcurrentSkipListMap
-
-
 
 
 

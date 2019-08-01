@@ -96,6 +96,15 @@ rs.moveToCurrentRow();
 
 ```
 
+## position
+absolute(int row)
+first(), last()
+next(), previous()
+relative(int rows)
+
+
+
+getRow()
 
 
 
