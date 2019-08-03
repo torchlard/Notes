@@ -21,7 +21,7 @@ intrinsically pattern matching like haskell
 
 eg. summation by pattern matching
 ```js
-const sums = ([a, ...b]) => (b.length==0) ? 0 : a+sums(b)
+const sums = ([a, ...b]) => (b.length==0) ? a : a+sums(b)
 
 // fibonacci number
 const init = [1,1]

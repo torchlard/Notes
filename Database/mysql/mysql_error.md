@@ -96,6 +96,14 @@ sudo service mysql restart
 # The user specified as a definer does not exist
 
 
+# MySQL 8.0 - Client does not support authentication protocol requested by server; consider upgrading MySQL client
+ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY '<your pwd>'
+flush privilegs;
+
+# Column count of mysql.user is wrong. Expected 42, found 44. The table is probably corrupted
+mysql_upgrade -uroot -p
+
+
 
 
 
