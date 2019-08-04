@@ -1,7 +1,7 @@
 # core principle of concurrency
 2 core: JMM, happen-before rule
 3 properties: atomicity, visibility, ordering
-
+1
 # properties
 ## atomicity
 all success / all fail
@@ -13,7 +13,7 @@ a++;
 int b = a;
 a = a+1;
 ```
-JMM atomic operation
+JMM (Java Memory Model) atomic operation
 1. lock: main memory
 2. unlock: main memory
 3. read: variable main -> worker memory

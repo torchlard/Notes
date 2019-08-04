@@ -66,6 +66,9 @@ other scheduler:
 - SwingScheduler.instance()
 - JavaFXSchedulers.gui()
 
+SubscribeOn: operator changes behavior by specifying different Scheduler should operate on
+ObserveOn: different Scheduler that Observable use to send notification to its observers
+
 
 # Processing
 ## dependent
@@ -88,6 +91,28 @@ continued.map(v -> v.toString())
 # overloads with desired type
 due to type erasure, java not consider following signatures
 eg. `operator(Functioin<T, Single<R>>)`, `operator(Function<T, Maybe<R>>)`
+
+
+# Subject
+bridge/proxy that act both as Subscriber and Observable
+- it's Subscriber, can subscribe to ≥1 Observables
+- it's Observable, pass through items it observes by reemitting them
+
+## AsyncSubject
+emit last value emitted by source Observable, only after source Observable completes
+- if Observable terminate with error, AsyncSubject won't emit any item
+
+## BehaviorSubject
+begins by emit item most recently emitted by source Observable
+- continues to emit any other item emitted later by source Observable
+
+## PublishSubject
+subscriber get item from time of subscription
+
+## ReplaySubject
+emit to any observer all items that were emitted by source Observables
+- may throw away old items once over certain size
+
 
 
 

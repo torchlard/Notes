@@ -97,18 +97,37 @@ represent processing stage, which both Subscriber and Publisher must obey contra
 Processor can recover onError signal / propagate signal to Subscriber
 
 
+# Async VS Sync processing
+all processing of elements (onNext) / termination signal(onError,onComplete) must not block Publisher
+- each on* handler can process event sync/async
+
+eg. nioSelectorThreadOrigin.map(f).filter(p).consumeTo(toNioSelectorOutput)
+
+nioSelectorThreadOrigin | map(f) | filter(p) | consumeTo(toNioSelectorOutput)
+------------R1--------- | --R2---|---R3------|-------R4--------------------
+
+implementation1: trampoline
+only final step async schedules, map & filter are sync
+
+|--------------------------------------------|-----------------------------
+
+implementation 2 :
+|-----------------------|--------------------------------------------------
+
+allow flexible implementation to manage resources and scheduling 
+- mix async and sync processing within bounds of non-blocking, async, dynamic push-pull stream
+
+all method defined by reactive interface return void
 
 
+# Subscriber controlled queue bounds
+all buffer size are bounded, known and controlled by subscriber
+- expressed in terms of element count
+- infinite stream need to enforce bounds
 
-
-
-
-
-
-
-
-
-
+at an ytime subscriber knows
+- #elments request: P
+- #elements processed: N
 
 
 
