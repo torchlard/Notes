@@ -8,6 +8,19 @@ action > gradle > refresh
 2. drag files from default changelist to new changelist
 
 
+# Intellij Module dependency . NoClassDefFound Error
+module settings > dependency > (+) button to add external libraries
+
+# cannot find main
+rm -rf *.iml .idea
+restart
+
+
+
+
+
+
+
 
 
 

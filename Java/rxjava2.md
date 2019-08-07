@@ -56,10 +56,12 @@ onNext, onCompleted, onError
 
 # Schedulers
 abstract away Threads, ExecutorServices
+- newThread: new thread for each unit of work scheduled; expensive, no reuse
 - computation: fixed #dedicated threads in background
-- io: IO like / blocking operation on dynamic set of threads
+- io: IO like / async blocking operation on dynamic set of threads
 - single: single thread in sequential, FIFO
 - trampoline: sequential work and FIFO manner, for testing
+- from(executor): custom scheduler, eg. Scheduler.from(Executors.newFixedThreadPool(n))
 
 other scheduler:
 - AndroidSchedulers.mainThread()
@@ -68,6 +70,18 @@ other scheduler:
 
 SubscribeOn: operator changes behavior by specifying different Scheduler should operate on
 ObserveOn: different Scheduler that Observable use to send notification to its observers
+
+## 
+print nothing: 
+main method finished executing before background thread returned result
+```java
+Observable.just("long","longer","longest")
+  .doOnNext(i -> System.out.println("processing item on thread: "+Thread.currentThread().getName()))
+  .subscribeOn(Schedulers.newThread())
+  .map(String::length)
+  .blockingSubscribe(len -> System.out.println("item length: "+len+" receive on thread: "+Thread.currentThread().getName()));
+```
+run in background (newThread), observe on main thread (blockingSubscribe)
 
 
 # Processing

@@ -9,6 +9,8 @@ rm -rf ~/.gradle/caches/
 gradle --daemon
 
 
+# org.gradle.api.UncheckedIOException: Could not add entry
+
 
 
 
