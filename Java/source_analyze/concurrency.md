@@ -63,6 +63,11 @@ ForkJoinTask may atomically tagged with short value using setForkJoinTaskTag/com
 should minimally implement protected methods exec(), setRawResult(V), getRawResult()
 - large task split into smaller subtasks
 
+###
+compute() itself is also Worker thread
+when 2 subtask call fork(), this worker thread will dispatch task to other 2 workers, itself stop working
+
+
 
 ### RecursiveAction
 most computations that don't return results
