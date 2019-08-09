@@ -130,6 +130,11 @@ impossible to discover most optimal memory barrier
 volatile read -> LoadStore,LoadLoad
 StoreStore <- volatile write -> StoreLoad
 
+# lock memory semantics
+thread A release lock: send signal to thread that will get lock
+thread B get lock: receive signal from prev thread 
+
+
 
 
 
