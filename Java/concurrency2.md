@@ -98,6 +98,15 @@ happen-before
 - not mean operation actually oeparte before 
 - mean prev operation actually visible to next operation
 
+1. program sequence: prev happen-before any later op 
+2. monitor lock rules: lock happen-before unlock
+3. volatile
+4. transitive
+5. start(): if thread A run ThreadB.start(), ThreadB.start() happen-before any op in B
+6. join(): if thread A run ThreadB.join(), any op in B happen-before ThreadB.join()
+
+
+
 ## data dependency
 data dependency only for single thread, single processor, not consider cross processor,cross threads
 
@@ -120,7 +129,7 @@ in computer, data transfer between processor and memory via bus => bus transacti
 
 bus arbitration: when processor A and B compete for transaction, decide one of them wins
 
-## stop rewrite
+## stop reorder
 *, volatile write
 volatile read, *
 volatile write, volatile read
@@ -133,6 +142,88 @@ StoreStore <- volatile write -> StoreLoad
 # lock memory semantics
 thread A release lock: send signal to thread that will get lock
 thread B get lock: receive signal from prev thread 
+
+for FairSync and NonFairSync, a;; need to RW on volatile variable `state`
+
+## x86 lock prefix 
+program add `lock` prefix to `cmpxchg` command by CPU type
+- if multi processor, then add
+
+1. ensure atomic read,write,modify to memory
+2. stop reorder with prev R, next W
+3. flush buffer data to memory
+
+CAS = volatile R + volatile W
+
+## thread communication
+1. A volatile write, B volatile read
+2. A volatile write, B CAS volatile change
+3. A CAS volatile change, B CAS volatile change
+4. A CAS volatile change, B volatile read
+
+
+# concurrent package implementation
+volatile RW, CAS
+=> AQS, non-blocking data structure, atomic variable
+=> Lock, synchronizer, blocking queue, Executor, concurrent container
+
+# final
+reorder prohibit rules
+1. write to final in constructor, ref to final var
+2. read obj with final var, read final var
+
+
+# JMM design
+1. memory model easy to understand, program
+2. compiler and processor less restriction, more optimization
+
+intra-thread semantics: reorder not change output within single thread
+
+double lock checking
+```java
+static Instance instance;
+static Instance getInstance(){
+  if(instance == null){
+    synchronized(D.class){
+      if (instance==null)
+        instance = new Instance();
+    }
+  }
+}
+```
+problem: 
+thread A: allocate memory location -> instace point to address
+thread B: instancce=empty? -> access instance
+thread A: init instance -> access instance
+
+solution
+1. volatile static Instance instance
+2. initialization on demand holder idiom
+```java
+class InstanceFactory {
+  static class InstanceHolder {
+    static Instance instance = new Instance();
+  }
+  static Instance getInstnace(){
+    return InstanceHolder.instance;
+  }
+}
+```
+when class init, JVM will get a lock
+
+JMM abstract difference in memory management among processors
+
+minimum security: obj value init happen-before access obj
+
+
+
+
+
+
+
+
+
+
 
 
 

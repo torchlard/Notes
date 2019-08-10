@@ -33,6 +33,10 @@ provide means for 1 thread to suspend execution (wait) until notified by another
 
 Condition instance is intrinsically bound to a lock
 
+free to remove possibility of spurious wakeups
+- recommand assume that can occur => always wait in loop
+3 forms of condition waiting: interrupting, non-interruptible, timed
+
 
 
 
