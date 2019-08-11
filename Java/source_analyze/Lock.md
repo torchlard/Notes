@@ -38,16 +38,47 @@ free to remove possibility of spurious wakeups
 3 forms of condition waiting: interrupting, non-interruptible, timed
 
 
+# AbstractQueuedSynchronizer
+framework to construct lock and other synchronizer componnet
+- change sync state: getState, setState, compareAndSetState
+- can dominately/share get sync state 
 
+dominate: tryAcquire, tryRelease
+shareable: tryAcquireShared, tryReleaseShared, isHeldExclusively
 
+## template method
+acquire(Shared): if fail, go to sync queue
+acquire(Shared)Interruptibly: same as acqurie + response to interrupt
+tryAcquire(Shared)Nanos: time limit
+release(Shared)
+getQueuedthreads: get all sync queue threads
 
+## implementation
+use FIFO bidirectional queue to manage sync state
+- if acquire fail: use Node store current thread + state info + prev,next Node
+  - add to sync queue, block current thread
 
+each node check if head, if yes, get sync state; else wait again
 
+## shared VS blocking
+blocking write, shared read
 
+tryReleaseShared must be sync using loop & CAS
 
+doAcquireNanos() = support interrupt + timeout
+if nanosTimeout < spinForTimeoutThreshold (1000ns)
+=> then won't wait, instead go spinning
+- reason: timeout cannot be very accurate in very short duration
 
+tryAcquireshared() 
+- if return value > 0, get sync state
+- else doAcquireshared() to spin
+  - if find itself == head, try to get sync state
+    - if return > 0, success get sync state, exit spin
 
-
+## reentrantLock
+- thread can lock repeatedly, not like mutex block itself
+non-fair lock not as efficient as fair lock
 
 
 

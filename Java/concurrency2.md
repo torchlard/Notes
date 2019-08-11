@@ -216,7 +216,47 @@ JMM abstract difference in memory management among processors
 minimum security: obj value init happen-before access obj
 
 
+# Thread
+finally cannot be run in Daemon thread
 
+deprecated API: suspend(), resume(), stop()
+suspend: thread will not release occupied resource
+stop: when thread ends not guarantee resource released normally
+
+```java
+synchronized (Sync.class){
+  m();
+}
+static symchronized void m(){}
+```
+=> 3: monitorenter, 4: monitorexit
+exclusive get and release monitor
+
+each object has its own monitor; if cannot get monitor => BLOCKED
+
+try get Monitor,
+if fail: go to SynchronizedQueue, state=BLOCKED, wait for notification
+if success: go to Object
+
+## wait/notify mechanism
+1 thread change value, 1 thread observe changes
+
+1. add lock to object before using wait(),notify(),notifyAll()
+2. after wait(), state: RUNNING -> WAITING
+3. after notify()/notifyAll(), need wait after current thread release lock
+4. notify(): one of waiting thread, notifyAll(): move all waiting thread to sync
+- state: WAITING -> BLOCKED
+5. to return from wait(), need to get object's lock
+
+Object.wait(): go to WaitQueue --notify()--> SynchronizedQueue
+
+## join
+thread A call thread.join(): thread A wait for thread to finish and then resume
+used wait(), nofity() mechanism
+
+
+## ThreadLocal
+thread variable: data structure use ThreadLocal object as key, any obj as value 
 
 
 
