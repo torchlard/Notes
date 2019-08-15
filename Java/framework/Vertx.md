@@ -45,6 +45,17 @@ multi-threaded worker verticles
 - thread from worker pool, instance run concurrently >1 thread
 - (most application don't need this)
 
+## iolation group
+default vertx has flat classpath
+sometimes want to deploy verticle so taht classes of the verticle isolated from others 
+- eg. deploy 2 different versions of a verticle with same class name in same Vertx instance
+
+
+
+# Verticle Factory
+most verticle factories loaded from classpath and registered at Vertx startup
+can programmatically register and unregister factory using `(un)registerVerticleFactory`
+
 # Polyglot
 multi-language
 
@@ -65,8 +76,8 @@ write all code assume single threading
 
 ## Vertx options
 1. Event Bus
-- addressing (string)
-- handler registration, can have multiple handler in same address
+  - addressing (string)
+  - handler registration, can have multiple handler in same address
 2. P2P
 3. immutable state
 - vertx shared state

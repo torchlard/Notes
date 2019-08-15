@@ -76,8 +76,15 @@ block
 String lock = "";
 synchronized(lock){ ... }
 ```
+# reduce context switch
+1. no lock concurrency
+2. CAS
+3. use least #thread 
+4. coroutine
+
 
 ## synchronized optimization
+
 ### CAS
 Compare and swap
 if value in memory match with expected => 
