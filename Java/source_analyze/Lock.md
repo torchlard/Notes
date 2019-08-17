@@ -39,11 +39,11 @@ free to remove possibility of spurious wakeups
 
 
 # AbstractQueuedSynchronizer
-framework to construct lock and other synchronizer componnet
+framework to construct lock and other synchronizer component
 - change sync state: getState, setState, compareAndSetState
-- can dominately/share get sync state 
+- can exclusively/share get sync state 
 
-dominate: tryAcquire, tryRelease
+exclusive: tryAcquire, tryRelease
 shareable: tryAcquireShared, tryReleaseShared, isHeldExclusively
 
 ## template method
@@ -51,7 +51,7 @@ acquire(Shared): if fail, go to sync queue
 acquire(Shared)Interruptibly: same as acqurie + response to interrupt
 tryAcquire(Shared)Nanos: time limit
 release(Shared)
-getQueuedthreads: get all sync queue threads
+getQueuedThreads: get all sync queue threads
 
 ## implementation
 use FIFO bidirectional queue to manage sync state
@@ -70,9 +70,9 @@ if nanosTimeout < spinForTimeoutThreshold (1000ns)
 => then won't wait, instead go spinning
 - reason: timeout cannot be very accurate in very short duration
 
-tryAcquireshared() 
+tryAcquireShared() 
 - if return value > 0, get sync state
-- else doAcquireshared() to spin
+- else doAcquireShared() to spin
   - if find itself == head, try to get sync state
     - if return > 0, success get sync state, exit spin
 
@@ -81,11 +81,11 @@ tryAcquireshared()
 fair lock not as efficient as non-fair lock
 
 ## ReadWriteLock
-
+```
  high 16bit  low 16bit
 <----------><----------->
    read         write
-
+```
 S&0x0000FFFF = S>>>16
 when state + 1 = S+1
 
@@ -251,7 +251,7 @@ AtomicReferenceFieldUpdater
 AtomicMarkableReference
 
 
-# Concurrency utils
+# Synchronizer
 ## CountDownLatch
 await() method block current thread, until N=0
 await(time) not block current thread after time t
@@ -270,6 +270,8 @@ control num of threads access certain resource
 exchanger coordinate how threads coorporate
 - provide sync point
 
+## Phaser
+more flexible form of barrier to control phased computation among multiple threads
 
 # Thread Pool
 ## principle
@@ -369,6 +371,54 @@ assuem pending queue has thread A,B,C
   - thread A remove itself from queue, wake up B ...
   - until all threads wake up and returned from get()
 
+
+# Concurrency practice
+## async task pool
+problem: 
+1. when a task submit to task pool, if task pool restart, all tasks lost
+2. task pool can only handle tasks in local machine
+
+each machine start a task pool, each task pool has multiple thread pool
+1. submit task to task pool, save task in db
+2. a machine get task from db
+
+task state: 
+new: submitted to task pool
+executing
+retry: runtime error in task, stop, set time for retry
+suspend: if task rely on other task, temporary suspend, resume after get result
+terminate, finish
+
+tasks itself must be stateless, don't need to save data in machine
+
+
+# Queue
+ConcurrentLinkedQueue
+LinkedBlockingQueue
+ArrayBlockingQueue
+SynchronousQueue
+PriorityBlockingQueue
+DelayQueue
+LinkedTransferQueue
+
+# Concurrent collections
+ConcurrentHashMap: HashMap
+ConcurrentSkipListMap: TreeMap
+ConcurrentSkipListSet
+CopyOnWriteArrayList: ArrayList
+CopyOnWriteArraySet
+
+# concurrent data structure VS convensional
+1. may proceed concurrently with other operation
+2. never throw ConcurrentModificationException
+3. guaranteed to tranverse elements exactly once, 
+   - may reflect any modification subsequent to construction
+
+# LockSupport
+## park
+method park(),unpark() provide efficient means of blocking and unblocking threads
+- no problem like in Thread.suspend(), Thread.resume()
+- park will return if interrupted, support timeout
 
 
 
