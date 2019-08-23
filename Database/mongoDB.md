@@ -58,22 +58,13 @@ Restore /etc/mongod.conf. Now, MongoDB 3.6 started without any problem
 echo "deb [ arch=amd64,arm64 ] deb https://repo.mongodb.org/apt/ubuntu trusty/mongodb-org/3.0 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-3.0.list
 
 
-# insert new field
-db.account.update({_id:154}, {$set: {username: 'peter'}})
-
-
-# import 
-bson: mongorestore -d universe -c test test.bson
-json: mongoimport -d universe -c test test.metadata.json
-
-# format
+# concept
+## format
 bson = binary format of json
 
-
-# Document
+## Document
 max size = 16MB
 to store >16MB, use GridFS API
-
 
 ## _id
 always first field, as primary key
@@ -83,6 +74,22 @@ options:
 - auto incrementing number
 - generate UUID in application code
 - driver's BSON UUID facility
+
+
+# mongo shell method
+## insert new field
+db.account.update({_id:154}, {$set: {username: 'peter'}})
+
+## import 
+bson: mongorestore -d universe -c test test.bson
+json: mongoimport -d universe -c test test.metadata.json
+
+## collections
+aggregate()
+count()
+createIndex()
+
+
 
 # ~sql operation
 ## select
@@ -105,18 +112,35 @@ db.universe.find({
 .limit(10)
 ```
 
+## insert
+- insert, insertOne, insertMany
+
 ## update
+- updateOne, updateMany
+
 db.people.updateMany(
    { age: { $gt: 25 } },  // condition
    { $set: { status: "C" } }  // set value
 )
 
 ## delete
+- deleteOne, deleteMany
+
 delete from people
 => db.people.deleteMany({})
 
 delete from people where status="D
 => db.people.deleteMany({ status: "D" })
+
+## index
+dropIndex, dropIndexes
+reIndex(), getIndexes()
+totalIndexSize
+### createIndex
+
+
+
+
 
 
 # SQL <=> MongoDB
@@ -302,12 +326,140 @@ $graphLookup: {
 ```
 
 ## lookup
+```js
+db.classes.aggregate([  // join from 'classes' collection
+    { $lookup: { 
+        from: "members",   // join to 'members' collection
+        localField: "enrollmentlist", // join from 'classes' field
+        foreignField: "name", // join to 'members' field
+        as: "fromItems" // joined result of 'members' data
+    }}, {
+      $replaceRoot: { // replace all existing fields in input document, including _id
+        newRoot: { $mergeObjects: [ // merge fromItems to result collection
+            { $arrayElemAt: ["$fromItems", 0] },  // return elem at specific index
+              "$$ROOT"  // reference root document (top-level)
+        ]}
+      }
+    }, 
+    { $project: { fromItems: 0 } } // ignore fromItems field
+])
+```
+## replaceRoot
+`{ $replaceRoot: {newRoot: "$obj"}}`
+obj must be a js object, non empty
+
+## out
+create new collection in current database if not exists
+replace existing collection
+
+1. create temp collection
+2. copy indexes from existing collection to temp collection
+3. insert documents into temp collection
+4. calls db.collection.renameCollection with dropTarget:true
+`{$out: "out_collection"}`
+
+## redact
+```
+mongoDB <---> trusted middleware <----> application
+      aggregation               requests
+      pipeline with 
+      $redact
+```
+any valid expression that resolve to 
+- $$DESCEND: return fields at current level, exclude embedded doc
+- $$PRUNE: exclude all fields, no further insepct excluded fields
+- $$KEEP: keep all field, no further inspection
+
+## sample
+random pick some documents
+`{$sample: {size: 3}}`
+
+# aggregate operators
+## arithmetic
+$abs, $add, $subtract, $multiply, $divide
+$avg, $ceil, $floor, $cmp, $exp
+$ln, $log, $log10
+
+## logic
+$allElementsTrue, $anyElementTrue
+$cond, $switch
+$eq, $gt, $gte
+$truncate
+
+## string
+$concat, $strcasecmp, $strLenBytes
+$substr, $substrBytes, $toLower, $toUpper
+
+## collection
+$arrayElemAt, $arrayToObject
+$concatArrays
+$indexOfArray, $in
+$slice, $split, $size
+
+### group stage
+$addToSet
+$first, $last
+
+## datetime
+$dateFromParts, $dateToParts, $dateFromString, $dateToString
+$dayOf(Month|Week|Year), $hour
+
+## set
+$setDifference, $setEquals, $setIntersection
+$setIsSubset, $setUnion
+
+
+## filter
+```js
+$filter: {
+    input: "$items",
+    as: "item",
+    cond: {
+        $gte: ["$$item.price", 100]
+    }
+}
+```
+## let
+```js
+$let: {
+  vars: { // create variables
+    total: {$add: ['$price', '$tax']},  // create total
+    discounted: { $cond: {if: '$applyDiscount', then:0.9, else:1} }
+  },
+  // ref to total,discounted, return value
+  in: { $multiply: ["$$total", '$$discounted'] }  
+}
+```
+
+## map
+```js
+$map: {
+  input: "$quizzes",
+  as: "grade",
+  in: { $add: [ "$$grade", 2 ] }
+}
+```
+## objectToArray
+{l:25, w:10, uom:"cm"} 
+=> [{"k":"l", "v":25}, {"k":"w","v":10}, {"k":"uom", "v":"cm"}]
+
+## switch
+```js
+$switch: {
+  branches: [
+    {case: {$gte:["$year", 1918]}, then: "well" },
+    {case: {$eq: ["$year", 1893]}, then: "ok"}
+  ],
+  default: "no..."
+}
+```
+
+## zip
+$zip: {inputs: [[1,2,3],["a","b","c"]]} => [[1,"a"],[2,"b"],[3,"c"]]
 
 
 
-
-# aggregate
-## aggreagation pipeline
+# aggreagation pipeline
 ```sql
 select sex,sum(num)
 from people
