@@ -205,7 +205,7 @@ goal: distinguish alive and dead object -> mark garbage -> collect
 hard reference: not collect even out of memory
 soft reference: if not enough memory, then collect it
 weak reference: collect it anyway
-virtual reference: same as no reference, will get system notification when collected
+virtual/phantom reference: same as no reference, will get system notification when collected
 
 ## reference counter
 +1 when more ref, -1 when lose ref, 0 -> garbage
@@ -225,8 +225,73 @@ in 2nd sentence, counter-1 -> 0, so collect garbage a;
 
 
 ## reachability analysis
+GC root can be: VM stack, static obj, method area frequent obj, 
+- native method stack referenced obj
+
 choose some objects as GC root, search from root downward
 if obj not accessible -> garbage
+
+### marking
+obj must be marked twice before dead
+if obj no finalize() / finalize() called => no need first mark
+if need finalize(): put in F-Queue, execute by Finalizer thread
+
+finalize() not guarantee executed
+- maybe obj execute finalize() too slowly / dead loop
+- if obj link itself with any other obj in finalize()
+  - when 2nd mark:
+    - then escape from GC
+    - else GC
+
+=> don't use finalize(), very uncertain
+
+### GC in method area
+collect useless constant and class
+
+useless class condition (need all)
+1. all instance collected
+2. that class's ClassLoader collected
+3. corresponding java.lang.Class not referenced by reflection
+
+## GC algorithm
+### Mark-Sweep
+1. stage 1: mark
+mark all obj need to be collected
+2. stage 2: sweep
+collected marked objects
+
+problem:
+1. low efficiency of mark and sweep
+2. memory fragmentation
+
+### copying
+divide all memory into 2 half, each time only use one half
+- when whole memory used up, copy alive obj to another half
+- collect whole half memory
+
+adv: efficient, easy
+problem: need double memory
+
+### optimized copying
+since 98% object died soon, no need 1:1 divide
+- larger one as Eden, 2 smaller Survivor space (default 8:1)
+- each time use Eden & 1 survivor
+- when collect, copy alive obj to another Survivor
+
+adv: only 10% memory wasted
+
+if survivor not enough to store all alive obj, move to old generation
+
+### mark-compact
+first half same as Mark-Sweep,
+when collect, move alive obj to one end, then clear memory outside boundary
+
+### generational collection
+divide memory space according to alive age
+- normally new + old generation
+new: when most obj die, use copying algorithm
+old: when most obj alive, use Mark-Sweep/Mark-Compact algorithm
+
 
 ## lifecycle
 1. created
@@ -278,31 +343,67 @@ for whole heap
 if old generation full, start major GC
 
 
-## type
-### serial collector
-single thread
+# GC problem
+## stop the world
+all thread except GC thread are paused, wait GC to finish
+needed to confirm all objects consistent
 
-### concurrent collector
+
+# Hotspot GC strategy
+use OopMap know where store obj ref
+- must ensure ref relations unchange
+
+if create OopMap for each instruction, too costly
+- only create OopMap at Safepoint
+- eg. method call, loop, exception
+
+how to move all threads to safepoint and pause all?
+1. preemptive suspesion
+- interrupt all threads, if some not at savepoint, resume them until to savepoint
+- no VM use this method
+
+2. voluntary suspension
+- set mark at safepoint, let thread to poll this mark
+- when thread find mark=true, thread interrupt itself
+
+## safe region
+if thread sleep / blocked, cannot response to mark in voluntary suspension
+- define safe region that ref relation not change
+
+
+# GC type
+## serial collector
+single thread
+default collector of client mode
+
+## concurrent collector
+multithread version of serial collector
 GC along with application
 not wait old generation to be full, stop wworld only during mark/re-mark
-- need more memory, mroe CPU
+- need more memory, more CPU
 - short pauses => responsible
 
-### parallel collector
+example: ParNew, CMS
+
+## parallel collector
 multiple CPU to run GC, multi-thread do mark/sweep
 start when heap nearly full
 - use less memory, lesser CPU
 - good for high throughput, can withstand pause
 
-## problem
-### stop the world
-all thread except GC thread are paused, wait GC to finish
-needed to confirm all objects consistent
-
-
-
+if tune down -XX:MaxGCPauseMillis, 
+each GC run shorter timer, but collect less garbage
+so need to run more GC
 
 # GC example
+Hotspot can have multiple collectors to execute GC
+
+## Concurrent Mark Sweep (CMS)
+1. initial mark
+2. concurrent mark
+3. remark
+4. concurrent sweep
+
 ## G1
 (current GC collector)
 whole heap divided into regions
