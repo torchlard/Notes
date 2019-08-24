@@ -1,4 +1,4 @@
-# type value size
+# introduction
 since all primitive type occupy same space, Java program is more cross-platform
 
 ## type of JVM
@@ -31,33 +31,66 @@ by inherit java.lang.ClassLoader
 2. linkage: verify, prepare, parse
 3. initialize
 
-# structure
-## program counter register
+# JVM structure
+thread shared: method area, heap
+thread isolated: VM stack, native method stack, program counter register
+
+
+## program counter (PC) register
+(only conceptual model, may use different way implement)
 processor need to know next command's address
+- bytecode command: branch, loop, jump, exception, thread resume...
+
 multi-threading: periodically switching and allocate process time
 - PC private to thread
 
+for native method, PC value = undefined => no OutOfMemoryError
 
 ## JVM stack
-variable, return value, intermediate
+lifecycle = method from invocation to end
+variable, return value, intermediate, method exit
 multiple frame
+
+- long,double use 2 slot, other primitive type use 1 slot
+- when executing method not change local variable table size
+
+StackOverflowError: required stack depth > allowed VM stack depth
+OutOfMemoryError: if allow auto scale, but not enough memory
 
 ## native method stack
 use C Stack
+- some VM (eg. hotspot) combine native method stack & VM stack
+- JVM standard no restriction on structure
+
 
 ## heap
 almost all object instance allocated memory in heap
 heap collected by GC
 memory only need to be logically continuous
 
-## method area
+### Thread Local Allocation Buffer (TLAB)
+heap private to thread
+
+## method area (non-heap / permanent generation)
 shared memory region, store class info already loaded by JVM
 - constant pool, field, method info, static field
-can choose not to be GC
 
-## runtime constant pool
+for hotspot, in future method area permanent generation -> native memory
+
+JVM standard can ignore GC
+
+### runtime constant pool
+- part of method area
 save string literal and symbolic reference generated in compile time
 will load all in runtime
+
+constant pool table: string literal and ref symbol formed when compile
+
+## direct memory
+not part of JVM
+NIO use native function to allocate out-of-heap memory,
+  and use DirectByteBuffer in heap
+
 
 ### reference
 ```java
@@ -72,7 +105,7 @@ direct reference: directly point to certain area in method area
 
 ## object in heap
 1. Header
-eg. h ash code, lock, GC age
+eg. hash code, lock, GC age
 pointer to memory area
 2. Instance Data
 field info
@@ -108,7 +141,7 @@ getDeclaredMethod: get method
 
 stack(ref) -> heap(obj [instanceOopDesc]) -> method area (instanceKlass)
 
-# memory management
+## memory management
 all data and object instance need to be allocated in heap
 how to allocate?
 1. pointer collision
@@ -120,7 +153,51 @@ memory fragmented
 maintain list of available memory block
 
 
+## create new object
+1. class loader validation
+2. allocate object memory
+3. reset memory space to zero, so that object can directly use without assign value
+4. make necessary setting, eg. which class, hashcode, generation => object header
+5. run `<init>` method
+
+## object header (Mark Word)
+- hash code, generation
+- biased lock 
+- heavyweight lock
+- empty, GC mark
+- biased thread ID, timestamp
+
+many metadata need to store in Mark Word,
+so dynamic structure to store as much data as possible
+
+- class pointer
+
+## locate object in heap
+1. use handler
+allocate memory for handler pool
+reference store handler address
+handler include instance data + object class data
+```
+reference -> (handler pool) instance pointer -> (instance pool) instance data
+                                             -> (method area) class data
+```
+good for write: when move obj, only need change instance data pointer
+
+2. use direct pointer
+reference -> (heap) instance data -> class data
+good for read: save 1 redirect
+
+## memory overflow
+### direct memory overflow
+test method: use reflection to get Unsafe instance
+- only want class in rt.jar use Unsafe functions
+
+
 # GC
+What memory need to be collected?
+When collect memory?
+How to collect?
+
 young generation, old generation
 goal: distinguish alive and dead object -> mark garbage -> collect
 
@@ -147,7 +224,7 @@ in 2nd sentence, counter-1 -> 0, so collect garbage a;
 - when obj is useless, set ref to other obj -> null
 
 
-## GC root
+## reachability analysis
 choose some objects as GC root, search from root downward
 if obj not accessible -> garbage
 
@@ -174,30 +251,32 @@ compacting: compact memory by moving around objects, make allocation contiguous
 
 ## generational collector
 young generation
-  eden space
-  survivor space from
-  survivor to
+  - eden space
+  - survivor space from
+  - survivor to
+
 old generation
 permanent generation (method area, final/static const, const pool)
 
 time passes:
 - eden space -> space from -> old generation
+  
 ### minor GC
 1. 1st round
-in young generation, when eden full, move to survivor from, clear eden
+in young generation, when eden full, move to "survivor from", clear eden
 2. 2nd round
-all move to survivor to after deleting unreachable
+all move to "survivor to" after deleting unreachable
 3. 3rd round
-back to survivor from
-...
+back to "survivor from"
+
 survivor: avoid compact 
 each object count num of times migrated (age)
 if count > MaxTenuringThreshold, move to old generation
 
-
 ### major GC
 for whole heap
 if old generation full, start major GC
+
 
 ## type
 ### serial collector
@@ -241,7 +320,7 @@ can handle heaps from few hundred MB - many TB
 ### principle
 mark in pointer, add Load Barrier when accessing pointer
 when object moved by GC, color on pointer different
-barrier will renew pointer to effective addrss and return
+barrier will renew pointer to effective address and return
 => only single object access is possible to decelerate
 
 ### 
@@ -289,7 +368,7 @@ far better performance than interpreter, sometimes better than static compilatio
 
 disadv: noticeable delay in initial execution of application (warm-up time)
 
-## htospot's implementation
+## hotspot's implementation
 all method start off being interpreted
 hot method identified by sample-based profiling
 hot method compiled
@@ -302,8 +381,10 @@ for client use, less optimization
 for server use, heavy optimization
 
 ## AOT (Ahead of Time)
+```
 MyClass.java --javac--> MyClass.class ------------->|--> java
                          |--jaotc--> my_class.so -->|
+```                         
 shared machine code among different JVM
 
 tiered compilation
