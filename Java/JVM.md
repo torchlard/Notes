@@ -6,10 +6,267 @@ HotSpot VM
 J9 VM
 Zing VM
 
-## class file
-binary file, independent of hardware
+# class file
+independent of hardware & language
 each .class file -> unique class / interface definition
 claaLoader generate class and interface
+
+## .class struture
+format: 8 byte as unit, binary file
+no separator, big Endian
+
+similar to C struct
+
+### symbol
+1. unsigned number
+basic data structure
+u1: 1 byte, u2, u4, u8: 8 bytes
+=> describe number, index ref, value, UTF-8 string
+
+2. table
+consist of multiple unsigned number + other table as composite data structure
+all end with "_info"
+eg. cp_info, field_info, method_info, attribute_info
+
+### actual format
+[4] magic
+[2] minor_version, [2] major_version
+[2] constant_pool_count, [cp_info] constant_pool (amount=constant_pool_count)
+[2] access_flags
+[2] this_class, [2] super_class
+[]2 interfaces_count, [2] interfaces
+[2] fields_count, [field_info] fields
+[2] methods_count, [method_info] methods
+[2] attributes_count, [attribute_info] attributes
+
+### magic, version
+magic number determine if file can be accepted by VM as class file
+for class file, magic = 0xCAFEBABE
+
+Java version number start from 45
+eg. JDK 1.0-1.1 use 45.0 - 45.3
+- higher version JDK compatible with previous class file version
+
+### constant pool
+const count start from #1
+- leave 0 index empty: allow other field point to #0 (not exist)
+
+store 
+- literal: text string, `final` variable
+- symbolic references
+  - class and interface fully qualified name
+  - field name and descriptor
+  - method name and descriptor
+
+when compile by javac, will not `linkage` like C/C++
+- when VM load .class, do dynamic linkage
+- class file not store method, field, final memory allocation info
+
+=> field and method symbolic ref need runtime conversion to get real memory addr
+
+#### cp_info types
+CONSTANT_<xxx>_info
+utf8, integer, float, long, double, class, string
+fieldref, methodref, interfaceMethodref, NameAndType
+MethodHandler, MethodType, InvokeDynamic
+
+CONSTANT_Class_info ([1] tag = 7, [2] name_index: ->CONSTANT_Utf8_info)
+CONSTANT_Utf8_info ([1] tag = 1, [2] length, [1] bytes)
+- since max length = 2 bytes = 65536 bit, so method name must < 64 KB
+
+CONSTANT_Float_info ([1]tag = 4, [4]bytes)
+...
+
+### access flag
+identify class / interface level
+eg. this Class = class/interface? public? abstract? final?
+
+ACC_<xxx>
+public, final, super, interface, abstract, synthetic, annotation, enum
+
+### this_class, super_class, interface
+use these 3 field to confirm inheritance relation
+- describe implements/extends what interface
+
+### field_info
+access_flags, name_index, descriptor_index, attributes
+
+attributes: public/private/protected? static? final? ...
+- fully qualified name, simple name
+
+field descriptor: field type, param list (amount, type, sequence), return value
+
+B:byte, C:char, D:dobule, F:float, I:int
+J:long, S:short, Z:boolean, V:void, L:reference type (eg. Ljava/lang/Object)
+
+eg. `void inc()` => `()V`
+
+### method info
+structure same as field_info, more access_flags
+
+java code inside method stored in `Code` attribute
+if method not overriden, no method_info from parent class
+
+to overload a method, same method name and different feature signature
+- can have multiple different return value, coexist in same class file
+
+### attribute_info
+contains in .class, method_info, field_info
+
+[method_info] Code: bytecode command 
+[field_info] ConstantValue : `final` variable
+[class,field_info,method_info] Deprecated
+[method_info] Exceptions
+[.class] EnclosingMethod
+
+InnerClasses
+LineNumberTable: line num <-> bytecode command
+LocalVariableTable
+StackMapTable: type checker
+Signature: generic
+SourceFile, SourceDebugExtension
+Synthetic: compiler auto gen
+LocalVariableTypeTable: feature signature
+RuntimeVisibleAnnotations: dynamic annotation
+RuntimeInvisibleAnnotation, AnnotationDefault
+BootstrapMethods: invokedynamic command ref 
+
+
+# Code
+attribute_name_index, attribute_length
+max_stack: operand stack max no.
+max_locals: local variable space (Slot)
+code_length, code
+exception_table_length, exception_table
+attributes_count, attributes
+
+for byte,char,float,int,short,boolean,returnAddress => each occupy 1 Slot
+double,long => 2 Slot
+
+## Exception
+1. if try throws Exception/its subclass, jump to catch
+2. if try throws exception not under Exception, jump to finally
+3. if catch throws any exception, jump to finally
+
+## LineNumberTable
+not compulsory, default generate into .class
+if not exist, when throw Exception, stacktrace won't show error row number
+
+## LocalVariableTable
+describe relation of variable in stack frame with Java code's variable
+not compulsory
+if not exist
+- IDE cannot show method param name
+- debug cannot get param value from context
+
+## LocalVariableTyeTable
+since generic type erased, need this to show field signature
+
+## ConstantValue
+only for static member
+
+## InnerClass
+record relation between inner class and host class
+
+## StackMapTable
+replace previous type checking based on data flow
+- new one can ignore runtime check
+
+if Code not have StackMapTable, then it has implicit StackMap attr
+
+## Signature
+to get generic type using reflection
+
+
+# bytecode
+1. restrict a bytecode length to 1 byte => total operand cannot exceed 256
+2. give up operand length align => reconstruct data structure from bytecode
+  - lower performance
+  - save many padding and separator, high transfer rate
+
+## principle
+do {
+  PC += 1
+  by PC get opcode from bytecode stream
+  if(operand in bytecode) get opcode
+  execute operation defined by opcode
+} while(bytecode length > 0)
+
+## data structure
+since most opcode not support byte,char,short,boolean
+- need convert to int at runtime/compile time
+- int as computational type
+
+## operand
+### store,load 
+local var to operand stack
+- iload, iload<n>, fload,fload<n>, dload, aload
+
+value from operand stack to local var
+- istore, lstore, dstore...
+
+const to operand stack
+- bipush, sipush, ldc, aconst_null, iconst_ml
+
+local var table to access index
+- wide
+
+### arithmetic
+add: iadd, fadd
+subtract: isub, fsub
+multiply: imul, lmul
+divide: idiv, fdiv
+mod: irem, frem
+negation: ineg, fneg
+bit shift: ishl, ishr
+var increment: iinc
+floating point compare: dcmpg, fcmpg
+
+must support IEEE 754 standard
+
+### type conversion
+convert between 2 types
+support int -> long,float,double
+long -> float,double ; float -> double
+
+Narrowing Numeric Conversion: i2b,i2c,i2s,d2f ...
+
+### object create, access
+new
+newarray, anewarray, multianewarray
+access member: getfield, putfield, getstatic, putstatic
+put element to operand stack: baload, caload ...
+bastore, sastore ....
+arraylength
+instanceof, checkcast
+
+### operand stack management
+pop 1/2 elem out of stack: pop, pop2
+duplicate value & push to stack: dup,dup2, dup_x1
+swap 2 top value in stack: swap
+
+### control transfer
+conditional branch: ifeq,iflt,ifne,ifgt,ifnull,ifnotnull,if_icmplt ...
+composite condition: tableswitch, lookupswitch
+unconditional branch: goto,goto_w, jsr, ret
+
+### method call, return
+invokevirtual: call obj instance method (most frequent)
+invokeinterface: call interface method
+invokespecial: special treatment, eg. instance init, private,parent method
+invokestatic
+invokedynamic: runtime parse methdo and run
+
+ireturn, lreturn freturn, dreturn
+
+### exception 
+athrow: explicit throw exception
+
+### synchronization
+monitorenter, monitorexit
+
+
+
 
 # class loader
 ## Bootstrap class loader
@@ -30,6 +287,8 @@ by inherit java.lang.ClassLoader
 1. loading: find and load .class
 2. linkage: verify, prepare, parse
 3. initialize
+
+
 
 # JVM structure
 thread shared: method area, heap
@@ -404,16 +663,41 @@ Hotspot can have multiple collectors to execute GC
 3. remark
 4. concurrent sweep
 
-## G1
+problem
+1. default #thread = (#cpu + 3)/4 => if cpu<4, performance drop 50%
+2. cannot manage floating garbage => need Full GC
+3. memory fragment => compact memory cannot be concurrent => long pause
+
+
+## G1 (Garbage First)
 (current GC collector)
-whole heap divided into regions
-dynamically select set of region as young generation in next GC
-region with more garbage will collect first
+based on Mark-Compat
+
+1. whole heap divided into multiple same size regions
+- previously: GC collect whole new/old generation
+- now: region with more garbage will collect first
+
+dynamically select set of region as young generation (most valuable) in next GC
 - more tunable GC pause
-- parallelism and concurrency together
+- new & old generation not physically separated
+
+2. parallelism and concurrency together
+3. predictable pause
+
+problem: need to scan other regions to ensure 1 obj in 1 region is garbage
+solution: 
+- use Remembered Set avoid whole heap scan
+- when access Reference type data, Write Barrier pause and check if cross region ef
+  - if yes, add info to Remembered Set by CardTable
+
+### steps
+1. initial marking
+2. concurrent marking
+3. final marking
+4. live data counting and evacuation
 
 
-## zgc
+## ZGC
 all stages concurrent
 application thread work along with GC thread, non-blocking
 can handle heaps from few hundred MB - many TB 
@@ -424,7 +708,6 @@ when object moved by GC, color on pointer different
 barrier will renew pointer to effective address and return
 => only single object access is possible to decelerate
 
-### 
 colored pointer, load barrier
 ZGC basically has no pause time
 
