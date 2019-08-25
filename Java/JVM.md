@@ -159,7 +159,7 @@ if not exist
 - IDE cannot show method param name
 - debug cannot get param value from context
 
-## LocalVariableTyeTable
+## LocalVariableTypeTable
 since generic type erased, need this to show field signature
 
 ## ConstantValue
