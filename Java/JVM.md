@@ -269,24 +269,183 @@ monitorenter, monitorexit
 
 
 # class loader
-## Bootstrap class loader
+1. 'class' can be class/interface
+2. 'class file' is byestream exist in any form (not limited to file)
+
+## class loading process
+1. Loading
+2. Verification
+3. Preparation
+4. Resolution
+5. Initialization
+6. Using
+7. Unloading
+[2-4: Linking]
+
+load,verify,prepare,init.unload are fixed, resolution not fixed timing
+- sometimes can parse after initialization
+
+must immediate initialize class when:
+1. if (new,getstatic,putstatic,invokestatic), init if not yet
+2. relection
+3. parent class not init
+4. when VM start, need run class with main() 
+5. java.lang.invoke.MethodHandle -> REF_(get|put|invoke)Static method handler
+  - corresponding class of method not yet init
+
+other than above 5 conditions, not trigger init => passive reference
+
+for interface init, generate `<client>()` class constructor
+- not require condition 3: no need init parent interface first
+
+### Loading
+1. get binary bytestream using fully qualified name
+2. static struct -> runtime data structure
+3. create object in memory
+
+multiple ways to get bytestream
+1. from zip: JAR, EAR, WAR format
+2. get from network: applet
+3. runtime compute: java.lang.reflect.Proxy's ProxyGenerator.generateProxyClass
+4. convert from other file: JSP
+5. get from DB
+
+array class created by JVM itself, but its Element Type still load by classloader
+1. if Component Type = ref type, then recursively loading
+2. if not ref type (eg. int[]), then link with bootstrap class loader
+
+loading and linking run concurrently
+
+### verification
+ensure bytestream meet JVM requirement
+- for security
+
+1. file format verify 
+  - start with 0xCAFEBABE
+  - major,minor version within range
+  - const all support (check tag) ...
+
+2. metadata: semantic checking
+  - parent class exist (other than java.lang.Object)?
+  - allow to inherit?
+  - if not abstract, implemented all methods ?
+  - method contradict?
+
+3. bytecode verify
+  - most complicated, use data flow and control flow analysis to verify logical
+  - eg. NOT put `int` to operand stack, then load into var table as `long`
+  - NOT jump to code outside method
+  - ensure type conversion valid
+
+optimization: StackMapTable skip bytecode verify
+
+4. symbolic ref verify
+  - check ref to const pool
+  - find all class, ref member exist, 
+  - correct access modifier
+
+### preparation
+at current stage only static variable allocated in memory, not instance variable
+
+### resolution
+symbolic ref: 
+- use group of symbol to reference target
+- can be any literal, irrelevant to VM memory allocation
+- not necessary in memory already
+
+direct ref
+- pointer point to target / relative offset / handler that can locate to target
+- must already exist in memory
+
+AIM: convert symbolic ref in const pool -> direct ref
+
+possible to resolve same symbolic ref multiple times
+other than `invokedynamic`, cache first time resolution result 
+
+`invokedynamic`: prepared for dynamic language
+- ref = dynamic call site specifier = resolution only when program run this command
+
+#### class, interface 
+1. if C not array type, class loader
+2. if array type, VM create obj represent array dimension and element
+
+#### field
+1. if C itself contains this member, return
+2. else search parent interface, if match return
+3. else if not Object, search parent class, if match return
+4. else throw java.lang.NoSuchFieldError
+
+#### class method
+if class_index find C = interface, throw IncompatibleClassChangeError
+else if match in C, return
+else if match in parent class => return; if found abstract method => AbstractMethodError
+else NoSuchMethodError
+
+if no access right => IllegaAccessError
+
+#### interface method
+if in class_index C = class => IncompatibleClassChangeError
+else if in C match => return
+else in parent interface match => return
+else NoSuchMethodError
+
+
+### initialization
+AIM: generate and run `<client>()`
+
+start from here can be controlled by program
+
+`<client>()` generated from collection of all field assignment + static block
+- no need explicit call parent class constructor
+- VM ensure all parent `<client>()` run before subclass `<client>()`
+- Object `<client>()` must run first
+- `<client>()` sync, only 1 thread run until complete
+
+#### parents delegation model
+other than Bootstrap ClassLoader, each classLoader must have its parent loader
+
+Composition relation: Bootstrap <- Extension <- Application <- custom
+
+when class loader receive loading request, first delegate request to parent loader
+- do it yourself when parent deny request (ClassNotFoundException)
+
+reason: ensure reuse class loadeed previously (eg. java.lang.Object)
+
+##### Bootstrap class loader
 implement by C/C++, use to load core lib in JDK (eg. java.lang, java.util)
 - $JAVA_HOME/jre/lib
 - -Xbootclasspath
 
-## extension class loader
+##### extension class loader
 load extension class, provide extra function
+- load <JAVA_HOME>/lib/ext / java.ext.dirs 
+- implement by ExtClassLoader
 
-## application class loader
+##### application class loader
 access by getSystemClassLoader
-- current classpath
-- java.class.path
+- current classpath / java.class.path
+- implement by AppClassLoader
 
-## custom class loader
+##### custom class loader
 by inherit java.lang.ClassLoader
 1. loading: find and load .class
 2. linkage: verify, prepare, parse
 3. initialize
+
+##### problem
+what if core lib want to call user API? 
+
+solution:
+use Thread Context ClassLoader to setContextClassLoader()
+- if thread not set, inherit from parent thread
+- cheating, let thread load class 
+
+example: JNDI, JDBC, JCE, JBI
+
+##### hot deploy
+eg. OSGi
+each bundle has its class loader, when switch bundle, change loader
+
 
 
 
@@ -735,6 +894,23 @@ size of memory collected in unit time
 reduce fragmented memory space
 
 
+
+# JVM bytecode exeecution
+## stack frame
+data structure for VM to call and execute method 
+- element at VM stack
+- store local var table, operand stack, dynamic linking, return addr
+
+only stack frame at top is effective => current stack frame <-> current method in frame
+
+### local variable table
+Variable Slot as smallest unit
+
+
+
+
+
+
 # JIT (just in time compilation)
 - slower if everything load from .class, better to precompile some in machine code first
 methods get compiled
@@ -780,6 +956,30 @@ jinfo: configuration info
 jmap: memory map
 jhat: java heap analysis tool
 jstat: JVM statistics monitoring tool, watch GC
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
