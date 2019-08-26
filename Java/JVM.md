@@ -906,8 +906,26 @@ only stack frame at top is effective => current stack frame <-> current method i
 ### local variable table
 Variable Slot as smallest unit
 
+## dynamic linking
+static linking: turn to direct ref when class loading / first time sue
+dynamic linking: to direct ref when runtime
 
+## return address
+after method execute, only exit when
+1. meet return command (normal method invocation completion)
+2. exception not handled (abrupt method invocation completion)
 
+method return need some info in stack frame => resume upper metod state
+
+resolution = method is callable and compile time know, unchange at runtime
+eg. static method, private method
+
+### VM method
+invokstatic: call static method
+invokespecial: call `<init>` method, private and parent class method
+invokevirtual: virtual method
+invokeinterface: call obj method that already implement this interface
+invokedynamic: 
 
 
 
