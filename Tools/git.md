@@ -10,6 +10,7 @@ no need to re-enter password
 commands:
 git remote -v     // check existing url
 git remote set-url origin git@github.com:USERNAME/REPO.git  // new ssh url
+
 // do following if no key installed
 ssh-keygen -t rsa -b 4096   // generate new key, cannot copy from old file
 ssh-add ~/.ssh/xxx  // add key to system
@@ -21,6 +22,3 @@ git reset --hard HEAD
 
 
 
-MAlonzo/Code/Qhello.hi: needs merge
-MAlonzo/Code/Qhello.o: needs merge
-hello.agdai: needs merge
