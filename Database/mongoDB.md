@@ -58,13 +58,205 @@ Restore /etc/mongod.conf. Now, MongoDB 3.6 started without any problem
 echo "deb [ arch=amd64,arm64 ] deb https://repo.mongodb.org/apt/ubuntu trusty/mongodb-org/3.0 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-3.0.list
 
 
+# data model
+## embedded data model
+denormalized model, store related pieces of into in same db record
+with MMAPv1 storage engine, impact write performance => data fragmentation
+- use Power of 2 sized allocation for document growth
+- documents in mongodb must < max BSON document size
+max size = 16MB; to store >16MB, use GridFS API
+
+## normalized data model
+use when
+- embedding result in data duplication, but no read adv
+- represent more complex many-to-many relation
+- model large hierarchical data set
+
+=> `$lookup`, `$graphLookup` for relation
+
+## operational factor, data model
+if applications require update frequently cause document growth
+- may refactor data model to use ref between data in distinct documents
+
+## atomicity
+operations atomic at document level
+if application tolerate non-atomic update for 2 piece of data => store in separate doc
+
+## sharding
+sharding for horizontal scaling
+allow user to partition a collection within db, distribute collection's doc across multiple mongod instances / shards
+- use shard key partition
+
+## large num of collections
+having many collections no significant performance penalty
+- each collection few kB
+- single namespace file (<DB>.ns) store all metadata (index,collection) for db
+- has limit on size of .ns
+- limit on num of namespace
+
+## large num of small documents
+if frequently do grouping, consider "rolling up" / embedded data model
+"roll up" docs into logical grouping: seq read + fewer random disk access
+
+## storage optimization for small doc
+specify value for _id explicitly when inserting doc into collection
+- can store any value in _id
+
+use shorter field names
+
+## data lifecycle management
+Time to live / Capped collections (FIFO) only store recent documents
+
+## validation
+use `$jsonSchema` for schema validate 
+```js
+db.createCollection("student", {
+  validator: {
+    $jsonSchema: {
+      bsonType: "object",
+      required: ["name","year","major","address"],
+      properties: {
+        name: {
+          bsonType: "string",
+          description: "must be string and required"
+        },
+        major: {
+          enum: ["MAth","eng","CS",null],
+          description: "only be one of enum"
+        },
+        address: {
+          bsonType: "object",
+          required: ["city"],
+          properties: {
+            street: {
+              bsonType: "string",
+              description: "msut be stirng if field exists"
+            },
+            city: {
+              bsonType: "string"
+            }
+          }
+        }
+      }
+    }
+  }
+})
+```
+validation during udpates and inserts, existing docs not validate until modification
+
+validationLevel
+- strict: validate all inserts and udpates
+- moderate: validate insert and updates to existing docs that already fulfill validate criteria
+
+## tree structure
+![tree img](img/data-model-tree.png)
+
+1. parent ref
+```js
+db.categories.insert( { _id: "MongoDB", parent: "Databases" } )
+db.categories.insert( { _id: "dbm", parent: "Databases" } )
+db.categories.insert( { _id: "Databases", parent: "Programming" } )
+db.categories.insert( { _id: "Languages", parent: "Programming" } )
+db.categories.insert( { _id: "Programming", parent: "Books" } )
+db.categories.insert( { _id: "Books", parent: null } )
+```
+2. child ref
+```js
+db.categories.insert( { _id: "MongoDB", children: [] } )
+db.categories.insert( { _id: "dbm", children: [] } )
+db.categories.insert( { _id: "Databases", children: [ "MongoDB", "dbm" ] } )
+db.categories.insert( { _id: "Languages", children: [] } )
+db.categories.insert( { _id: "Programming", children: [ "Databases", "Languages" ] } )
+db.categories.insert( { _id: "Books", children: [ "Programming" ] } )
+```
+
+3. array of ancestors
+efficient way find descendants and ancestors of node
+```js
+db.categories.insert( { _id: "MongoDB", ancestors: [ "Books", "Programming", "Databases" ], parent: "Databases" } )
+db.categories.insert( { _id: "dbm", ancestors: [ "Books", "Programming", "Databases" ], parent: "Databases" } )
+db.categories.insert( { _id: "Databases", ancestors: [ "Books", "Programming" ], parent: "Programming" } )
+db.categories.insert( { _id: "Languages", ancestors: [ "Books", "Programming" ], parent: "Programming" } )
+db.categories.insert( { _id: "Programming", ancestors: [ "Books" ], parent: "Books" } )
+db.categories.insert( { _id: "Books", ancestors: [ ], parent: null } )
+```
+
+4. materialized path
+can add index on path
+```js
+db.categories.insert( { _id: "Books", path: null } )
+db.categories.insert( { _id: "Programming", path: ",Books," } )
+db.categories.insert( { _id: "Databases", path: ",Books,Programming," } )
+db.categories.insert( { _id: "Languages", path: ",Books,Programming," } )
+db.categories.insert( { _id: "MongoDB", path: ",Books,Programming,Databases," } )
+db.categories.insert( { _id: "dbm", path: ",Books,Programming,Databases," } )
+```
+5. nested set
+each node in tree as stops in round-trip traversal of tree
+![tree img](img/nested-set.png)
+```js
+db.categories.insert( { _id: "Books", parent: 0, left: 1, right: 12 } )
+db.categories.insert( { _id: "Programming", parent: "Books", left: 2, right: 11 } )
+db.categories.insert( { _id: "Languages", parent: "Programming", left: 3, right: 4 } )
+db.categories.insert( { _id: "Databases", parent: "Programming", left: 5, right: 10 } )
+db.categories.insert( { _id: "MongoDB", parent: "Databases", left: 6, right: 7 } )
+db.categories.insert( { _id: "dbm", parent: "Databases", left: 8, right: 9 } )
+
+// find descendant of a node
+var databaseCategory = db.categories.findOne({_id: "Databases"})
+db.categories.find({ left: {$gt: databaseCategory.left }, right: {$lt: databaseCategory.right} })
+```
+
+## numeric model
+decimal BSON type: decimal-based floating-point format, provide exact precision
+`NumberDecimal()`
+
+scale factor: convert to monetary value to 64-bit integer (long BSON type)
+
+## non-numeric model
+1 field exact monetary value as non-numeric string ,
+1 field binary-based floating-point (double BSON type)
+
+## time
+store times in UTC by default, convert any local time representations into this form
+
+## DBRefs
+convention foir representing a document, not specific reference type
+`$ref`: collection name, `$id`: _id value, `$db`: db name
+
+
+# index
+auto create index on _id; each index need >= 8kB
+mongo use B-tree index
+
+## command
+show index usage
+```js
+db.ag_bet.aggregate([ 
+    { $indexStats: {} }    
+]).toArray()
+```
+
+## single field
+
+
+# optimization
+## speed
+find > aggregate > map-reduce
+
+
+
+## command
+dropIndex, dropIndexes
+reIndex(), getIndexes()
+totalIndexSize
+
+`db.collection.createIndex({name: -1})`
+
+
 # concept
 ## format
 bson = binary format of json
-
-## Document
-max size = 16MB
-to store >16MB, use GridFS API
 
 ## _id
 always first field, as primary key
@@ -74,6 +266,19 @@ options:
 - auto incrementing number
 - generate UUID in application code
 - driver's BSON UUID facility
+
+## data structure
+String, Integer, Boolean
+Double
+Min/Max keys: compare a value with max & min of BSON element
+Arrays
+Timestamp, Object, Null
+Symbol: basically equivalent to String
+Date
+ObjectID
+Binary date
+Code: store JS code
+Regular Expression
 
 
 # mongo shell method
@@ -117,11 +322,16 @@ db.universe.find({
 
 ## update
 - updateOne, updateMany
-
+```
 db.people.updateMany(
    { age: { $gt: 25 } },  // condition
    { $set: { status: "C" } }  // set value
 )
+```
+
+## save
+update(): update existing value in document
+save(): replace old document with new one
 
 ## delete
 - deleteOne, deleteMany
@@ -131,13 +341,6 @@ delete from people
 
 delete from people where status="D
 => db.people.deleteMany({ status: "D" })
-
-## index
-dropIndex, dropIndexes
-reIndex(), getIndexes()
-totalIndexSize
-### createIndex
-
 
 
 
@@ -149,10 +352,10 @@ table                 = collection
 row                   = document / BSON document
 column                = field
 index                 = index
-table joins           = $lookup, embedded documents
+table joins           = `$lookup`, embedded documents
 primary key           = primary key
-select into new_table = $out
-merge into table      = $merge
+select into new_table = `$out`
+merge into table      = `$merge`
 transactions          = transactions
 
 mysqld = mongod
@@ -160,8 +363,7 @@ mysql  = mongo
 
 # operator
 ## String
-sql: xx like '%x'
-=> { $regex: /x$/i }
+`sql: xx like '%x' => { $regex: /x$/i }`
 
 ## between
 ```
@@ -170,9 +372,10 @@ $and: [ {"age": {$gt:20}}, {"age": {"$lt":60}} ]
 "age": {$gt:20, $lt:60}
 ```
 ## field operations
-$expr: {$lt: ["$num", "$age"]}
+`$expr: {$lt: ["$num", "$age"]}`
 
 ## computational filter
+```
 $expr: {
     $lt:[ {
       $cond: {
@@ -181,15 +384,16 @@ $expr: {
           else: { $divide: ["$price", 4] }
         }
     }, 5 ] }
-
+```
 
 ## array
-exact match: {arr: [1,2]}
-contains all: { arr: {$all: [1,2]} }
-contains any: {arr: { $elemMatch: {$gt: 3}}}
-match size of array: {arr: {$size: 2}}
+exact match: `{arr: [1,2]}`
+contains all: `{ arr: {$all: [1,2]} }`
+contains any: `{arr: { $elemMatch: {$gt: 3}}}`
+match size of array: `{arr: {$size: 2}}`
 
 ### get first
+```
 find({ arr: {$gte: 3} }, {"arr.$": 1 })
 
 // get first 2 elements of arr
@@ -198,6 +402,7 @@ find({arr: {$gte: 3}}, {arr: {$slice: 2}})
 find({arr: {$gte: 3}}, {arr: {$slice: -2}})
 // offset 1, take 2
 find({arr: {$gte: 3}}, {arr: {$slice: [1,2]}})
+```
 
 ## unwind
 expand array to rows
@@ -212,7 +417,7 @@ expand array to rows
 ```
 
 ## special
-$exists: whethere document has specific field
+`$exists`: whethere document has specific field
 
 
 
@@ -241,7 +446,7 @@ $bucket: {
         "count": {$sum: 1},
         "state": {$addToSet: "$state"}
     }
-    }
+  }
 }
 ```
 
@@ -376,38 +581,45 @@ random pick some documents
 
 # aggregate operators
 ## arithmetic
+```
 $abs, $add, $subtract, $multiply, $divide
 $avg, $ceil, $floor, $cmp, $exp
 $ln, $log, $log10
-
+```
 ## logic
+```
 $allElementsTrue, $anyElementTrue
 $cond, $switch
 $eq, $gt, $gte
 $truncate
-
+```
 ## string
+```
 $concat, $strcasecmp, $strLenBytes
 $substr, $substrBytes, $toLower, $toUpper
-
+```
 ## collection
+```
 $arrayElemAt, $arrayToObject
 $concatArrays
 $indexOfArray, $in
 $slice, $split, $size
-
+```
 ### group stage
+```
 $addToSet
 $first, $last
-
+```
 ## datetime
+```
 $dateFromParts, $dateToParts, $dateFromString, $dateToString
 $dayOf(Month|Week|Year), $hour
-
+```
 ## set
+```
 $setDifference, $setEquals, $setIntersection
 $setIsSubset, $setUnion
-
+```
 
 ## filter
 ```js
@@ -455,7 +667,7 @@ $switch: {
 ```
 
 ## zip
-$zip: {inputs: [[1,2,3],["a","b","c"]]} => [[1,"a"],[2,"b"],[3,"c"]]
+`$zip: {inputs: [[1,2,3],["a","b","c"]]} => [[1,"a"],[2,"b"],[3,"c"]]`
 
 
 
