@@ -237,7 +237,30 @@ db.ag_bet.aggregate([
 ]).toArray()
 ```
 
-## single field
+## single field field
+`db.records.createIndex({score: 1})`
+`db.records.createIndex({"location.state": 1})`
+
+for single field, sort order not matter, can traverse index in either direction
+
+## compound index
+cannot create index for hashed index type
+index sort order matters
+
+`db.events.createIndex({ "username":1, "date": -1})`
+can support {username:-1, date:1}, {username:1, date:-1}
+cannot support {username:1, date:1}, {username:-1, date:-1}
+
+
+`db.events.createIndex({ "username":1, "date": 1})`
+can support {username:1, date:1}, {username:-1, date:-1}
+cannot support {username:-1, date:1}, {username:1, date:-1}
+
+## multikey index
+create index key for each element in array
+`db.coll.createIndex({ <field>: 1/-1})`
+
+
 
 
 # optimization
