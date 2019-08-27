@@ -925,7 +925,157 @@ invokstatic: call static method
 invokespecial: call `<init>` method, private and parent class method
 invokevirtual: virtual method
 invokeinterface: call obj method that already implement this interface
-invokedynamic: 
+invokedynamic: runtime get method and run
+- non-virtual method: static method, private method, instance constructor, parent class method
+- other are virtual method except`final`
+
+### operand stack
+eg. iadd: get top most 2 ints, add them and put into stack
+optimization: partial shared local variable
+
+### dispatch (method overlaod resolution)
+#### static dispatch
+```java
+static abstract class Human {}
+static class Man extends Human {}
+static class Woman extends Human {}
+
+sayHello(Human guy) // 1
+sayHello(Man guy)   // 2
+sayHello(Woman guy) // 3
+
+Human man = new Man();
+Human woman = new Woman();
+
+sayHello(man)   // => 1
+sayHello(woman) // => 1
+```
+Human as Static Type(Apparent Type), Man as Actual Type
+- static type only change when use, variable type itself not changed
+- actual type result known at runtime
+
+```java
+// actual type change
+Human man = new Man();
+man = new Woman();
+
+// static type change
+sr.sayHello(Man man)
+sr.sayHello(Woman man)
+```
+
+#### dynamic dispatch
+override
+```java
+static abstract class Human {
+  abstract void sayHello();
+}
+static class Man extends Human {
+  @Override void sayHello(){
+    ...
+  }
+}
+static class Woamn extends Human {
+  @Override void sayHello(){
+    ...
+  }
+}
+
+Human man = new Man();
+Human man = new Woman();
+man.sayHello()
+woman.sayHello()
+```
+JVM use actual type to decide dispatch which method
+
+invokevirtual process:
+1. find actual type (C) of top most element
+2. check access right
+3. find along inheritance chain, find appropriate method
+
+
+#### single dispatch, multiple dispatch
+method receiver & param
+Java is static multiple dispatch, dynamic single dispatch
+
+### dispatch optimization
+not go through frequent dynamic dispatch searching
+use Virtual Method Table (vtable) in method area
+
+for `invokeinterface`, use Interface Method Table (itable)
+
+vtable store actual entry address of each method
+- if virtual method in subclass not overriden in subclass 
+- then same entry address as parent class
+
+## dynamic language support
+dynamic lang variable no type, only value has type
+
+MethodHandler VS Reflection
+1. both are simulating method invocation, but reflection is method level, 
+  - method handler is bytecode level 
+  - findStatic(): invokestatic, findVirtual(): invokevirtual & invokeinterface
+  - findSpecial(): invokespecial
+2. java.lang.reflect.Method contains more info than java.lang.invoke.MethodHandle
+3. MethodHandle can have more optimization
+4. MethodHandle designed for all lang in JVM, reflection just for Java
+
+### invokedynamic
+let user decide how to find target method 
+each location containing invokedynamic called Dynamic Call Site
+- CONSTANT_InvokeDynamic_info
+
+```java
+public class InvokeDynamicTest {
+  public static void main(String[] args) throws Exception {
+    INDY_BootstrapMethod().invokeExact("icyfenix");
+  }
+  public static void testMethod(String s){
+    System.out.println("hello string: "+s);
+  }
+  public static CallSite BootstrapMethod(MethodHandles.Lookup lookup, String name, 
+    MethodType mt) throws Throwable {
+      return new ConstantCallSite(lookup.findStatic(InvokeDynamicTest.class, name, mt));
+    }
+  private static MethodType MT_BootstrapMethod(){
+    return MethodType.fromMethodDescriptorString(
+      "(Ljava/lang/invoke/MethodHandles$Lookup;Ljava/lang/string;Ljava/lang/invoke/MethodType;"+
+      "Ljava/lang/invoke/CallSite;",null);
+  }
+  private static MethodHandler MH_BootstrpMethod() throws Throwable {
+    return lookup().findStatic(InvokeDynamicTest.class, "BootstrapMethod", MT_BootstrapMethod());
+  }
+
+  private static MethodHandler INDY_BootstrapMethod() throws Throwable {
+    CallSite cs = (CallSite) MH_BootstrapMethod().invokeWithArguments(lookup(), "testMethod",
+      MethodType.fromMethodDescriptorString("(Ljava/lang/String;)V", null);
+      return cs.dynamicInvoker();
+  }
+}
+```
+
+## JVM instruction
+JVM: stack based instruction set
+- portable
+- easier to implement
+- slower: need many pop and push operation, frequent memory access
+x86: register based instruction set
+- rely on hardware
+
+for 1+1,
+stack based
+```
+iconst_1
+iconst_1
+iadd
+istore_0
+```
+register based
+```
+mov eax, 1
+add eax, 1
+```
+
 
 
 
