@@ -1127,18 +1127,34 @@ jstat: JVM statistics monitoring tool, watch GC
 
 
 
+# early Compiler optimization
+compile: .java -> .class
 
+1. frontend compiler: javac, Eclipse JDT (ECJ)
+2. JIT compiler: Hotspot VM's C1,C2 
+3. AOT compiler: GCJ, Excelsior JET
 
+## compile process
+1. parse and enter symbol
+2. annotation processing
+3. analyse and generate bytecode
 
+## syntax, grammar analysis
+com.sun.tools.javac.parser.Scanner
+com.sun.tools.javac.parser.Parser
 
+## symbol table
+symbol address + symbol info
+- ordered table, tree table, stack table
+`com.sun.tools.javac.comp.Enter`
 
+## process annotation
+init: `initProcessAnnotations()`
+process: `processAnnotations()`
 
+com.sun.tools.javac.processing.JavacProcessingEnvironment
 
-
-
-
-
-
+## semantics analysis, generation
 
 
 
