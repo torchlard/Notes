@@ -260,6 +260,34 @@ cannot support {username:-1, date:1}, {username:1, date:-1}
 create index key for each element in array
 `db.coll.createIndex({ <field>: 1/-1})`
 
+- cannot create compound key of 2 arrays
+- if compound multiple key already exists, cannot insert doc violate restriction
+
+### multi key bound
+bound of index scan define portion of index to search during query
+`a:[[3,Infinity]], b: [[-Infinity, 6]] `
+if mongodb cannot compound 2 bounds, always constraint index scan by leading field (this case a)
+
+### WiredTiger
+if query specifies multiple predicates on indexed scalar field of compound multikey index
+- will intersect bounds for the field
+
+### MMAPv1
+cannot combine bounds for scalar field for compound multikey index
+
+## text index
+a collection can have at most 1 text index
+
+## hashed index
+maintain entries with hash value of indexed field
+support sharding using hashed shard keys
+- use hashed index of field as shard key 
+any single field support, collapse embedded docs; not support multi-key (ie. arrays) indexes
+
+## TTL index
+special single-field index use to auto remove docs from collection after certain time
+
+
 
 
 
