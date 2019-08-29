@@ -1158,6 +1158,83 @@ com.sun.tools.javac.processing.JavacProcessingEnvironment
 
 
 
+# late compiler optimization
+use Tiered Compilation
+layer 0: program interpreted, no profiling
+layer 1: C1, compile bytecode to native code, simple and reliable optimization
+layer 2: C2, compile to native, use aggressive and longer optimization
+
+## compile target
+hotspot code:
+1. method called many times
+2. loop block run many times
+
+determine hotspot
+1. sample based hotspot detection
+  - periodically check thread stack top
+  - simple, efficient
+  - hard to accurately measure popularity
+2. counter based hotspot detection
+  - counter for each method / code block, popular if > threshold
+  - more accurate
+
+hotspot use 2nd method
+
+### invocation ocunter
+default client 1500, server 10,000 times
+when method call, use compiled version if exist, if not then counter+1
+
+count called times within time interval
+if exceed certain time, half counter => counter decay
+`-XX: CompileThreshold`
+
+### back edge counter
+`-XX: BackEdgeThreshold`
+client threshold = CompileThreshold x OnStackReplacePercentage / 100
+server threshold = 
+  CompileThreshold x (OnStackReplacePercentage - InterpreterProfilePercentage)/100
+
+- no counter decay
+
+### memory allocation
+```
+header, klass
+
+constMethodOop, constants
+
+methodDate, interp_invocation_count
+
+access_flags, vtable_index
+
+result_index (C++ interpreter only)
+
+method_size|max_stack , max_locals|size_of_parameters
+
+intrinsic_id | flags | throwout_count
+
+num_breakpoints 
+
+invocation_counter, backedge_counter
+
+prev_time (tiered only)
+
+rate (tiered)
+
+code, i2i, adapter, from_compiled_entry, from_interpreted_entry
+
+native_function, signature_handler
+
+```
+
+## client compiler
+simple and fast 3 stage compiler, concern on local optimization
+
+1. platform independent high level intermediate representation (HIR)
+  - use static single assignment (SSA) represent code value
+
+
+
+
 
 
 
