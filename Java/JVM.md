@@ -1119,14 +1119,6 @@ tiered compilation
 class data sharing
 
 
-# JVM command
-jinfo: configuration info
-jmap: memory map
-jhat: java heap analysis tool
-jstat: JVM statistics monitoring tool, watch GC
-
-
-
 # early Compiler optimization
 compile: .java -> .class
 
@@ -1158,7 +1150,7 @@ com.sun.tools.javac.processing.JavacProcessingEnvironment
 
 
 
-# late compiler optimization
+# runtime (late) compiler optimization
 use Tiered Compilation
 layer 0: program interpreted, no profiling
 layer 1: C1, compile bytecode to native code, simple and reliable optimization
@@ -1180,7 +1172,7 @@ determine hotspot
 
 hotspot use 2nd method
 
-### invocation ocunter
+### invocation counter
 default client 1500, server 10,000 times
 when method call, use compiled version if exist, if not then counter+1
 
@@ -1223,7 +1215,6 @@ rate (tiered)
 code, i2i, adapter, from_compiled_entry, from_interpreted_entry
 
 native_function, signature_handler
-
 ```
 
 ## client compiler
@@ -1231,6 +1222,189 @@ simple and fast 3 stage compiler, concern on local optimization
 
 1. platform independent high level intermediate representation (HIR)
   - use static single assignment (SSA) represent code value
+
+2. LIR
+
+## diagnosis
+`javac Tmp2.java`
+`java -XX:+UnlockDiagnosticVMOptions -XX:+PrintCompilation -XX:+PrintInlining Tmp2 > output`
+
+trace compile stages data: `PrintCFGToFile`
+use hotspot client compiler visualizer (client) / Ideal Graph Visualizer (server) to analyze
+- intermediate code: Program Dependence Graph called Ideal
+- `PrintIdealGraphLevel=2`, `PrintIdealGraphFile=ideal.xml`
+
+## compile optimization
+VM design team almost put all optimization measures on JIT
+- other than `-O` option, no other bytecode level optimization
+
+types:
+- compiler tactics
+- profile-based technique
+- proof-based technique
+- flow-sensitive rewrites
+- language-specific technique
+- memory and placement transformation
+- loop transformation
+- global code shaping
+- control flow graph transformaiton
+
+### method inlining
+1. inlining
+```java
+static class B {
+  int value;
+  final int get(){ return value; }
+}
+public void foo(){
+  y = b.get(); ...
+  z = b.get();
+  sum = y+z;
+}
+
+// optimize to
+
+public void foo(){
+  y = b.value; ...
+  z = b.value;
+  sum = y+z;
+}
+```
+adv:
+- reduce method calling cost (build stack frame)
+- build good foundation for other optimization method
+
+2. redundant loads elimination
+```java
+public void foo(){
+  y = b.value; ...
+  z = y;
+  sum = y+z;
+}
+```
+3. copy propagation
+```java
+public void foo(){
+  y = b.value; ...
+  y = y;
+  sum = y+y;
+}
+```
+4. dead code elimination
+```java
+public void foo(){
+  y = b.value; ...
+  sum = y+y;
+}
+```
+
+cannot inline reason:
+- other than `invokespecial,constructor,parent,invokestatic`
+- remaining polymorphism happen in runtime
+- at compile time cannot determine which method to use without context
+
+
+### global common subexpression elimination
+int d = (c * b) * 12 + a + (a + b * c)
+=> E * 12 + a + (a + E)
+=> E * 13 + a * 2
+
+### array bounds checking elimination
+`foo[i]`: will auto check `i>=0` && `i<foo.length`
+can check in compile time
+- eg. foo[3]: compile time check 3 < foo.length
+
+implicit error handling
+```java
+if (foo != null){
+  return foo.value;
+} else {
+  throw new NullPointerException();
+}
+// optimize to
+try {
+  return foo.value;
+} catch(segment_fault){
+  uncommon_trap();
+}
+```
+no need to check foo is null
+- if foo is null, then need to convert to error handler and throw NullPointerException
+- switch from user mode to kernel mode, then back to user mode
+- slower than null checking
+
+if foo mostly non-null, can do this
+
+### Class hierarchy analysis
+solve virtual method inlining problem
+confirmif more than 1 implementation in loaded class
+- is certain class has (abstract?) subclass? 
+
+Guarded inlining:
+if query result only 1 method version => do inlining
+- is aggressive optimization, need back door
+
+Inline cache:
+- before method call, empty inline cache
+- after first call, record method receiver
+- if next time use same version of method, can inline continuously
+
+### Escape analysis
+analyse object dynamic scope
+- after obj defined in method, maybe ref by external method
+
+method escape: obj call by parameter to external method
+thread escape: other threads acceess to obj
+
+if we can proof object will not escape to other method/thread:
+- stack allocation
+  - allocate memory for obj on stack
+  - obj destroyed along with end of method, save GC
+- synchronization elimination
+  - no read write contention, can remove sync measures
+- scalar replacement
+  - scalar: primitive type, eg. int,long
+  - aggregate: can continue to break down, eg. object
+  - convert object member to primitive type 
+  - let obj stay on stack, cache in register
+
+since escape analysis time consuming, not sure if worth analysis
+- currently VM use simple algorithm
+- not mature
+
+## Java VS C++ compiler
+Java disadv
+1. JIT limited optimization
+2. dynamic type safe language, need frequent checking (boundary, null pointer...)
+3. frequent virtual method call
+4. dynamic load new class, hard for global optimization => cannot see global program
+5. GC
+
+Java adv
+1. easier alias analysis, if class A and B no inheritance relation, objA & objB cannot be same
+2. runtime profiler: call frequency prediction ...
+
+
+
+# JVM command
+jinfo: configuration info
+jmap: memory map
+jhat: java heap analysis tool
+jstat: JVM statistics monitoring tool, watch GC
+
+
+# Hotspot VM options
+memory management
+JIT
+class loader
+multi-threading
+performance
+debug
+
+
+
+
+
 
 
 
