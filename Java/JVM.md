@@ -9,7 +9,6 @@ Zing VM
 # class file
 independent of hardware & language
 each .class file -> unique class / interface definition
-claaLoader generate class and interface
 
 ## .class struture
 format: 8 byte as unit, binary file
@@ -185,13 +184,14 @@ to get generic type using reflection
   - save many padding and separator, high transfer rate
 
 ## principle
+```
 do {
   PC += 1
   by PC get opcode from bytecode stream
   if(operand in bytecode) get opcode
   execute operation defined by opcode
 } while(bytecode length > 0)
-
+```
 ## data structure
 since most opcode not support byte,char,short,boolean
 - need convert to int at runtime/compile time
@@ -895,7 +895,7 @@ reduce fragmented memory space
 
 
 
-# JVM bytecode exeecution
+# JVM bytecode execution
 ## stack frame
 data structure for VM to call and execute method 
 - element at VM stack
@@ -1191,29 +1191,17 @@ server threshold =
 ### memory allocation
 ```
 header, klass
-
 constMethodOop, constants
-
 methodDate, interp_invocation_count
-
 access_flags, vtable_index
-
 result_index (C++ interpreter only)
-
 method_size|max_stack , max_locals|size_of_parameters
-
 intrinsic_id | flags | throwout_count
-
 num_breakpoints 
-
 invocation_counter, backedge_counter
-
 prev_time (tiered only)
-
 rate (tiered)
-
 code, i2i, adapter, from_compiled_entry, from_interpreted_entry
-
 native_function, signature_handler
 ```
 
@@ -1222,8 +1210,13 @@ simple and fast 3 stage compiler, concern on local optimization
 
 1. platform independent high level intermediate representation (HIR)
   - use static single assignment (SSA) represent code value
-
 2. LIR
+
+## architecture
+frontend:
+bytecode -> (method inline, const...) -> HIR -> (null checking,range...) -> optimized HIR -> HIR to LIR 
+
+backend: LIR -> (register allocate, machine code generation) -> native code
 
 ## diagnosis
 `javac Tmp2.java`

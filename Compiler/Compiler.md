@@ -507,11 +507,11 @@ function map to FunEntry -> formals(type of formal params), result(type of resul
 struct expty transVar(S_table venv, S_table tenv, A_var v);
 struct expty transExp(S_table venv, S_table tenv, A_exp a);
 ```
-type-checker: recursive funciton of AST (transExp)
+type-checker: recursive function of AST (transExp)
 all types returned from transExp should be "actual" type
 every kind of expression has own type-checking rules
 
-## type declaraiton
+## type declaration
 transExp mark current state of environment by calling `beginScope()`
 call `transDec` to augment environments (venv, tenv) with new declarations
 revert to environemnt original state: `endScope()`
@@ -538,8 +538,8 @@ normally local variables destroyed when fn returns
 - use stack to hold
 
 ## higher order functions
-lang that support nested funciton and function-valued variables 
--> need to keep local variables after funciton returned
+lang that support nested function and function-valued variables 
+-> need to keep local variables after function returned
 -> cannot use stack
 
 ## stack frames
@@ -578,7 +578,7 @@ to make compiled program run fast, useful to keep
 - local variables, intermediate results of expression, other values in registers
 - instead of in stack frame
 
-funciton f using register r to hold local variable and call procedure g
+function f using register r to hold local variable and call procedure g
 - r: caller-save register if caller save,restore it
 - r: callee-save regsiter if callee responsible for it
 eg. in MIPS, register 16-23 callee-save; others caller-save
@@ -746,6 +746,7 @@ manipulation of MEM should all done in Translate module, not in Semant
 
 Frame holds all machine-dependent definitoins 
 add to frame-pointer register FP
+
 
 
 
