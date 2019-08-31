@@ -740,11 +740,141 @@ stm s1 = seq(cjump(gt, a, b, NULL_t, z),
 ```
 target:  fill NULL_t, NULL_f with destinations
 
+patchList: list of places to fill in label
+```
+typedef struct patchList_ *patchList;
+struct patchList_ {Temp_label *head; patchList tail;};
+static patchList PatchList(Temp_label *head, patchList tail);
+
+// a>b|c<d 
+// list of where all NULLs filled with t
+patchList trues = PatchList(&s1->u.SEQ.left->u.CJUMP.true,
+                    PatchList(&s1->u.SEQ.right->u.SEQ.right->
+                                u.CJUMP.true, NULL));
+
+// list of where all NULLs filled with f
+patchList falses = PatchList(&s1->u.SEQ.right->u.SEQ.right->
+                              u.CJUMP.false, NULL);
+Tr_exp e1 = Tr_Cx(trues, falses, s1);
+```
+
 Tr_exp is abstract data type, Ex/Nx constructors visible only within Translate
 manipulation of MEM should all done in Translate module, not in Semant
 
 Frame holds all machine-dependent definitoins 
 add to frame-pointer register FP
+
+## arithmetic
+`Absyn` op -> `Tree` op
+no unary arithmetic op
+unary negation = 0 - x
+unary complement = n XOR 1s
+
+unary floating-point negation ≢ 0-n
+- allow negative 0, negation = positive 0
+- -0 < 0
+=> add new op for floating negation
+
+## conditionals
+`Cx` expression
+statement `s` jump to any true & false destination
+
+trues = {t}
+falses = {f}
+stm = CJUMP(LT, x, CONST(5), _ , _)
+
+translated into if-expression
+if e1 then e2 else e3
+=> e1: Cx, e2,e3: Ex
+
+## strings
+const address of segment of memory initialized to proper characters
+- definition of label -> assembly-lang pseudo-instruction -> init block of memory for chars ...
+
+## array variables
+`Translate` function to handle array subscripts, 1 for record fields, 1 foreach kind of expression
+
+array variable behave like pointers
+- no named array constsas in C
+
+blur syntactic distinction between pointers and objects
+
+## structured L-values
+l-value: expression can occur on left of `=`
+r-value: expr on right of `=`
+
+scalar: integer, pointer value, can fit in a register
+
+to implement record in C
+- need info of variable size
+
+`T_exp T_Mem(T_exp, int size)`
+eg. MEM(+(TEMP fp, CONST kₙ), S)
+- S = size of obj to be fetched/stored
+
+### subscription and field selection
+subscript array: calc address of i-th element of a: (i-l)*s + a
+l = lower bound of index range
+s = size (bytes) of each array element
+a = base address of array elements
+
+l-value should be represented as an address
+convert l-value to r-value: fetch from that address
+assign to l-value: store to that address
+MEM: menas store,fetch
+
+## simple variable
+type environment `tenv`
+value environment `venv`
+`exp` holds intermediate representation translation of each Tiger expr
+
+`Tr_exp` = abstract data type, `Ex`,`Nx` visible only within `Translate`
+`Semant` not contain any direct ref to `Tree` or `Frame`
+- all IR tree manipulatioin in `Translate`
+
+## record and array creation
+a[f1,f2 ... fn]
+- creates n-element record initialized to value of expression ei
+
+## while loop
+if break occurs within body, translation is JUMP to `done`
+
+## for loop
+rewrite abstract syntax into abstract syntax of let/while expression shown
+- then call `transExp` on result
+- put test at bottom of loop
+
+## function call
+static link must be added as an implicit extra argument
+
+`call(name lf, [sl,e1 ... en])`
+lf = label for f
+sl = static link
+
+## declarations
+for each var declaration in declaration, additional space reserved in current level's frame
+- foreach declaration, new 'fragment' of Tree code kept for function's body
+
+### function definition
+prologue: 
+1. pseudo-instruction: declare begin fn
+2. label def for function name
+3. instruction to adjust stack pointer
+4. instruction to save escaping args (eg. static link)
+5. store instructions to save callee-save registers (eg. return address register)
+
+function body
+
+epilogure:
+1. instruction move return value to register
+2. load instruciton to restore callee-save registers
+3. instruction reset stack pointer
+4. return instruction (JUMP to return addr)
+5. pseudo-instruction announce end of fn
+
+
+
+
 
 
 
