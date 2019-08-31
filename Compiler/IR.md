@@ -162,6 +162,30 @@ LLVM (low level virtual machine) is linear three-address code
 - explicit support for array and structure addresses
 
 
+## linear code -> control flow graph
+compiler often must convert between different styles of IRs
+
+if linear IR contains has labels not used as branch targets, 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
