@@ -592,12 +592,12 @@ if f has local variable i needed before and after several fn calls
 
 ## parameter passing
 in past very few functions have > 4 arguments, none > 6
-- convention specify first k arguments (k=4/6) of function passed in registers r_p,...r_p+k-1
+- convention specify first k arguments (k=4/6) of function passed in registers rₚ...rₚ₊ₖ₋₁
 - rest of args passed in memory
 
 use of register save time (overcome memory traffic)
 1. some procedure don't call other procedures (leaf procedure)
-  - procedure either call nothing / call >= 2 otehrs
+  - procedure either call nothing / call >= 2 others
 2. some optimizing compiler use interprocedural register allocation
   - assign different procedures different registers
   - receive params, hold local vars
@@ -726,7 +726,7 @@ seq(s1,s2): statement s1, then s2
 label(n): const value of name n to be current machine code addr
 
 
-## translation
+## translate into trees
 1. kind of expressioin
 ```
 example: a > b | c < d 
@@ -736,10 +736,9 @@ stm s1 = seq(cjump(gt, a, b, NULL_t, z),
             seq(label(z),
               cjump(lt, c, d, NULL_t, NULL_f)
           ));
-==>
 
 ```
-target: to fill NULL_t, NULL_f with destinations
+target:  fill NULL_t, NULL_f with destinations
 
 Tr_exp is abstract data type, Ex/Nx constructors visible only within Translate
 manipulation of MEM should all done in Translate module, not in Semant
