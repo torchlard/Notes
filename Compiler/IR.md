@@ -165,7 +165,54 @@ LLVM (low level virtual machine) is linear three-address code
 ## linear code -> control flow graph
 compiler often must convert between different styles of IRs
 
-if linear IR contains has labels not used as branch targets, 
+algorithm should track which labels are jump targets
+- if code contains ambiguous jumps, must treat labelled statements as leaders
+
+ambiguous jump may force compiler to introduce edge
+leader = initial operation of block
+
+if ambiguous jump => treat all labelled statements as leaders
+some lang allow jumps to labels outside current procedure
+- branch target can be modelled with new CFG node
+- must know target label is target of nonlocal brance
+
+## mapping values to names
+### naming temporary values
+source code:
+a <- b+c
+b <- a-d
+c <- b + c
+d <- a - d
+
+source names:
+t1 <- b
+t2 <- c
+t3 <- t1 + t2
+a <- t3
+t4 <- d
+t1 <- t3 - t4
+b <- t1
+
+value names:
+t1 <- b
+t2 <- c
+t3 <- t1 + t2
+a <- t3
+t4 <- d
+t5 <- t3 - t4
+b <- t5
+
+use of b in first and third statement has distinct values
+reuse of name b conveys no information
+
+### static single assignment form (SSA)
+encode information about flow of control and flow of data values
+- names <-> specific definition points in code
+
+program in SSA
+1. each definition has distinct name
+2. each use refer to single definition
+
 
 
 
