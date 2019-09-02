@@ -268,6 +268,61 @@ monitorenter, monitorexit
 
 
 
+# Class Loader
+byte[] --> Class
+from *.class in disk/jar
+can encrypt/decrypt bytes with classLoader
+
+each Class has classLoader to identify loaded from which ClassLoader
+- like container, contains class object
+
+```java
+class class<T>{
+  private final ClassLoader classLoader;
+  ...
+}
+```
+JVM load classes on demand
+after loading save Class object in ClassLoader, don't need to reload
+
+JVM instance has many classLoaders , different classLoader load bytes from different files/network location
+
+## BootstrapClassLoader
+load JVM core runtime, in JAVA_HOME/lib/rt.jar
+include java.util.*, java.io.*
+implemented by C => root loader
+
+## ExtensionClassLoader
+load JVM extension class, eg. swing, js engine, xml parser
+(javax) JAVA_HOME/lib/ext/*.jar
+
+## AppClassLoader
+target user, extends URLClassLoader
+`main` method
+
+find unknown class,, delegate task to parent first
+if parent cannot handle, then handle itself
+- AppClassLoader: (if handle, search classpath)
+- ExtensionClassLoaer: (search ext)
+- BootstrapClassLoader
+
+## methods
+loadClass(): load target class's entry
+findClass(): let subclass find class
+defineClass(): byte --> class
+
+even class name the smae, if loaded from different ClassLoader, then not same Class
+ClassLoader like namespace of Class, can separate class (sandbox)
+unique class name in same ClassLoader
+
+## Thread's contextClassLoader
+show what class loader is using
+
+`Thread.currentThread().getContextClassLaoder().loadClass(name)`
+can use to share class across thread, by sharing contextClassLoader
+share same contextClassLoader in same thread pool, avoid class loading conflict
+
+
 # class loader
 1. 'class' can be class/interface
 2. 'class file' is byestream exist in any form (not limited to file)
