@@ -181,7 +181,6 @@ loop@ for (i in 1..10){
   }
 }
 
-
 listOf(1,2,3,4,5).forEach lit@{
   if(it == 3) return@lit  // skip when it==3, can also use @forEach
   print(it)
@@ -189,8 +188,129 @@ listOf(1,2,3,4,5).forEach lit@{
 ```
 
 # class
-## cosntructor
+## constructor
 priamry constructor in class (..), many secondary constructor
+`init` block for constructor init code
+
+## data class
+- primary constructor at least 1 param, param must mark as var/val
+- data class cannot be abstract,open,sealed,inner
+
+## sealed class
+restricted class hierarchy, 
+a value can have 1 type from a limited set, cannot have any other type
+- extension of enum class
+
+## extensions
+extend class with new functionality without inheritance or design pattern like Decorator
+extension functions are dispatched statically
+- not virtual by receiver type
+- method call determined by type of expression, not by result type of evaluating expr at runtime
+- if both member function and extension same signature, member always win
+
+
+
+# generic
+## in Java
+use-site variance
+generic types are invariant => List<String> is not subtype of List<Object>
+`? extends E` method accept collection of object E or subtype of E
+- can safely read E, but cannot write to it (Don't know what subtype)
+- wildcard with upper bound makes type covariant
+
+for max flexibility, use wildcard types on input param that represent producers/consumers
+
+```java
+interface Soruce<T> { T nextT(); }
+
+void demo(Source<String> strs){
+  Source<Object> objs = strs; // NOT allowed in Java
+}
+```
+## in kotlin
+declaration-site variance
+annotate type param T, it only returned from member of Source<T>, never consumed
+```kt
+interface Source<out T>{ fun nextT(): T }
+
+fun demo(strs: Source<String>){
+  val objects: Source<Any> = strs
+}
+```
+class Source is covariant in parameter T, T is covariant type param
+class Source being producer of T's, not consumer
+`out`: variance annotation; only produce never consume
+`in`: contravariance annotation; only consume never produce
+
+## kotlin use-site variance
+type projection: `from` is restricted(projected) type
+correspond to `Array<? extends Object>`, only get()
+
+```kt
+fun ccpy(from: Array<out Any>, to: Array<Any>){
+  assert(from.size == to.size)
+  for(i in from.indices)
+    to[i] = from[i]
+}
+```
+
+## star projection
+situation: know nothing about type argument, still want to use in safe way
+
+`Foo<out T: TUpper>` T is covariant type param
+`Foo<*>` == `Foo<out TUpper>` T is unknown, can safely read value of TUpper from `Foo<*>`
+
+`Foo<in T>` T is contravariant type param
+`Foo<*>` == `Foo<in Nothing>`
+
+`Foo<T : TUpper>` T is invariant param with upper bound TUpper
+`Foo<*>` == `Foo<out TUpper>` for reading value, `Foo<in Nothing>` for writing values
+
+star-project like safe version of Java's raw type
+
+## generic function
+fun <T> T.basicToString(): String
+
+
+
+# field
+## Backing field
+fields cannot be declared directly in kotlin class
+can be referenced in accessors using `field` identifier
+cannot ref to itself, since circular dependency on field itself
+
+```kt
+class Klass {
+  var a : Int = 0
+    get() = field+3
+    set(value) { field = value -1 }
+}
+```
+
+## compile time const
+const val SUBSTS: String = "This subsystem is deprecated"
+
+## late initialized properties
+lateinit var subject: TestSubject
+
+## null receiver
+extention can be defined with nullable receiver type
+- can check `this == null` inside body
+
+
+
+# visibility modifier
+private: only this class
+protected: this class + subclass
+internal: this module
+public: all (default)
+
+## modules
+set of kotlin files compiled together
+- intellij module
+- maven project
+- gradle source set
+- set of files compiled with 1 invocation of `<kotlinc>` ant task
 
 
 
