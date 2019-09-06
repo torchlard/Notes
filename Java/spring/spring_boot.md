@@ -157,7 +157,11 @@ if not using maven/gradle, can use cli
 
 
 # command
+## gradle
 gradle bootRun
+
+## maven
+mvn clean install
 mvn spring-boot:run
 
 

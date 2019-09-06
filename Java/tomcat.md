@@ -23,7 +23,7 @@ getServletInfo()
 2. for each request, create 1 Request, 1 Response
 3. pass Request, Response object as parameter
 4. If request static resource, then call StaticResourceProcessor's process()
-5. if req servlet, call service()
+5. if require servlet, call service()
 6. destroy() only when all service() finished OR server closed
 
 
@@ -40,10 +40,12 @@ receive dispatch, run servlet service
 
 # Demo
 ## servlet processor
-URLClassLoader: url array, point to locaiton of servlet classes
+URLClassLoader: url array, point to location of servlet classes
 - end with "/" => directory
 - else => jar
 repository: location to check servlet class
+
+
 # Connector
 connector just input param that servlet needs, to save time
 - use SocketInputStream to read byte stream
