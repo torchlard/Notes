@@ -196,6 +196,30 @@ priamry constructor in class (..), many secondary constructor
 - primary constructor at least 1 param, param must mark as var/val
 - data class cannot be abstract,open,sealed,inner
 
+public boolean JDBC.AgGameType.equals(java.lang.Object)
+public java.lang.String JDBC.AgGameType.toString()
+public int JDBC.AgGameType.hashCode()
+public final java.lang.String JDBC.AgGameType.component1()
+public final java.lang.String JDBC.AgGameType.component2()
+public final java.lang.String JDBC.AgGameType.component3()
+
+public final java.lang.String JDBC.AgGameType.getName()
+public final void JDBC.AgGameType.setName(java.lang.String)
+public final java.lang.String JDBC.AgGameType.getPlatformType()
+public final void JDBC.AgGameType.setPlatformType(java.lang.String)
+public final java.lang.String JDBC.AgGameType.getCode()
+public final void JDBC.AgGameType.setCode(java.lang.String)
+
+public final JDBC.AgGameType JDBC.AgGameType.copy(java.lang.String,java.lang.String,java.lang.String)
+public static JDBC.AgGameType JDBC.AgGameType.copy$default(
+  JDBC.AgGameType,java.lang.String,java.lang.String,java.lang.String,int,java.lang.Object)
+
+public JDBC.AgGameType()
+public JDBC.AgGameType(java.lang.String, java.lang.String, java.lang.String)
+public JDBC.AgGameType(java.lang.String,java.lang.String,java.lang.String,int,
+  kotlin.jvm.internal.DefaultConstructorMarker)
+
+
 ## sealed class
 restricted class hierarchy, 
 a value can have 1 type from a limited set, cannot have any other type
@@ -314,7 +338,7 @@ set of kotlin files compiled together
 
 
 
-# syntax
+# others
 ## collection
 Array<T> is mutable, but List<T> is immutable
 
@@ -347,16 +371,41 @@ with(myTurtle){
 }
 ```
 
+# kotlin standard library
+living essentials with kotlin
+- higher-order functions (llet,apply,use,synchronized...)
+- extension function providing querying operations for collections(eager), sequences(lazy)
+- utilities for string and char sequences
+- extension on JDK class for files,IO,threading
+
+## libary names
+kotlin, xx.annotation, collections, comparisons
+concurrent, contracts (experimental DSL for custom function contracts)
+coroutines, experimental (API subject to future change)
+io, js, jvm, math, native.concurrent, 
+properties (delegates for delegated properties, helper fn or custom delegates)
+random, ranges, reflect, sequences, streams, system, text, time
 
 
+# Exception
+## Checked Exception
+kotlin don't have checked exception
+reason: 
+- don't ignore exception
+- large software project with checked exception decrease productivity, no improve code quality
 
+## Exception Class
+all exception class are descendants of `Throwable`
+to catch an exception, use
+```
+try { ... }
+catch(e: Exception) {...}
+finally {...}
+```
+## Nothing type
+`throw` is an expression in Kotlin
 
-
-
-
-# break main
-in main, you can exit funciton anywhere by adding return
-
+`val s = person.name ?: throw IllegalArgumentException("Name required")`
 
 
 
