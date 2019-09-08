@@ -105,8 +105,15 @@ setDataSource, query, update
 param, dateParam, transaction
 
 ## XML tag
-## JSTL function
+- create and modify XML document's tag
+out, parse, set
+if, forEach, choose, when, otherwise
+transform, param
 
+## JSTL function
+contains, containsIgnoreCase, endsWith
+indexOf, join, length, replace, split
+substring, toLowerCase, toUpperCase, trim
 
 
 
