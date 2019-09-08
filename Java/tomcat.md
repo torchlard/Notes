@@ -1,3 +1,40 @@
+# introduction
+## directories, files
+/bin: startup,shutdown and other scripts
+/conf: config files, related DTD, server.xml
+/logs: log files
+/webapps: where your webapps go
+
+CATALINA_BASE: root at runtime config of specific Tomcat instance
+
+## building
+Tomcat create necessary directories automaticaaly if missing
+- don't need create all recommended directories
+- manual create directory tree used by CATALINA_BASE
+
+`lib/` further resources to be added on classpath
+`logs/` 
+`webapps/` automatically loaded web applications
+`work/` tmp working directories for deployed web applications
+`temp/` use by JVM for tmp files
+
+copy all config files from `CATALINA_HOME/conf` to `CATALINA_BASE/conf` 
+- at least have conf/server.xml, conf/web.xml
+
+## unix daemon
+run as daemon using jsvc
+source tarball for jsvc included with Tomcat libraries, need compile
+
+# standard directory layout
+com.mycompany.MyServlet => /WEB-INF/classes/com/mycompany/MyServlet.class
+all classes in WEB-INF/classes and WEB-INF/lib made visible to other classes
+
+## tomcat context descriptor
+META-INF/context.xml used to define Tomcat specific config options
+- eg. access log, data sources, session manager ...
+
+
+
 # HTTP Request
 header1 \r\n
 header2 \r\n
