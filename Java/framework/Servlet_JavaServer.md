@@ -57,6 +57,28 @@ extra control: `tomcat_dir/conf/server.xml`
 5. access JSP page and servlet
 
 
+# HttpServletRequest
+every time client request page, JSP create new obj to handle it
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
