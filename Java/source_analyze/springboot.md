@@ -25,16 +25,22 @@ run
         default: StandardEnvironment
   configureIgnoreBeanInfo
   printBanner
+    print
+      PrintBanner(banner, sourceClass)
+        Banner: {OFF,CONSOLE,LOG}
+    - print to logger/stdout
+  createApplicationContext
+    SERVLET: 
+      org.springframework.context.annotation.AnnotationConfigApplicationContext
+    reactive: 
+      org.springframework.boot.web.servlet.context.AnnotationConfigServletWebServerApplicationContext
+    default: 
+      org.springframework.boot.web.reactive.context.AnnotationConfigReactiveWebServerApplicationContext
+    BeanUtils.instantiateClass(contextClass)
 
-
-
-
-
-
-
-
-
-
+  getSpringFactoriesInstances
+  prepareContext
+    
 
 
 
