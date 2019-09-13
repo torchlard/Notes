@@ -40,6 +40,26 @@ run
 
   getSpringFactoriesInstances
   prepareContext
+    postProcessApplicationContext
+      registerSingleton
+        - org.springframework.context.annotation.internalAutowiredAnnotationProcessor
+        setConversionService
+      applyInitializers
+        resolveTypeArgument, initialize
+    listeners.contextPrepared
+    registerSingleton
+      - springApplicationArguments / springBootBanner
+    addBeanFactoryPostProcessor(LazyInitialiationBeanFactoryPostProcessor())
+      
+  
+  
+  
+  
+  
+  
+  
+  
+  
     
 
 
