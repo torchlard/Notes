@@ -1,5 +1,11 @@
 # MVC
+![](img/mvc_mvp_mvvm.png)
+
 Model-View-Controller
+
+model invariant
+model not rely on view, view rely on model
+
 ## Model
 data, state, logic
 ## View
@@ -9,22 +15,63 @@ glue model and view together, control two
 decide how to interact with model 
   -> new logic result
   -> reflect change in view
+
+## process
+when user trigger action
+-> controller update model and inform view to update
+-> view request data from model
+
 ## Problem
 - Controller highly coupled with View, if View changed also need modify Controller
 - Controller difficult to do unit test
 - too many code put into Controller
 
+## conclusion
+MVc all action associated with a controller method calling
+every action is action to certain URK
+
+input (eg. mouse click) directed to controller first, then controller kick off some functionality
+controlelr may render many different views based on operation being executed
+controller decide how to response
+
+MOST IMPORTANT: controller
+
+
 # MVP
 Model-View-Presenter
-## Model
+
+## components
+### Model
 data, state, logic
-## View
-see Activity, Fragment as part of View
+### View
+should only have simple get/set method
+in android, eg. see Activity, Fragment as part of View
 implement View Interface, for Presenter <--Interface--> View
-## Presenter
+
+### Presenter
 glue two together, but not bound to View
+
+## adv
+1. modify view not affect model
+2. all interaction within Presenter
+3. 1 presenter apply to multiple view
+4. unit test only on interface
+
 ## Problem
 still Presenter will grow very large
+
+## Passive view
+view is passive, not change any of its state; all states changed by presenter
+
+## supervising controller
+turn to implicit data sync
+View has simple view and model state
+- supervisor try to declare state/data in View
+
+## conclusion
+in MVP, view must dispatch event to presenter, if not event cannot be responsed
+
+MOST IMPORTANT: view
 
 
 # MVVM
@@ -38,45 +85,39 @@ view as Observable variables, bidirectional interaction with ViewModel
 Data binding leviate work for interaction
 only pack Model and Observable Data to View
 
+## properties
+view hold ref to view-model, view no idea about model
+view-model not aware of view
+
+many views to 1 view-model
+
+
+# Important point
+presentation / ViewModel abstract View, extract state and behavior away from view
+
+
+
+
 ## iOS
 in iOS, to implement MVVM, use
 1. KVO pattern 
 2. RxSwift/ ReactiveCocoa
 3. make it yourself
 
-# SOLID
-in OOP, SOLID is combination of 5 design principle -> more flexible, understandable, maintainable
-## Single responsibility principle
-class only have 1 responsibility == 1 reason that cause change
-## Open/closed principle
-software entity open for extension, closed for modification
-## Liskov substitution principle
-object are replaceable with instances of subtypes without altering correctness of that program
-## Interface segregation principle
-client-specific interface better than 1 general-purpose interface
-## Dependency inversion principle
-depend upon abstractions, not concretions
 
 
-# RxJava
-## components
-1. represent data source
-2. listen to data source
-3. modify and combine data
 
-## motivation
-in android environment, async is everywhere, from Activity, fragment to network request
-very tedious if written in nested callback in Java
-## theory
-when start listening to data source, it will start/stop certain operation
-operations can be sync/async
-response only two outcome: success/fail
-implement traditional Observer pattern
 
-we should write code between model and async data source, as state arbiter
 
-## code
-Flowable, Observable -> can produce same kind of data, 0-n data/null
+
+
+
+
+
+
+
+
+
 
 
 
