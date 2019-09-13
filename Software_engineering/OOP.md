@@ -12,22 +12,27 @@ client-specific interface better than 1 general-purpose interface
 depend upon abstractions, not concretions
 
 
-# RxJava
-## components
-1. represent data source
-2. listen to data source
-3. modify and combine data
+# Inversion of control (IoC)
+## dependency injection
+Inversion of Control = methodology
+Dependency injetion = implementation of IoC
 
-## motivation
-in android environment, async is everywhere, from Activity, fragment to network request
-very tedious if written in nested callback in Java
-## theory
-when start listening to data source, it will start/stop certain operation
-operations can be sync/async
-response only two outcome: success/fail
-implement traditional Observer pattern
+convention:
+1. caller create object instances
+2. caller run instance methods by object
 
-we should write code between model and async data source, as state arbiter
+DI:
+1. other component create object instances
+2. caller run those instances directly
 
-## code
-Flowable, Observable -> can produce same kind of data, 0-n data/null
+target: loose coupling
+
+## service locator
+another implementation of IoC
+
+
+
+
+
+
+
