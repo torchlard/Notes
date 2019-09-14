@@ -60,13 +60,37 @@ extra control: `tomcat_dir/conf/server.xml`
 # HttpServletRequest
 every time client request page, JSP create new obj to handle it
 
+# Filter
+authentication
+data compression
+encryption
+filters that trigger resource access events
+image conversion filters
+logging and auditing filters
+mime-type chain filters
+tokenizing filters
+XSL/T filters 
+
+# Logging
+tomcat has own implementation of several key elements java.util.logging
 
 
+# session
+a way to identify user across more than 1 page request / visit to website
+- store info about user
 
+HttpSession interface
+- can view and manipulate information about session
+- bind objects to session, allow user info persist across multiple user connection
 
+id: unique identifier for the session
+lastAccessTime: last time client sent reqeust with session 
 
-
-
+# implicit object
+## application
+application object, when web server starts, auto create it
+- exist until web server close
+- singleton, shared
 
 
 
