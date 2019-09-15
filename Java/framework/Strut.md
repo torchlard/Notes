@@ -39,6 +39,39 @@ Hibernates
 myBatis
 
 
+# Action class
+as controller in MVC
+respond to user action, execute business logic, return result tell Struts what view to render
+
+ActionSupport: default implementation for most common actions (eg. execute, input)
+```jsp
+<s:form action="hello">
+  <s:textfield name="username" label="Your name"/>
+  <s:submit value="Submit"/>
+</s:form>  
+```
+when user click submit, execute hello.action, form field value posted to action class
+
+# Struts tag
+framework provide tag library decoupled from view technology
+most tag supported in all template languages (eg. JSP tag, velocity, Freemarker tag)
+
+## generic tags
+control tag, eg. if,else,iterator
+data tag, eg. bean, push, i18n
+
+## UI tag
+template: bit of code written in FreeMarker that can be rendered by certain tags
+theme: collection of templates packaged together to provide common functionality
+
+form tag, eg.form,textfield,select
+non-form tag, eg. a, div, tabbedPanel
+
+
+
+
+
+
 
 
 
