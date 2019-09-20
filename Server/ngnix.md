@@ -34,7 +34,7 @@ use linked list free_connnections keep all idle ngx_connection_t
 - each time get connection, get one from linked list
 
 # main components
-## Ngnix
+## Nginx
 binary executable, execute file from modules
 ## Nginx.conf
 config file
@@ -103,6 +103,7 @@ process output content, eg. modify images, add footbar
 
 ### upstream
 reverse proxy, redirect request
+- to include machines's network path that can do load balance
 
 ### load-balancer
 implement specific algorithm, choose one among all servers
@@ -167,6 +168,9 @@ server {
 }
 ```
 if nginx found that localhost:8081 is not accessible, will only direct to localhost:8080
+
+
+
 
 ## url_hash
 ```
@@ -251,7 +255,7 @@ in content phase, dispatch request to an appropriate content handler
 if specified content handler, run 
 eg. perl, flv, proxy_pass, mp4 ...
 
-#
+
 ## location
 ==if no content handler, then try==
 
@@ -276,6 +280,69 @@ after content generation phase, send to filter module
 2. XSLT filtering
 3. image scaling
 4. gzip compression
+
+
+# settings
+## proxy_pass
+for http://192.168.1.1/proxy/test.html
+
+http://127.0.0.1/test.html
+```
+location /proxy/ {
+  proxy_pass http://127.0.0.1/;
+}
+```
+http://127.0.0.1/proxy/test.html
+```
+location /proxy/ {
+  proxy_pass http://127.0.0.1;
+}
+```
+
+http://127.0.0.1/aaa/test.html
+```
+location /proxy/ {
+  proxy_pass http://127.0.0.1/aaa/;
+}
+```
+http://127.0.0.1/aaatest.html
+```
+location /proxy/ {
+  proxy_pass http://127.0.0.1/aaa;
+}
+```
+## sendfile
+sendfile = system call after linux 2.0
+more performance than read,write 
+
+## root VS alias
+[root]
+root path
+default: root html
+config: http, server, location, if
+root => root + location
+
+[alias]
+alias path
+config: location
+alias => replace location with alias 
+
+alias = directory definition
+root = root directory definition
+
+request `/t/a.html`, return `/www/root/html/t/a.html`
+```
+location ^~ /t/ {
+  root /www/root/html/;
+}
+```
+
+request `/t/a.html`, return `/www/root/html/new_t/a.html`
+```
+location ^~ /t/ {
+  alias /www/root/html/new_t/;
+}
+```
 
 
 # command scope

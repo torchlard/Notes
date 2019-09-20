@@ -25,6 +25,8 @@ coroutine ~ micro-thread
 
 coroutine switching controlled by programmer
 
+
+
 # IO models comparison
 |                  | BIO  | pseudo async IO | NIO             | AIO   |
 |------------------|------|-----------------|-----------------|-------|

@@ -13,6 +13,18 @@ depend upon abstractions, not concretions
 
 
 # Inversion of control (IoC)
+trials
+1. new instance
+2. factory pattern decouple component and service implementation, declaration
+
+## problem
+1. direct ref cause dependency, need recompile
+2. component rely on may not be complleted since parallel development
+3. hard unit test, need run all config
+4. need copies of service instance, distribute across system
+5. init param different
+6. init process use lot of resource
+
 ## dependency injection
 Inversion of Control = methodology
 Dependency injetion = implementation of IoC
@@ -29,6 +41,11 @@ target: loose coupling
 
 ## service locator
 another implementation of IoC
+
+1. service provider bind interface and implementation
+2. register service instance to service container
+3. dependency injection / service interface / alias to get instance
+4. call instance method
 
 
 
