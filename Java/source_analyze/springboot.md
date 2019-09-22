@@ -8,27 +8,30 @@ SpringApplication
       AnnotationAwareOrderComparator.sort(instances)
     - ApplicationContextInitializer
     
-  setLiostener
+  setListener
     - ApplicationListener
   deduceMainApplicationClass
     for(StackTraceElement)
 
 run
-  StopWatch
   configureHeadlessProperty
   getRunListener(args) -> starting
+
   prepareEnvironment(listeners, applicationArgs)
     getOrCreateEnvironment
       webApplicationType
         SERVLET: StandardServletEnvironment
         REACTIVE: StandardReactiveWebEnvironment
         default: StandardEnvironment
+
   configureIgnoreBeanInfo
+
   printBanner
     print
       PrintBanner(banner, sourceClass)
         Banner: {OFF,CONSOLE,LOG}
     - print to logger/stdout
+
   createApplicationContext
     SERVLET: 
       org.springframework.context.annotation.AnnotationConfigApplicationContext
@@ -39,6 +42,7 @@ run
     BeanUtils.instantiateClass(contextClass)
 
   getSpringFactoriesInstances
+
   prepareContext
     postProcessApplicationContext
       registerSingleton
@@ -49,15 +53,34 @@ run
     listeners.contextPrepared
     registerSingleton
       - springApplicationArguments / springBootBanner
-    addBeanFactoryPostProcessor(LazyInitialiationBeanFactoryPostProcessor())
-      
+    addBeanFactoryPostProcessor(LazyInitializationBeanFactoryPostProcessor())
+      - for(bean def names): setLazyInit
+    getAllSources
+      - add all primarySources,sources
+    load(sources)
+      - createBeanDefinitionLoader
+      - set bean name generator, resource loader, environment
+    contextLoaded
+
+  refreshContext
+    prepareBeanFactory
+      - setBeanClassLoader, setBeanExpressionResolver, addPropertyEditorRegister
+      - addBeanPostProcessor, ignroeDependencyInterface, registerResolvableDependency
+      - setTempClassLoader, registerSingleton
+
+    postProcessBeanFactory
+    invokeBeanFactoryPostProcessors
+    regsiterBeanPostProcessor
+    initMessageSource
+    initApplicationEventMulticaster
+    oinREfresh
+    registerListeners
+    finishBeanFactoryInitialization
+    finishRefresh
   
-  
-  
-  
-  
-  
-  
+  afterRefresh
+
+  callRunners
   
   
     
