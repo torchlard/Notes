@@ -70,18 +70,40 @@ run
 
     postProcessBeanFactory
     invokeBeanFactoryPostProcessors
+      - addBeanPostProcessor
+      - setTempClassLoader
+
     regsiterBeanPostProcessor
+
     initMessageSource
+      - get messageSource
+      - setParentMessageSource
+
     initApplicationEventMulticaster
-    oinREfresh
+      - new SimpleApplicationEventMulticaster()
+    
+    onRefresh
     registerListeners
+      - add getApplicationListeners
+      - add getBeanNamesForType
+      - add earlyApplicationEvents
+
     finishBeanFactoryInitialization
+      - init conversion service for context
+      - addEmbeddedValueResolver
+      - getBeanNamesForType
+      - freezeConfiguration
+
     finishRefresh
+      - clearResouirceCaches
+      - initLifecycleProcessor
+      - publishEvent
+      - registerApplicationContext
   
   afterRefresh
 
   callRunners
-  
+    - run all runners
   
     
 
