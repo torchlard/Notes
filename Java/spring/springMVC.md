@@ -30,6 +30,27 @@ object provided to use controller method
 
 
 
+# HandlerInterceptor
+implemented abstract class HandlerInterceptorAdpter
+OR implement HandlerInterceptor
+
+## preHandle
+before @Controller handling
+can have multiple interceptor in same request
+first declared preHandle first call
+
+## postHandle
+after @Controlelr handling
+before DispatcherServlet render view
+first declared postHandle later call
+
+## afterCompletion
+
+
+
+
+
+
 
 
 

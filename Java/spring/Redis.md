@@ -156,7 +156,9 @@ abstract class inherit: AbstractCacheManager <- AbstractTransactionSupportingCac
 class inherit: <- RedisCacheManager (inner: RedisCacheManagerBuilder)
 
 
-
+# RedisMessageListenerContainer
+async behaviour for Redis message listener
+handle low level details of listening, converting and message dispatching
 
 
 
