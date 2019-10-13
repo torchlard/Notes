@@ -34,6 +34,20 @@
 - pipeline: opinionated deployment pipeline for zero downtime fashion, easy roll back
 - function: implement business logic via functions, uniform programming model across serverless providers 
 
+# Spring cloud context
+operate by creating bootstrap context (parent context for main application)
+- load configuration properties
+application.properties / bootstrap.properties
+
+every context in hierarchy has own bootstrap(maybe empty) property source
+if exists config server, every context has different `spring.application.name`
+
+SpringApplicationBuilder let share Environment amongst whole hierarcy
+
+
+# spring cloud commons
+service discovry, load balancing, circuit breakers
+
 
 
 
