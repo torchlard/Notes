@@ -284,7 +284,7 @@ after content generation phase, send to filter module
 
 # settings
 ## proxy_pass
-for http://192.168.1.1/proxy/test.html
+for `http://192.168.1.1/proxy/test.html` =>
 
 http://127.0.0.1/test.html
 ```
