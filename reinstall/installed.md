@@ -1,5 +1,8 @@
+# gnome
 sudo apt-get install adb chromium-browser-l10n g++ gimp git gnome-tweak-tool gzip ibus-rime jupyter-notebook kdenlive krita latexmk lm-sensors lshw make memtest86+ mesa-common-dev mesa-va-drivers mesa-vdpau-drivers ntfs-3g obs-studio okular openssh-client openssl openvpn psensor ssh tex-common texlive-base tree unrar unzip vim virtualbox vlc wireshark wpasupplicant zsh qt-at-spi curl openjdk-8-jdk openjdk-12-jdk
 
+# kde
+sudo apt-get install adb g++ gimp gzip jupyter-notebook kdenlive krita latexmk lm-sensors lshw make memtest86+ mesa-common-dev mesa-va-drivers mesa-vdpau-drivers ntfs-3g obs-studio okular openssh-client openssl openvpn psensor ssh tex-common texlive-base tree unrar unzip vim virtualbox vlc wireshark wpasupplicant zsh openjdk-8-jdk openjdk-11-jdk openjdk-13-jdk
 
 # install by other means
 ## oh my zsh
