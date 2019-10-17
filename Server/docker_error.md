@@ -18,6 +18,9 @@ $ sudo service docker restart
 $ newgrp - docker
 
 
+# ERROR: Couldn't connect to Docker daemon at http+docker://localhost - is it running?
+solution: sudo docker-compose up
+
 
 
 

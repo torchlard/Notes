@@ -304,14 +304,289 @@ group related log together to config at same time
 predefined:
 sql = org.springframework.jdbc.core, org.hibernate.SQL
 
+# internationalization
+localized message 
+spring.messages.basename=messages,config.i18n.messages
+- basename of resource bundle
+
+# JSON
+Gson, Jackson(preferred,default), JSON-B
+
+# Web application
+## auto config
+- ContentNegotiatingViewResolver, BeanNameViewResolver beans
+- serve static resources, include WebJars
+- auto register Converter, GenericConverter, Formatter
+- HttpMessageConverters
+- MessageCodesResolver
+- static index.html
+- custom Favicon
+- ConfigurableWebBindingInitializer
+
+keep MVC features, add additional MVC configuration (interceptor,formatter,view controller...)
+=> add @Configuration class of WebMvcConfigurer without @EnableWebMvc
+declare WebMvcRegistrationsAdapter to provide custom
+- RequestMappingHandlerMapping, RequestMappingHandlerAdapter, ExceptionHandlerExceptionResolver
+
+## HttpMessageConverters
+covert http requests and responses
+eg. obj auto convert to JSON/XML
+- default UTF-8
+
+```java
+@Bean
+public HttpMessageConverters customConverters(){
+  HttpMessageConverter<?> additonal = ...
+  HttpMessageConverter<?> another = ...
+  return new HttpMessageConverters(additional, another);
+}
+```
+## custom JSON serializer, deserializer
+```java
+import com.fastxml.jackson.core.*;
+import org.springfframework.boot.jackson.*;
+@JsonComponent
+public class Example {
+  public static class Serializer extends JsonSerializer<SomeObj>{...}
+  public static class Deserializer extends JsonDeserializer<SomeObj>{...}
+}
+```
+## MessageCodesResolver
+generate error code for rendering error msg
+
+## static content
+server from /static OR /public OR /resources OR /META-INF/resources
+modify behavior by adding WebMvcConfigurer, overriding addResourceHandlers
+
+`spring.mvc.static-path-pattern=/resources/**`
+don't use src/main/webapp if application packaged as jar, works only with war packaging
+
+## path matching
+request `GET /projects/spring-boot?format=json` map to `@GetMapping("/projects/spring-boot")`
+
+spring.mvc.contentnegotiation.media-types.markdown=text/markdown
+spring.mvc.contentnegotiation.favor-path-extension=true
+
+## error handling
+default `/error` mapping that handles all errors
+registered as global error page in servlet container
+
+implement ErrorController, register bean definition of that type, add bean type ErrorAttributes
+```java
+@ControllerAdvice(basePackageClasses=AcmeController.class)
+public class AcmeControllerAdvice extends ResponseEntityExceptionHandler {
+  @ExceptionHandler(YourException.class)
+  @ResponseBody
+  ResponseEntity<?> handleControllerException(HttpServletRequest req, Throwable ex){
+    HttpStatus status = getStatus(req);
+    return new ResponseEntity<>(new CustomErrorType(status.value(), ex.getMessage()), status);
+  }
+}
+```
+
+## Custom Error Page
+```
+src/
+  main/
+    resources/
+      templates/
+        error/
+          txx.ftl
+        <other templates>
+```
+## CORS
+@CrossOrigin
+```java
+@Bean
+public WebMvcConfigurer corsConfig(){
+  return new WebMvcConfigurer(){
+    @Override
+    public void addCorsMapping(CorsRegistry registry){
+      registry.addMapping("/api/**");
+    }
+  }
+}
+```
+
+# WebFlux
+no servlet API, fully async and non-blocking, implements Reactive Streams spec 
+functional / annotation based
+
+```java
+// annotation
+@RestController
+@RequestMapping("/users")
+public class MyRestController {
+  @GetMapping("/\{user}")
+  public Mono<User> getUser(@PathVariable Long user){...}
+
+  @GetMapping("/\{user}/customer")
+  public Flux<Customer> getUserCustomers(@PathVariable Long user){...}
+}
+
+// functioinal
+@Configuration
+public class RoutingConfiguration {
+  @Bean
+  public RouterFunction<ServerResponse> monRouterFunction(UserHandler userHandler){
+    return route(GET("/\{user}").and(accept(APPLICATION_JSON)), userHandler::getUser)
+      .andRoute(GET("/\{user}/customer").and(accept(APPLICATION_JSON)), userHandler::getUserCustomers);
+  }
+}
+
+@Component
+public class UserHandler {
+  ...
+}
+```
+## auto config
+configure codesc for HttpMessageReader, HttpMessageWriter
+serve static resource
+
+- use HttpMessageReader, HttpMessageWriter convert HTTP req and res
+- config with CodecConfigurer
+
+support freemaker, thymeleaf, mustache
+
+WebFilter implemented to filter HTTP req-res exchanges
+- MetricsWebFilter, WebFilterChainProxy, HttpTraceWebFilter
+
+can also use JAX-RS programming model for REST endpoints, instead of Spring MVC
+
+# Embedded servlet container
+support embedded tomcat, jetty, underflow
+
+for more flexible filters, 
+use ServletRegistrationBean, FilterRegistrationBean, ServletListenerRegistrationBean
+
+embedded servlet container don't directly execute servlet 3.0+
+for servlet context init, implement `web.servlet.ServletContextInitializer`
+
+@WebServlet, @WebFilter, @WebListener enabled using @ServletComponentScan
+
+springboot use different type of ApplicationContext for embedded servlet container support
+ServletWebServerApplicationContext = special WebApplicationContext bootstrap itself by searching for single ServletWebServerFactory
+- TomcatServletWebServerFactory, JettyServletWebServerFactory, UndertowServletWebServerFactory
+
+## customization
+network
+session
+error management
+SSL
+HTTP compression
+
+- try best to expose common settings
+- dedicated namespace offer server specific config (eg. server.tomcat)
+
+
+# Security
+rely on spring security content negotiation whether to use httpBasic / formLogin
+method-level secutiry: @EnableGlobalMethodSecurity
+
+default UserDetailService single user; username=user, password = <random gen>
+- DefaultAuthenticationEventPublisher to publish authenticationevents
+
+## OAuth2
+OAuth2ClientProperties
+OAuth2LoginAuthenticationFilter default process url matching `/login/oauth2/code/*`
+WebSecurityConfigurerAdapter
+
+for common OAuth2 and OpenID providers, including google,github,facebook, provide default xx
+```
+spring.security.oauth2.client.registration.my-client-id=abcd
+spring.security.oauth2.client.registration.my-client.client-secret=password
+spring.security.oauth2.client.registration.my-client.provider=google
+
+OR
+
+spring.secutiry.oauth2.client.registration.google.client-id=abcd
+spring.secutiry.oauth2.client.registration.google.client-secret=password
+```
+## Actuator security
+for security, all actuator other than /health and /info disabled by default 
+
+
+# Caching
+suported cache provider:
+- generic, JCache, EhCache, Hazelcast
+- Infinispan, Couchbase, Redis, Caffeine, Simple
+
+force cache provider by `spring.cache.type`
+
+## Generic
+>= 1 org.springframework.cache.Cache bean
+CacheManager wrap all beans of that type
+
+## JCache
+javax.cache.spi.CachingProvider
+
+## Redis
+RedisCacheManager auto-configured
+additional cache: spring.cache.cache-names=cache1,cache2
+
+## Caffeine
+Java8 rewrite of Guava's cache
+
+## Simple
+if none of provider found, simple implementation using ConcurrentHashMap as cache store
+
+
+# Messaging
+extensive support for integrating with messaging system
+
+JMS API: JmsTemplate, AMQP: RabbitTemplate
+websocket natively support STOMP
+
+## ActiveMQ
+```
+spring.activemq.broker-url=tcp://192.168.1.210:9876
+spring.activemq.user=admin
+spring.activemq.password=secret
+```
+
+## Artemis
+auto config ConnectionFactory
+
+
+# RestTemplate
+call remote REST service from application, can use RestTemplate class
+need customized before being used
+auto configure RestTemplateBuilder, to create RestTemplate instances
+
+narrow scope: inject auto-configured RestTemplateBuilder
+application-wide: RestTemplateCustomizer
+
+for WebFlux, use WebClient to call remote REST service
 
 
 
+# Actuator Endpoints
+built in endpoints
 
+auditevents
+beans
+caches
+conditions
+configprops
+env
+flyway
+health
+httptrace
+info
+integrationgraph
+loggers
+liquibase
+metrics
+mappings
+scheduledtasks
+sessions
+shutdown
+threaddump
 
-
-
-
+heapdump
+jolokia
+logfile
+prometheus
 
 
 

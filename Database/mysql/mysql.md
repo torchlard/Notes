@@ -355,6 +355,18 @@ docker exec -i mysql-container mysql -u 'user' -p 'password' 'name_db' < 'data.s
 mysql -u root -p"123456" testdb -sNe 'show tables' | while read table; do mysql -u root -p"123456" -sNe "alter table testdb.$table RENAME TO newdb.$table"; done
 
 # dump only schema
-mysqldump -u root -h localhost --no-data -p database > db.sql
+mysqldump -u root -h localhost --no-data -p database <tablename> > db.sql
+
+## data only
+--no-create-info --skip-triggers
+
+
+
+
+
+
+
+
+
 
 
