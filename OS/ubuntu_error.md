@@ -20,6 +20,15 @@ The following signatures couldn't be verified because the public key is not avai
 solution: Replace $key with the corresponding $key from your GPG error.
 sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys $key
 
+# resume from suspend => screen freeze
+reason: PM default maybe s2idle
+solution: 
+change in `/etc/default/grub` to set sleep mode to (suspend to memory) :
+GRUB_CMDLINE_LINUX_DEFAULT="quiet splash mem_sleep_default=deep"
+
+$ sudo grub-mkconfig -o /boot/grub/grub.cfg
+
+
 
 
 
