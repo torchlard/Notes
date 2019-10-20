@@ -73,6 +73,40 @@ add/remove client node on the fly
 use servo track info in both client and server for performance & alert
 
 
+# zuul
+```
+client -> load balance -> zuul cluster -> A service cluster [A1, A2, A3] 
+                                       -> B service cluster [B1, B2, B3]
+
+service registry Eureka                          
+config service cluster
+
+git repository
+```
+route dispatch and filter
+eg. /api/user -> user service, /api/shop -> shop service
+
+zuul + ribbon = load balance
+
+## functions
+authentication
+insights
+stress testing
+canary testing
+dynamic routing
+service migration
+load shedding
+security
+static response handling
+active/active traffic management
+
+
+
+
+
+
+
+
 
 
 
