@@ -2,6 +2,12 @@
 sudo rabbitmq-server start
 sudo rabbitmq-server stop
 
+## set users
+// create a user
+rabbitmqctl add_user <username> <password>
+// tag the user with "administrator" for full management UI and HTTP API access
+rabbitmqctl set_user_tags <username> administrator
+
 # introduction
 messge broker, accept and forward msg
 
@@ -70,7 +76,9 @@ quick.orange.rabbit --mapto--> *.orange.*, *.*.rabbit
 ## Error: Failed to initialize erlang distribution
 sudo rabbitmq-plugins enable rabbitmq_management  
 
-
+## from springboot: socket connection closed
+reason: account using no privilege to access virtual host
+solution: use account will privilege
 
 
 

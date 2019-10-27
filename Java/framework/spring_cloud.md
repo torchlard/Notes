@@ -1,3 +1,8 @@
+# what is spring cloud
+ordered collection of list of framework
+simplify development of distributed system
+reuse spring boot framework, easy maintain and deploy
+
 # features
 1. distributed/versioned configuration
 2. service registration and discovery
@@ -45,8 +50,52 @@ if exists config server, every context has different `spring.application.name`
 SpringApplicationBuilder let share Environment amongst whole hierarcy
 
 
+# start same client with different port
+java -jar xxx.jar --server.port=8882
+
+
 # spring cloud commons
 service discovry, load balancing, circuit breakers
+
+
+## config server
+/{application}/{profile}[/{label}]
+/{application}-{profile}.yml
+/{label}/{application}-{profile}.yml
+/{application}-{profile}.properties
+/{label}/{application}-{profile}.properties
+
+## config bus
+set git server to store config
+use config bus to auto refresh config fetch without restarting server
+- using spring boot actuator
+- rabbitmq as message bus
+
+client send post requset `localhost:8881/actuator/bus-refresh` to config-client
+- that client send msg to bus, bus refer msg to another config-client
+
+
+# spring cloud sleuth
+service tracing in distributed system
+- each machine expose REST interface
+- 1 service need multiple calling => complicated call stack
+
+## terms
+span: basic working unit, each new req make new span ID
+  - use 64 bit unique ID 
+trace: form tree sturcture with spans
+annotation: record existence of an event, record req start and end time
+  - client sent, client received
+  - server sent, server received
+
+
+
+
+
+
+
+
+
 
 
 
