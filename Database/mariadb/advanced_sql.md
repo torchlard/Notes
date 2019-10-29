@@ -198,6 +198,15 @@ direct access to table storage engine interface foir key lookups and key/table s
 
 handler read: 50% speedup, no parsing, all data transformed in binary
 
+```sql
+handler <tbl> OPEN;
+handler <tbl> READ FIRST;
+handler <tbl> READ NEXT;
+handler <tbl> READ NEXT;
+handler <tbl> CLOSE;
+```
+
+suitable to access few rows very quickly
 
 
 
