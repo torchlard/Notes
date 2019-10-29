@@ -1,0 +1,35 @@
+# Performance Schema
+turn on: set `performance_schema=on` in my.cnf
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
