@@ -14,6 +14,22 @@ include task in ant, use all resource from maven
 replace xml with groovy, much simplified
 
 
+# keyword
+## implementation
+not pass library that depends on, only effective in current module
+
+## api
+pass dependent library, can use that relied module
+
+## provided (compileOnly)
+only work in compile time, not involve in packaging
+
+## apk (runtimeOnly)
+only in generated apk, not involve in compile 
+
+
+
+
 # start new project
 gradle init
 
