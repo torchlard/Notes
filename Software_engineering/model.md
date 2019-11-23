@@ -11,7 +11,7 @@ in response to message that receive, actor can
 decouple sender from communication sent
 recipients of messages are identified by address
 actor only communicate with actors whose address it has
-async message passing, no restrictio on message arrival order
+async message passing, no restriction on message arrival order
 
 
 

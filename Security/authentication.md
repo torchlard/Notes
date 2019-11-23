@@ -15,16 +15,17 @@ do authenticated request, send cookie -->
 
 # Json web token (JWT)
 compact, self-contained way to securely transmit information as JSON object
-signed using secret / public/private key pair using RSA
+signed using secret | public/private key pair using RSA
 
 when user successfully login, json web token returned and saved locally 
 - JWT is self-contained, all necessary info is there
 - can use stateless API, make request to downstream service
 - easy to scale horizontally
 - no need worry CORS, not rely on cookie
+  
 ```
 POST/login with username, pwd -->
-              create JWT with secret
+               create JWT with secret
 <-- return JWT to browser
 send JWT on authorization header -->
         check JWT signature, get user info from JWT
@@ -47,6 +48,8 @@ header = {
 ```
 JSON --base64--> JWT payload, JWT header
 JWT_header+"."+JWT_payload --HS256--> signature
+
+signature = HMACSHA256( jwt_header.jwt_payload, 256-bit-secret )
 JWT = JWT_header+"."+JWT_payload+"."+signature
 
 request = "http://your.awesome-app.com/make-frd/?jwt=xxxx.xxxx.xxxxx"
@@ -69,6 +72,7 @@ since token stored in client side
 2. if access token not expired, return data to user
 3. if access token failed, use refresh token to apply new access token
 4. if refresh token not exipred, return new Access token
+5. store jwt in HttpOnly cookie, not session/local storage
 
 ## session VS JWT
 ### scalability
