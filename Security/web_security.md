@@ -101,7 +101,10 @@ the field can be modified
 generate pseudo random number
 
 
-
+# MIME sniffing
+in absence of MIME type / browser think MIME type incorrect
+  - browser perform MIME sniffing
+  - look at bytes of resources
 
 
 
