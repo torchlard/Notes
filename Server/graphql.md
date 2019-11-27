@@ -6,7 +6,8 @@ query language for API + server-side runtime for executing queries using type sy
 query:
 {
   hero {
-    name  // can return single item / list of items
+    name!  // can return single item / list of items
+    // if compulsory, then use !
   }
 }
 
@@ -122,7 +123,11 @@ query HeroNameAndFriends($episode: Episode = jp) {
 
 # directives
 dynamically change structure and shape queries using variables
+
 ```js
+@include(if: Boolean)
+@skip(if: Boolean)
+
 query Hero($episode: Episode, $withFriends: Boolean!) {
   hero(episode: $episode) {
     name
@@ -160,6 +165,73 @@ result:
   }
 }
 ```
+
+# mutation
+any write operation should sent explicitly via mutation
+
+review = input object type
+- can contain multiple fields
+```js
+mutation CreateReviewForEpisode($ep: Episode!, $review: ReviewInput!) {
+  createReview(episode: $ep, review: $review) {
+    stars
+    commentary
+  }
+}
+
+variables:
+{
+  "ep": "JEDI",
+  "review": {
+    "stars": 5,
+    "commentary": "this is a great movie!"
+  }
+}
+
+result:
+{
+  "data": {
+    "createReview": {
+      "stars": 5,
+      "commentary": "this is a great movie!"
+    }
+  }
+}
+```
+# inline fragments
+access data on underlying concrete type
+```js
+query HeroForEpisode($ep: Episode!) {
+  hero(episode: $ep) {
+    name
+    ... on Droid {
+      primaryFunction
+    }
+    ... on Human {
+      height
+    }
+  }
+}
+
+{
+  "data": {
+    "hero": {
+      "name": "r2",
+      "primaryFunction": "Astromech"
+    }
+  }
+}
+
+```
+
+
+
+
+
+
+
+
+
 
 
 
