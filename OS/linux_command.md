@@ -27,7 +27,8 @@ reboot
 # apply command to all files
 `find <top_directory> -type f -exec sh -c '<command> "$0"' {} \;`
 
-
+## file sort by size
+ls -alS --block-size=M
 
 
 
