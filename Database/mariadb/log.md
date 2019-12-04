@@ -145,12 +145,25 @@ delete before certain datetime:
 `PURGE BINARY LOGS BEFORE '2013-04-22 09:55:22'`
 
 auto removed with expire_logs_days
-forece log rotate: `FLUSH BINARY LOGS` on regular basis
+force log rotate: `FLUSH BINARY LOGS` on regular basis
+
+## mysqlbinlog
+save binlog:
+`mysqlbinlog mariadb-bin.000480 > 480.txt`
+`mysqlbinlog -r filename binlog-filenames`
+
+recover server:
+`mysqlbinlog xxx | mysql -u root -p`
+
+can run myltipple log file
+`mysqlbinlog xx1 xx2 | mysql -u root -p`
 
 
+# relay log
+log files created by slave during replication
+same format as binary log, contain record of events affect data/structure
 
-
-
+`mysqlbinlog --start-position=1847 --stop-position=2585 mysql-bin.000008 > test.sql`
 
 
 

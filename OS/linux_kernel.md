@@ -140,7 +140,17 @@ problem in dynamic device loading
 
 
 
+# pid
+after program runs auto generate pid files under /var/run
+pid only 1 line: record process ID
 
+## purpose
+avoid process create multiple copies
+- only process who get write access (F_WRLCK) can normally start & write pid to file
+- other process auto exit
+
+## reminder
+if process closed fd, then lock failed
 
 
 
