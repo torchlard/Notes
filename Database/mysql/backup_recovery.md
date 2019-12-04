@@ -53,6 +53,17 @@ mysqlbinlog gbichot2-bin.0007 gbichot2-bin.0008 | mysql
 some file system allow "snapshots" -> logical copy of fs at given time
 - eg. LVM, ZFS
 
+### mylvmbackup
+quickly create full physical backup
+obtain read lock on all tables, flush all server caches to disk
+- make LVM snapshot of volume containing mysql data directory => unlock tables again
+- server continue normal operations
+
+snapshot mounted to temporary directory, all data backed up by `tar`
+=> backup-YYYYMMDD_hhmmss_mysql.tar.gz
+
+
+
 ## full VS incremental backup
 incremental made possible by server's binary log (record data changes)
 
@@ -69,6 +80,9 @@ recover changes made during given time span (point-in-time recovery)
 5. slave's sql process check relay-log renew content, parse relay-log and run
 
 
+# backup solution
+## replication
+replication alone not sufficient for backup
 
 
 

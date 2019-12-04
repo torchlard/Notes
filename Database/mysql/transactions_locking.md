@@ -17,3 +17,33 @@ rollback is problem if non-transactional table
 MVCC: twist on row-level locking
 - allow nonlocking reads
 - only lock necessary rows during write operations
+
+
+# locking
+## external locking
+use file system locking to manage contention for MyISAM by multiple prpocesses
+situations:
+1. multiple servers use same db directory
+2. myisamchk perform table maintenance operations
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
