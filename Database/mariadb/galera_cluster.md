@@ -67,10 +67,10 @@ bind-address=0.0.0.0
 
 # activation
 use one node as starter:
-sudo mysqld --wsrep-new-cluster
+`sudo mysqld --wsrep-new-cluster`
 
 other nodes start normally:
-sudo service mysql start
+`sudo service mysql start`
 
 
 

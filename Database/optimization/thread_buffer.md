@@ -52,6 +52,10 @@ thread_pool_idle_timeout: num of sec idle thread before exists
 thread_pool_oversubscribe: 
 - #worker thread group remain active at same time, once thread goroup oversubscribed due to stall
 
+thread_pool_size: #thread_groups in thread pool
+
+thread_pool_stall_limit
+
 
 ## Thread group in thread pool implementation
 thread group to divide client connection to many set of threads
@@ -99,7 +103,7 @@ if:
 - worker not been created for group within throtting interval
 
 ## thread group stalls
-if client conn monopolize thread group , prevent other conn
+if client conn monopolize thread group, prevent other conn
 consider stall if:
 - more conn req that listener need to distribute
 - no client conn req allowed to dequeued to run since last stall check by timer thread
@@ -109,6 +113,9 @@ if stall, wake up sleeping worker thred => temporarily allow several client conn
 higher: avoid too many parallel threads
 lower: help prevent deadlocks
 
+## thread group oversubscription
+when multiple active worker therad, thread group boersubscribed
+once thread group oversubscribed, `thread_pool_overssubscribe` define upper limit for when worker threads start shutting down
 
 
 
