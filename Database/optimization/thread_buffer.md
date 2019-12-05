@@ -118,6 +118,185 @@ when multiple active worker therad, thread group boersubscribed
 once thread group oversubscribed, `thread_pool_overssubscribe` define upper limit for when worker threads start shutting down
 
 
+# thread state
+## delayed insert connection 
+allocating local table
+create delayed hander
+got handler lock
+got old table
+storing row into queue
+waiting for dealy_list
+waiting for handler insert
+waiting for handler lock
+waiting for handler open
+
+## delayed insert handler 
+insert: about to insert
+reschedule: sleeping, let other thread function
+upgrading lock: get lock to table to insert rows
+waiting for insert
+
+## event scheduler 
+clearing
+initialized
+waiting for next activation
+waiting for scheduler to stop
+waiting on empty queue
+
+## general thread
+analyzing: calculating table key distribution
+checking permission: check if enough permission to perform statement
+checking table: table not closed / corrupt, integrity between data and index files with checksum
+FULLTEXT initialization
+init: ALTER, DELETE, INSERT, SELECT, UPDATE
+login: connection thread not yet auth
+optimizing: initial optimization
+preparing: during query optimization
+
+reopen tables: after thread obtained lock but underlying table structure changed => lock released
+repair by sorting: create index using a sort
+repair with keycache: create index by key cache, one-by-one
+rolling back
+waiting for commit lock: flush tables with read lock
+waiting for global read lock
+waiting for table level lock
+waiting on cond: wait for unspecified condition to occur
+writing to net
+
+copy to tmp table: new table by ALTER TABLE
+copying to group table: sort rows by group, copy to tmp table (diff GROUP BY, ORDER BY)
+copying to tmp table: copy to tmp table in memory
+copying to tmp talbe on disk
+creating sort index: process SELECT resolved using internal temp table
+creating tmp table: memory/disk
+executing
+searching rows for update: matching rows before UPDATE
+sending data: sending data to client as part of processing SELECT
+sorting for group|order: sort as part of GROUP BY | ORDER BY
+sorting index
+sorting result: SELECT using non-temp table
+system lock: waiting for external lock for specific table
+table lock: request table's internal lock after acquiring external lock
+updating main|reference table
+updating status: after query execution complete, if exceed long_query_time, Slow_queries ++
+user lock: wait for advisory lock from GET_LOCK()
+user sleep: SLEEP()
+
+deleting from main table
+deleting from reference table: deleting matched rows from secondary ref table
+
+after create: function that created table(temp/non-temp) just ended
+cleaning up
+closing tables
+end: cleanup ALTER TABLE, CREATE VIEW, DELETE, INSERT, SELECT, UPDATE
+freeing items: free from query cache
+flusing tables
+
+killed: thread abort next time it checks kill flag
+locked: query locked by another query
+purging old relay logs
+reading file: LOAD DATA INFILE
+remove duplicates: SELECT DISTINCT could not be optimized
+rename (result table)
+
+## replication master thread
+finished reading one binlog; switching to next binlog
+master sent all binlog to slave; waiting for binlog to be udpated
+sending binlog event to slave
+waiting to finalize termination
+
+## query cache thread
+checking privileges on cached query
+checking query cache for query
+invalidating query cache entries
+sending cached result to client
+storing result in query cache
+waiting for query cache lock
+
+## replication slave connection thread
+changing master: CHANGE MASTER TO
+killing slave: STOP SLAVE
+opening master dump table
+reading master dump table
+rebuilding index on master dump table
+
+## replication slave IO thread
+checking master version
+connecting to master
+queueing master event to relay log: event copied to relay log
+reconnecting after failed binlog dump request
+reconnecting after failed master event read
+registering slave on master
+requesting binlog dump
+waiting for master to send event
+waiting for slave mutex on exit
+waiting for slave SQL thread free enough relay log space
+waiting for master update
+waiting to reconnect after failed binlog dump request
+waiting to reconnect after failed master event read
+
+## slave SQL thread
+apply log event
+making temp file
+reading event from relay log
+read all relay log; waiting slave IO to update
+waiting for work from SQL thread: in parallel replication worker thread waiting more
+waiting prior transaction to start commit before next tx: 
+  - wait for conflicting things to end before start executing
+waiting for worker thread to be idle
+waiting due to global read lock: FLUSH TABLES WITH READ LOCK wait for worker finish
+waiting while replication worker thread pool busy
+wait other master connection to process GTID received on multiple master connections
+  - another thread executing same GTID form another conn
+wait slave mutex on exit
+wait next event in relay log
+
+
+# InnoDB buffer pool
+keep frequently used blocks in buffer
+
+new sublist: recently-used information
+old sublist: older information
+
+when server starts, buffer pool empty
+when access data, buffer pool slowly populated
+=> some time necessary before buffer pool useful (warmup)
+
+to warm up without time, can dump buffer pool directly
+`innodb_buffer_pool_dump_at_shutdown`, `innodb_buffer_pool_dump_at_startup`
+
+when new info acessed not appear in list, oldest item in old list removed
+
+## innodb_buffer_pool_size
+total memmory allocated 10% more than specified size
+extra space reserved for control structure and buffers
+- space must be contiguous
+- make sure size not too large, causing swapping
+
+## innodb_buffer_pool_instances
+if > 1GB, divide buffer pool into specific number of instances
+many instances reduce contention concurrency
+
+## innodb_old_blocks_pct
+default 37% reserved for old list
+
+innodb_old_blocks_time: delay before block move from old to new sublist
+  - default no delay
+
+reduce impact of full table scans
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
