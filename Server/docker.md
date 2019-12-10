@@ -1,47 +1,3 @@
-# orientation and setup
-
-# concept
-use resource isolation features in OS kernel, eg. cgroups 
-  to run multiple independent continers on same OS
-
-container move from 1 Docker environment to another with same OS work without changes
-image includes all dependencies needed
-
-# Container
-running instance of an image
-
-# DockerFile
-
-# Images
-executable package comprised of multiple layers:
-  system library, tools, other files, dependencies for executable code
-
-image developer can reuse static image layers for different projects
-used to execute code in Docker container
-
-command line shows all top-layer images
-when new container created from image, writable layer also created (container layer)
-- host all changes made to running container
-- store newly written,deleted files, modification to existing files
-
-# CLI
-docker ps: see running contaienrs
-docker history: show history of an image (all changes)
-docker update: update config of containers
-docker tag: create tag to organize container images
-docker search: looks in Docker Hub
-docker save: save image to archive
-docker rmi: remove image
-docker push: user upload own custom image
-
-// show all container
-docker container ls --all
-// show images
-docker image ls
-
-// delete none images
-docker rmi -f $(docker images -f "dangling=true" -q)
-
 # open container initiative
 established in 2015 
 Runtime specification: how to run 'filesystem bundle' that is unpacked on disk
@@ -57,6 +13,80 @@ download OCI image -> unpack image into OCI runtime filesystem bundle
 
 entire workflow allow run image without additional argument
 
+# underlying technology
+## namespace
+create set of namespace (isolated workspace) for taht container
+pid: process isolation
+net: network interface
+ipc: ipc resource
+mnt: mount point
+uts: isolate kernel and version identifiers (unix timesharing system)
+
+## control group (cgroups)
+limit application to specific set of resources
+
+## union file systems
+fiel system operate by creating layers => very lighweight, fast
+provide building blocks for containers
+UnionFS variants: AUFS, btrfs, vfs, DeviceMapper
+
+## container format
+combine namespace, control groups, UnionFS => container format
+default `libcontainer`
+in future BSD Jails, Solaris Zones
+
+
+# concept
+use resource isolation features in OS kernel, eg. cgroups 
+  to run multiple independent continers on same OS
+
+container move from 1 Docker environment to another with same OS work without changes
+image includes all dependencies needed
+
+# Docker engine
+client-server application
+1. server of daemon process `dockerd`
+2. rest api specifies interface that program talk to daemon
+3. command line interface (docker command)
+
+# Images
+readonly template with instructions for creating Docker container
+
+executable package comprised of multiple layers:
+- system library, tools, other files, dependencies for executable code
+
+image developer can reuse static image layers for different projects
+used to execute code in Docker container
+
+command line shows all top-layer images
+when new container created from image, writable layer also created (container layer)
+- host all changes made to running container
+- store newly written, deleted files, modification to existing files
+
+# Container
+running instance of an image
+can connect container to many networks, attack storage to it
+create new image based on current state
+
+# CLI
+`docker ps` see running contaienrs
+`docker history` show history of an image (all changes)
+`docker update` update config of containers
+`docker tag` create tag to organize container images
+`docker search` looks in Docker Hub
+`docker save` save image to archive
+`docker rmi` remove image
+`docker push` user upload own custom image
+
+show all container `docker container ls --all`
+
+show images
+`docker image ls`
+
+delete none images
+`docker rmi -f $(docker images -f "dangling=true" -q)`
+
+
 # swarm cluster
 group of machines that are running Docker, joined into a cluster
 swarm manager 
@@ -70,20 +100,13 @@ instll docker-ce
 sudo usermod -aG docker $USER
 
 # run service
-docker swarm init
-// start running services/adjust scale
-docker stack deploy -c docker-compose.yml getstartedlab
-// see services
-docker service ls
-// take down stack
-docker stack rm getstartedlab
-// take down swarm
-docker swarm leave --force
-
-
-docker stack rm getstartedlab
-// reset environment
-eval $(docker-machine env -u)
+`docker swarm init`
+start running services/adjust scale `docker stack deploy -c docker-compose.yml getstartedlab`
+see services `docker service ls`
+take down stack `docker stack rm getstartedlab`
+take down swarm `docker swarm leave --force`
+`docker stack rm getstartedlab`
+reset environment `eval $(docker-machine env -u)`
 
 
 ## example
