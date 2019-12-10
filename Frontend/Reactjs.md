@@ -176,7 +176,64 @@ eg. directly input address to open
 - put (hsitory, locaiton, match) into props
 
 
+# higher order components (HOC)
+function that takes a component, return new component
+aim: abstract components with similar patterns to 
 
+example:
+```js
+const CommentListWithSubscription = withSubscription(
+  CommentList, DataSource => DataSouirce.getComments()
+)
+const BlogPostWithSubscription = withSubscription(
+  BlogPost, (DataSource, props) => DataSource.getBlogPost(props.id)
+)
+```
+
+HOC add features to component without drastically altering component
+
+
+# React hook
+## rules
+useState depend on order of calling
+
+useEffect, useState always at top level
+only call hooks at top level, don't call inside loops,conditions/nested fn
+
+called in same order each time component renders
+
+## lazy init state
+```js
+const [state, setState] = useState(() => {
+  const initialState = someExpensiveComputation(props);
+  return initialState;
+});
+
+```
+
+## useEffect
+funciton in useEffect fires after layout and paint, during deferred event
+- make suitable for common side effects, like subscript, event handlers
+- DOM mutation cannot deferred
+
+### useLayoutEffect
+different fire time
+
+
+# React context
+data shared across components without pass by props
+
+## useContext
+`const value = useContext(MyContext)`
+
+accept context object, return current context value 
+- current context value determined by value prop of nearest `<MyContext.Provider>`
+
+when nearest context update, trigger renderer with latest context value passed to that MyContext
+use `useState` to change value in context provider
+
+## useRef
+like 'box' hold mutable value in its `.current` property
 
 
 
