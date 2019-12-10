@@ -15,7 +15,7 @@ entire workflow allow run image without additional argument
 
 # underlying technology
 ## namespace
-create set of namespace (isolated workspace) for taht container
+create set of namespace (isolated workspace) for that container
 pid: process isolation
 net: network interface
 ipc: ipc resource
