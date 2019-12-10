@@ -15,8 +15,10 @@
 ## rainbow table
 stored lots of common password and their hash, much faster to crack password
 
-
-
+# change password
+use mysql;
+alter user 'root'@'localhost' identified by 'xxx';
+flush privileges;
 
 
 

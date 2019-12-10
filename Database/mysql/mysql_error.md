@@ -1,30 +1,29 @@
 # forget root password
 Start server
 
-$ sudo service mysql start
+`sudo service mysql start`
 Go to sock folder
 
-$ cd /var/run
+`cd /var/run`
 Back up the sock
 
-$ sudo cp -rp ./mysqld ./mysqld.bak
+`sudo cp -rp ./mysqld ./mysqld.bak`
 Stop server
 
-$ sudo service mysql stop
+`sudo service mysql stop`
 Restore the sock
 
-$ sudo mv ./mysqld.bak ./mysqld
+`sudo mv ./mysqld.bak ./mysqld`
 Start mysqld_safe
 
-$ sudo mysqld_safe --skip-grant-tables --skip-networking &
+`sudo mysqld_safe --skip-grant-tables --skip-networking &`
 Init mysql shell
 
-mysql -u root
+`mysql -u root`
 Change password
 
-FLUSH PRIVILEGES;
-
-ALTER USER 'root'@'localhost' IDENTIFIED BY 'MyNewPass';
+`FLUSH PRIVILEGES;`
+`ALTER USER 'root'@'localhost' IDENTIFIED BY 'MyNewPass';`
 
 # not allow insert local file data
 reason: not enabled
