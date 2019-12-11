@@ -176,6 +176,11 @@ eg. directly input address to open
 - put (hsitory, locaiton, match) into props
 
 
+## useCallback
+assume function getData() to check updated value,
+if `useEfefct(() => ..., [getData])`, rely on function ref, then infinite loop
+
+useCallback fix function ref
 
 
 

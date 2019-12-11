@@ -61,8 +61,10 @@ change { xxx } to ( xxx )
 
 --------------------------------------------------
 
-
-
+# Whitespace text nodes cannot appear as a child of <tr>
+reason: empty space around tr
+solution: { xxx ? xx : null}
+don't use '' in condition, use null
 
 
 
