@@ -112,8 +112,45 @@ created by systemd, manage and schedule all kernel threads
 - maintain linked list of kernel threads
 - always run in kernel space
 
+# Init
+last step of initiating kernel: start pid=1 init process
+- parent of all processes, run as daemon process
+
+compatible to SystemV => sysvinit
+different init implementation
+
+## sysvinit
+predefined run levels
+
+### adv
+simple concept
+service developer only need to write init and stop scripts
+add/delete service to certain runlevel, only need run some create/del file link op
+- no extra learning / special syntax needed
+
+easy to debug, follow init sequence strictly, no concurrency
+
+### disadv
+low efficiency, slow init
+problem in dynamic device loading
+
+## upstart
+
+## systemd
 
 
+
+# pid
+after program runs auto generate pid files under /var/run
+pid only 1 line: record process ID
+
+## purpose
+avoid process create multiple copies
+- only process who get write access (F_WRLCK) can normally start & write pid to file
+- other process auto exit
+
+## reminder
+if process closed fd, then lock failed
 
 
 

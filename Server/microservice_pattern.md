@@ -2,7 +2,7 @@
 example: suppose Order service + Customer service
 
 ## Choreography-based saga
-1. order service create order in pending state, publishes ORderCreated event
+1. order service create order in pending state, publishes OrderCreated event
 2. Customer service receive event attempts reserve credit for that order
   - publish Credit reserved / creditLimitExceeded event
 3. Order Service receive event, change state of order to either approved / cancelled
@@ -32,7 +32,7 @@ publish event: Aggregates, domain events
 
 # event sourcing
 not store newest state of obj, but store all events produced by obj
-by evernt sourcing get newest state of obj
+by event sourcing get newest state of obj
 
 events are immutable
 optimize: create snapshot of differnet time in memory
@@ -49,15 +49,7 @@ eg. car (aggregate root), wheel, tire
 objs cannot call each other directly, but by sending msg
 each actor has mailbox, will put all msg in mailbox, then single loop manager msg in Mailbox
 
-actor state modification is event dirven, updated to newest by event sourcing
-
-# CQRS (command query responsibility segregation)
-command side: receive all insert,update,delete commands
-Query side: read only
-
-since command and query has own Repository, eg. C side RMDB, Q side NoSQL
-
-CQRS has limitation, suitable for read >>> write
+actor state modification is event driven, updated to newest by event sourcing
 
 
 ## problems in microservice

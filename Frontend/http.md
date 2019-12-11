@@ -132,6 +132,17 @@ usage:
 - redirect: used when user cancel login, return to main page / jump to other website
 
 
+# header
+## X-Content-Type-Options
+`X-Content-Type-Options: nosniff`
+
+response header used by server
+indicate MIME types advertised in Content-Type headers should not change
+- prevent browser sniff MIME type
+
+
+
+
 
 
 

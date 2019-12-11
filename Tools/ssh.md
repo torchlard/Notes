@@ -61,7 +61,33 @@ PubkeyAuthentication yes
 6. sudo service sshd restart
 7. try: ssh <user>@<host>
 
+# ssh forward
+## local forwarding
+forward port request client -> server machine
 
+ssh client listen for connection on configured port, 
+when receive connection, tunnels to SSH server
+
+use: 
+1. file transfer through jump servers
+2. connect to service on internal network from outside
+
+### example
+`ssh -L 80:intra.example.com:80 gw.example.com`
+
+open connection to gw.example.com jump server,
+forward any connection to port 80 local -> intra.example.com port 80
+
+
+## remote forwarding
+forward port request server -> client
+
+`ssh -R 8080:localhost:80 public.example.com`
+anyone on remote server connect to port 8080 on remote server
+conn tunnel back to client host => make conn to port 80 on localhost
+- other hostname / IP could be used instead of localhost
+
+sshd_config can control
 
 
 

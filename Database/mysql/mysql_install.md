@@ -60,13 +60,12 @@ sudo service mysql start
 
 # change mariadb root password
 For MariaDB:
-
-$ sudo systemctl stop mariadb
+`sudo systemctl stop mariadb`
 
 ##
 Next, restart the database server without permission checking using the following command:
 
-$ sudo mysqld_safe --skip-grant-tables &
+`sudo mysqld_safe --skip-grant-tables &`
 
 Here, the --skip-grant-tablesoption allows you to connect without a password and with all privileges. 
 If you start your server with this option, it also enables --skip-networkingoption which is used to prevent the other clients from connecting to the database server. 
@@ -80,7 +79,7 @@ $ mysql
 
 - At the mysql> or MariaDB [(none)]> prompt, run the following command to reset the root user password:
 
-UPDATE mysql.user SET Password=PASSWORD('NEW-PASSWORD') WHERE User='root';
+`UPDATE mysql.user SET Password=PASSWORD('NEW-PASSWORD') WHERE User='root';`
 
 - Replace NEW-PASSWORD in the above command with your own password.
 - Then, type following commands to exit from the mysql console.
@@ -90,22 +89,18 @@ exit
 
 ##
 Finally, shutdown the running database server that you started earlier with --skip-grant-tablesoption. To do so, run:
-
-$ sudo mysqladmin -u root -p shutdown
+`sudo mysqladmin -u root -p shutdown`
 
 You will be asked to enter your mysql/mariadb root user password that you set in the previous step.
 
 Now, start mysql/mariadb service normally using command:
-
-$ sudo systemctl start mysql
+`sudo systemctl start mysql`
 
 For MariaDB:
-
-$ sudo systemctl start mariadb
+`sudo systemctl start mariadb`
 
 Verify if the password has really been changed using the following command:
-
-$ mysql -u root -p
+`mysql -u root -p`
 
 
 # mariadb installed without init password
@@ -119,9 +114,15 @@ $ sudo mysql -u root
 $ sudo mysql_secure_installation
 
 
+# basedir
+path to installation directory
+all paths resolved relative to this
 
+# datadir
+path to db root data files
 
-
+# tmpdir
+place temp file for transactions
 
 
 

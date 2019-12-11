@@ -40,6 +40,40 @@ CSS engine keep number of branches in tree to min
 
 
 
+# Javascript async
+JS = single thread language = 1 call stack, 1 memory heap
+must execute code in order, synchronous
+
+js engine (V8) has web api handle tasks in background
+- call stack recognize functions of web API, hands them off handled by browser
+- once tasks finished by browser, return and push onto stack as callback
+
+
+```js
+console.log(1)
+setTimeout(() => console.log(2),1000)
+console.log(3)
+
+// result
+1
+3
+2
+```
+`console.log(1)` on stack first
+then notice `setTimeout`, which isn't handled by js
+- push it off to web api to be done asynchronously
+- call stack moves without caring about code handle off by web api
+run `console.log(3)`
+
+JS engine's event loop request, 
+- if setTimeout isn't finished, returns undefined
+- once finished, put on stack and run `console.log(2)`
+
+
+
+
+
+
 
 
 
