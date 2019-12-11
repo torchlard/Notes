@@ -120,7 +120,7 @@ OR
 
 1. write stack.yml
 2. docker-compose -f stack.yml up
-3. docker exec -it mariadb_db_1 bash
+3. enter container shell `docker exec -it mariadb_db_1 bash`
 
 mariadb:
 (GRANT ALL PRIVILEGES ON *.* TO 'root'@'%' IDENTIFIED BY PASSWORD '123456' WITH GRANT OPTION)
@@ -148,7 +148,8 @@ export DOCKER_HOST=127.0.0.1:2375
 8. install docker-compose
 
 
-# 
+# docker compose
+
 
 
 
