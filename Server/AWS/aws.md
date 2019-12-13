@@ -34,12 +34,10 @@ package repo access via yum
 ssh -i xxx.pem ubuntu@<ip/DNS>
 
 
-# virtual private cloud (VPC)
+
 
 # elastic block store (EBS)
 
-# relational database service (RDS)
-basic building block: DB instance
 
 
 

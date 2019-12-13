@@ -1,0 +1,34 @@
+# relational database service (RDS)
+basic building block: DB instance
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

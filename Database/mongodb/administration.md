@@ -157,9 +157,16 @@ validationLevel
 ## insert new field
 db.account.update({_id:154}, {$set: {username: 'peter'}})
 
-## import 
+## import, export 
 bson: `mongorestore -d testdb -c test test.bson`
 json: `mongoimport -d testdb -c test test.metadata.json`
+
+import multiple bson
+`mongorestore -d <db> --nsInclude '*.bson' <src>`
+
+import multiple metadata json
+`cd <src>; ls -1 *.json | sed 's/.metadata.json$//' | while read col; do mongoimport -d <db> -c $col < $col.metadata.json; done`
+
 
 ## collections
 aggregate()
