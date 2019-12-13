@@ -148,6 +148,21 @@ export DOCKER_HOST=127.0.0.1:2375
 8. install docker-compose
 
 
+# docker file
+## build context
+current working directory called build context
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

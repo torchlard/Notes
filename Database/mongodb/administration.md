@@ -147,3 +147,31 @@ validation during udpates and inserts, existing docs not validate until modifica
 validationLevel
 - strict: validate all inserts and udpates
 - moderate: validate insert and updates to existing docs that already fulfill validate criteria
+
+
+# backup
+`mongodump -h=<host> -u=<user> -p=<pwd> -d=<db> -c=<coll> --authenticationDatabase=admin`
+
+
+# mongo shell method
+## insert new field
+db.account.update({_id:154}, {$set: {username: 'peter'}})
+
+## import 
+bson: `mongorestore -d testdb -c test test.bson`
+json: `mongoimport -d testdb -c test test.metadata.json`
+
+## collections
+aggregate()
+count()
+createIndex()
+
+
+
+
+
+
+
+
+
+
