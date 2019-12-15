@@ -531,7 +531,7 @@ after x sending FIN, x cannot send data anymore, but still can receive data
 ```
 if x first init FIN:
 x can close connection only after waiting for 2*max segment lifetime
-server clse connection once receive final ACK 
+server close connection once receive final ACK 
 
 # Network layer
 transport segment from sender to receiver
