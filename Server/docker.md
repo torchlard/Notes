@@ -77,6 +77,9 @@ create new image based on current state
 `docker save` save image to archive
 `docker rmi` remove image
 `docker push` user upload own custom image
+`docker top` see running process
+
+`docker-compose start|stop <service>`
 
 show all container `docker container ls --all`
 
@@ -148,7 +151,19 @@ export DOCKER_HOST=127.0.0.1:2375
 8. install docker-compose
 
 
-# docker compose
+# docker file
+## build context
+current working directory called build context
+
+
+
+
+
+
+
+
+
+
 
 
 
