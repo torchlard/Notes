@@ -12,6 +12,8 @@ limitation:
 1. CANNOT move multi-AZ db instance not in VPc into VPC
 2. CANNOT moving db instance with read replicas not in VPC into VPC 
 
+After a database is created, you can't change the VPC selection
+
 # instance class type
 ## standard
 m1: general
@@ -124,6 +126,46 @@ take snapshot
 
 enable auto backup, backup retention period not 0
 within an region, all read replicas must be created in same VPC
+
+### read replica as standalone instance
+1. perform DDL (only mysql, maraidb2. )
+  - time consuming create/rebuild index
+  - perform these on read replica, sync with source DB
+
+2. sharding
+  - create read replica corresponding to each shard
+  - carve out key space
+
+3. failure recovery
+  - complements sync replication, uto failure detectioin, failover
+  when failure,
+  1. promote read replica
+  2. direct db traffic to promoted DB instance
+  3. create replacement read replica with promoted DB instance as source
+
+## cross region consideration
+1. source DB can cross region read replicas in multiple AWS regions
+2. 1 cross region read replica from source (that not read replica of another)
+3. higher lag time
+4. within region: read replicas either in/out VPC
+  - cross region: subnet group must from same VPC
+5. cannot guarantee > 5 cross-region read replica instances
+
+## cross region replica implementation
+process can take an hour to complete
+1. source DB instnace `modifying`, new replica `creating`
+2. create automated DB snapshot of source DB in source region
+   - format: `rds:<instanceID>-<timestamp>`
+3. cross-region snapshot copy for initial data transfer
+4. when copy completes, snapshot copy `available`
+5. use copied snapshot for init data load on replica, `creating`
+6. after replica available, sync changes from source
+
+# option group
+1. create new option group 
+2. add options to option group
+3. associate option group with DB instances
+
 
 
 
