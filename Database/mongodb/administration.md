@@ -58,7 +58,7 @@ Restore /etc/mongod.conf. Now, MongoDB 3.6 started without any problem
 echo "deb [ arch=amd64,arm64 ] deb https://repo.mongodb.org/apt/ubuntu trusty/mongodb-org/3.0 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-3.0.list
 
 # login
-
+mongo --username root
 
 
 # data model
