@@ -162,18 +162,107 @@ process can take an hour to complete
 6. after replica available, sync changes from source
 
 # option group
+## step
 1. create new option group 
 2. add options to option group
 3. associate option group with DB instances
 
+## overview
+DB engine offer additional features, additional security
+use option groups to enable and configure these features
+  - specify features, called options
+
+both DB instances and DB snapshots can associate with option group
 
 
 
 
+# parameter groups
+container for engine config values that apply to >=1 DB instances
+if not specified, use default DB parameter group
+
+
+# ARN (amazon resource names)
+db instance `arn:aws:rds:<region>:<account>:db:<name>`
+event subscription `arn:aws:rds:<region>:<account>:es:<name>`
+option group `arn:aws:rds:<region>:<account>:og:<name>`
+parameter group `arn:aws:rds:<region>:<account>:pg:<name>`
+reserved db instance `arn:aws:rds:<region>:<account>:ri:<name>`
+
+
+# backup
+automated backup when available
+no backup/snapshot while copy is executing in same region for same DB instance
+
+first snapshot contains data for full DB instance
+  - subsequent snapshots for same DB instance incremental
+
+can copy automated and manual DB snapshots
+up to 100 manual snapshots per region
+
+automated backups occur daily during preferred backup window
+when backup, storage IO suspennd briefly
+default 30-min backup window, selected randomly from 8-hour clock
+
+## backup retention period
+default backup retention = 1 day
+period = 0 disables automated backups
+
+final snapshot doesn't expire
+
+## restore from snapshot
+restore DB instance from snapshot, default parameter and opption groups
+  - can apply custom param and option group
+
+cost = total storage of system snappshot
+max backup = 40
+
+can't restore from DB snapshot that both shared and encrypted
+can restore using different storage type
+
+option group associated with DB instance linked to that VPC
+- if restore to different VPC, can't use option group
+- must create new option group
+
+## copy snapshot
+can't copy snapshot to/from China
+can't copy between AWS GovCloud
+
+cross-region snapshot copy take an hour
+can copy shared snapshot across regions if unencrypted, encrypted snapshot must same region
+
+each account copy up to 5 snapshot at a time
+
+## sharing snapshot
+can share manual snapshot up to 20 other AWS accounts
+cannot share snapshot that use option group with permanenet/persistent options
+
+## restore db instance to specified time
+restore DB instance to specific point creating new DB instance
+
+RDS upload transaction logs for DB instances to S3 every 5 minutes
+
+
+## encrypted snapshot
+AWS KMS key
 
 
 
+# monitoring
+## automated monitoring tool
+### event
+subscribe to RDS events when change occur on instance, snapshot, parameter group, security group
 
+### database log
+can query some db log files loaded into db tables
+
+### enhanced monitoring
+real time mtric
+
+### cloudWatch
+metric: update every minute foreach active db
+alarm: based on metric threshold
+logs: monitor, store, access log
 
 
 
