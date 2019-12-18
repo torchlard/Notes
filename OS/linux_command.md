@@ -31,8 +31,15 @@ reboot
 ls -alS --block-size=M
 
 
-
-
+# top
+## CPU
+us: time cpu executing process in userspace
+sy: time cpu running kernelspace processes
+ni: priority of process (higher value nicer to process, so lower priority)
+id: time cpu idle
+wa: time cpu waiting IO to complete
+hi: time handling hardware interrupt
+si: time handling software interrupt
 
 
 
