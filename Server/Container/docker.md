@@ -26,7 +26,9 @@ uts: isolate kernel and version identifiers (unix timesharing system)
 limit application to specific set of resources
 
 ## union file systems
-fiel system operate by creating layers => very lighweight, fast
+iamge: each layer build on top of other, group of filesystem
+
+file system operate by creating layers => very lighweight, fast
 provide building blocks for containers
 UnionFS variants: AUFS, btrfs, vfs, DeviceMapper
 
@@ -34,6 +36,10 @@ UnionFS variants: AUFS, btrfs, vfs, DeviceMapper
 combine namespace, control groups, UnionFS => container format
 default `libcontainer`
 in future BSD Jails, Solaris Zones
+
+# best practice
+container should not write any data => keep stateless
+all file IO should use Volume / bind to host directory
 
 
 # concept
