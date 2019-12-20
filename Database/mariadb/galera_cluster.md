@@ -19,13 +19,14 @@ node data: sync; master/slave: async
 galera-3 installed along with mariadb-server-10.3
 
 # config
+## 1st node
 ```
 wsrep_on=ON
 wsrep_provider=/usr/lib/galera/libgalera_smm.so
-wsrep_cluster_address='gcomm://'    #第一个启动节点配置
+wsrep_cluster_address='gcomm://'    
 wsrep_cluster_name='mariadb_cluster'
-wsrep_node_address='192.168.0.56'   #本机IP地址
-wsrep_node_name='mariadb_node1'    #集群节点名称
+wsrep_node_address='192.168.0.56'   
+wsrep_node_name='mariadb_node1'    
 wsrep_sst_method=rsync
  
 binlog_format=row
@@ -34,7 +35,7 @@ innodb_autoinc_lock_mode=2
 bind-address=0.0.0.0
 ```
 
-在第二台和第三台节点上配置/etc/my.cnf.d/server.cnf 文件的[galera]部分：
+## 2nd, 3rd node
 
 ```
 wsrep_on=ON
@@ -68,16 +69,22 @@ bind-address=0.0.0.0
 # activation
 use one node as starter:
 `sudo mysqld --wsrep-new-cluster`
+`sudo galera_new_cluster`
 
 other nodes start normally:
 `sudo service mysql start`
+`sudo systemctl start mariadb`
 
 
+# problem
+## edit the grastate.dat file manually and set safe_to_bootstrap to 1 
+sudo vim /var/lib/mysql/grastate.dat
 
+change `safe_to_bootstrap: 1`
 
-
-
-
+## ist not allowed
+set node address to private ip in VPC
+disable SELinux
 
 
 

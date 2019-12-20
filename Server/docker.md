@@ -86,6 +86,9 @@ show all container `docker container ls --all`
 show images
 `docker image ls`
 
+stop all running images
+`docker stop $(docker ps -q)`
+
 delete none images
 `docker rmi -f $(docker images -f "dangling=true" -q)`
 
