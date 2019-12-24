@@ -75,6 +75,7 @@ other nodes start normally:
 `sudo service mysql start`
 `sudo systemctl start mariadb`
 
+`journalctl -fu mariadb`
 
 # problem
 ## edit the grastate.dat file manually and set safe_to_bootstrap to 1 
