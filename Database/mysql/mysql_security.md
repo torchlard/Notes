@@ -20,7 +20,7 @@ use mysql;
 alter user 'root'@'localhost' identified by 'xxx';
 flush privileges;
 
-
+`GRANT SELECT, LOCK TABLES, REPLICATION CLIENT, SHOW VIEW ON *.* TO 'readonly'@'%' `
 
 
 

@@ -41,7 +41,8 @@ wa: time cpu waiting IO to complete
 hi: time handling hardware interrupt
 si: time handling software interrupt
 
-
+# scp
+`scp source_ip:source_file dest_ip:dest_file`
 
 
 

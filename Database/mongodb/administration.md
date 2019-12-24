@@ -177,11 +177,21 @@ count()
 createIndex()
 
 
+# account
+rename user 
+`db.system.users.update({"user": "<old>"}, {$set: {"user": "<new>"}})`
 
+create user
+```
+use admin
+db.createUser({user: '<name>', pwd: '<pwd>', roles: [
+    "root"
+]})
+```
+connection
+`mongo -u <user> -p <pwd> --host <host>`
 
-
-
-
-
+revoke role from user
+`db.revokeRolesFromUser("<user>", ["root"], {})`
 
 
