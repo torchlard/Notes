@@ -153,6 +153,8 @@ avoid process create multiple copies
 if process closed fd, then lock failed
 
 
+# OOM killer
+when system out of memory, kill process using most memory
 
 
 

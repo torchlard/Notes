@@ -20,6 +20,14 @@ Physical infrastructure
 ```
 # Kubernetes architecture
 at least 1 master, multiple compute node
+
+```
+cluster
+  worker nodes
+    pod
+      container
+```
+
 ## master
 exposing API, schedule deployment, manage overall cluster
 
@@ -33,7 +41,7 @@ use `kubectl` to communicate
 
 ## Node
 runs container runtime, eg. Docker, rkt
-- run two process: 
+run two process: 
 - kubelets: communicate with master
 - kube-proxy: reflect Kubernetes networking services on each node
 logging, monitor, service discovery, optional add-on
@@ -44,6 +52,7 @@ core unit of management
 collection of >= 1 containers
 each pod unique IP
 Pod itself doesn't run 
+
 ### manage multiple container
 container inside Pod communicate using localhost
 container communicate outside Pod -> coordinate how to use shared network resource (ports)
