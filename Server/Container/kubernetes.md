@@ -1,12 +1,14 @@
-# other management tools
+# background
+## other management tools
 Docker datacenter, Mesosphere DC/OS (Mesos)
 
-# container implementations
+## other container implementations
 LXD (Canonical), rkt (CoreOS), Windows Containers (Microsoft), CRI-O 
 vSphere Integrated Container (VMWare)
 
-# Container orchestration
-influenced Paas architecture in package, deployment, isolation, service discovery, scaling, rolling upgrades
+## Container orchestration
+influenced PaaS architecture in package, deployment, isolation, service discovery, 
+scaling, rolling upgrades
 - deploy core container orchestration toools
 - Paas implementaiton target developer
 
@@ -18,6 +20,7 @@ Cluster 1: app,app,app | Cluster 2
 VM VM VM VM VM VM
 Physical infrastructure
 ```
+
 # Kubernetes architecture
 at least 1 master, multiple compute node
 
@@ -28,8 +31,9 @@ cluster
       container
 ```
 
-## master
+# master
 exposing API, schedule deployment, manage overall cluster
+include API server, scheduler, controller, etcd
 
 definition of Kubernetes object (pod,replica set, services) submitted to master
 -> by requirement, availability of resource
@@ -39,18 +43,40 @@ definition of Kubernetes object (pod,replica set, services) submitted to master
 
 use `kubectl` to communicate
 
-## Node
+## API server
+only entrance for all resource, do auth, authorization, access control
+API registration, discovery
+
+## scheduler
+## controller manager
+failure detection, auto scal in/out, rolling update
+
+## etcd
+keep running state of cluster
+
+
+# Node
 runs container runtime, eg. Docker, rkt
-run two process: 
-- kubelets: communicate with master
-- kube-proxy: reflect Kubernetes networking services on each node
+run two process: kubelets, kube-proxy
+
 logging, monitor, service discovery, optional add-on
 can be VM / bare-metal servers
 
-## pod
-core unit of management
-collection of >= 1 containers
-each pod unique IP
+## kubelet
+communicate with master, maintain container lifecycle
+CSI (container storage interface)
+CNI (container network interface)
+
+## kube-proxy
+service abstract multiple pods, provide virtual IP
+
+reposible for service & pod config => produce iptables rule
+- direct traffic to service virtual IP to on right nodes
+
+
+# pod
+core unit of management, collection of >= 1 containers
+each pod unique IP, not exposed outside cluster without service
 Pod itself doesn't run 
 
 ### manage multiple container
@@ -65,80 +91,54 @@ discovery of pods
 - associate set of pods to specific criterion
 - key-value pairs (labels, selector)
 
-## Service
+# Service & label
 abstraction define logical set of Pods and policy to access them => micro-service
 Pods target by Service determined by Label Selector
 
-## volume
+service route traffic across set of pods
+service = abstraction that allow pods to die and replicate in k8s without affecting app
+discovery & routing among dependent pods handled by k8s services
+
+eg
+```
+label = appB/A
+label selector: A->appA, B->appB
+
+node1: pod1 (app B)
+node2: pod2 (app B), pod3 (app B)
+node3: pod4 (app A)
+
+```
+
+
+
+
+
+# Volume
 a directory on disk / in another container
 lifetime same as Pod, data preserved across Container restarts
 if Pod ends, data lost
 
 ## namespace
 Kubernetes support multiple virtual clusters backed by same physical cluster
+
 Namespace intended for many users across multiple teams / projects
 name of resources need to be unique within namespace, not across namespace
-- divide cluster resource between multiple users
-- objects in same namespace has same access control policy by default
+  - divide cluster resource between multiple users
+  - objects in same namespace has same access control policy by default
 
-# feautres
-## Workload scalability
-applications packaged as microservices
-adding support to stateless application (eg. Cassandra, MongoDB replica sets)
 
-## High Availability
-tackle availability of both infrastructure and applications
-by means of:
-- replica sets, replication controllers, pet sets
-each component (etcd, API server, ndoes) can be configured for high availability
-
-## security
-API endpoint: TLS
-Kubernetes API created automatically by API server
-secret: Kubernetes object that contains small amount of sensitive data
-- pod access secret at runtime through mounted volumes / environment variables
-
-restricted network traffic
-- network policy: how selections of pods allowed to communicate with each otehr & network endpoints
-
-## portability
-can choose any OS, cloud platform, virtualization environment
-
-# functions
-## Resource Management
-ResourceRequest
-- combined set of resources being requested for container / Pod
-ResourceLimit
-- upper boundary that container/pod can consume
-ResourceCapacity
-- amount of resource available on cluster node
-
-## Scheduling
-pod matched to available resource
-consider 
-- resource requirement, availability, user-provided constraints
-- QOS, affinity requirement, data locality
-
-PriorityFunctions: score host that fit predicate by user-configurable priority functions
-workloads has variable number of pods
-
-## load balancing
-spreading application load uniformly across variable number of lcuster
-Kubernetes use pods to realize horizontal scaling
-- when scale, multiple pods share common label across cluster hosts
-- target number of pods running -> create/destroy pod to keep
-- each pod with virtual IP
 
 # API
 ## Ingress
 manage external access to services in cluster, typically HTTP
-- load balance, SSL termination, name-based virtual hosting
+  - load balance, SSL termination, name-based virtual hosting
 need ingress controller to satisfy ingress
-- support GCE and nginx controllers
+  - support GCE and nginx controllers
 
 additional controller:
 - HAProxy, Istio, Kong, Traefik
-can deploy any nuber of ingress controllers within cluster
+can deploy any number of ingress controllers within cluster
 
 
 # tools
