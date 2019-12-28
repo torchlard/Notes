@@ -34,16 +34,6 @@ in future BSD Jails, Solaris Zones
 container should not write any data => keep stateless
 all file IO should use Volume / bind to host directory
 
-# Volume
-images stored as series of read-only layers
-when start container
-1. take read-only image
-2. add read-write layer on top
-3. if running container modifies existing file, file copied out of underlying read-only layer into top-most read-write layer
-  - hides undelying file, not destroy it
-4. when container deleted, relaunching image start fresh container without any changes made
-
-Union fs = read-only layer + read-write layer
 
 ## union file systems
 iamge: each layer build on top of other, group of filesystem
@@ -65,12 +55,6 @@ command line shows all top-layer images
 when new container created from image, writable layer also created (container layer)
 - host all changes made to running container
 - store newly written, deleted files, modification to existing files
-
-## persistence
-goal: save (persist) data, share data between container
-
-## volume location
-/var/lib/docker/volumes/<id>/_data/xxx
 
 
 
