@@ -8,6 +8,16 @@ when Pod vanish, volume disappear
 Pod can use any number of types of volumes simultaneously
 at core volume just directory
 
+docker image at root of fs hierarchy, any volume mounted at specified paths within image
+
+## awsElasticBlockStore
+mounts AWS EBS Volume into pod
+when pod removed, content of EBS preserved and volume merely unmounted
+EBS can pre-populated with data, data can transfer between pods
+
+nodes that pod running must be EC2
+instances must in same region and availability-zone as EBS 
+EBS only support single EC2 instance mounting a volume
 
 
 
