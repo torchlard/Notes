@@ -1,5 +1,6 @@
 # minikube
-`minikube start`
+start local k8s `minikube start`
+see dashboard `minikube dashboard`
 
 # kubectl
 get resources `kubectl get xxx [-o wide]` 
@@ -28,6 +29,20 @@ scale `kubectl scale deployments/kubernetes-bootcamp --replicas=2`
 terminate all replica `kubectl scale deployments/kubernetes-bootcamp --replicas=0`
 
 
+# example 
+1. minikube start
+2. write yaml for deployment,services
+3. kubectl apply -f xxx.yaml
+4. check by `kubectl get pods`, `kubectl get services`
+5. check node IP by 
+   - NodePort `minikube service frontend --url` 
+   - LoadBalancer `kubectl get service frontend` 
+6. scale by `kubectl get deployment frontend --replica=5`
+7. delete and clean up deployment, services
+  - kubectl delete deployment -l app=redis
+  - kubectl delete service -l app=redis
+  - ...
+  
 
 
 
