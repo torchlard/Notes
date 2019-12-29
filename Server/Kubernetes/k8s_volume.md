@@ -1,3 +1,17 @@
+# Volume
+a directory on disk / in another container
+lifetime same as Pod, data preserved across Container restarts
+if Pod ends, data lost
+
+## namespace
+Kubernetes support multiple virtual clusters backed by same physical cluster
+
+Namespace intended for many users across multiple teams / projects
+name of resources need to be unique within namespace, not across namespace
+  - divide cluster resource between multiple users
+  - objects in same namespace has same access control policy by default
+
+
 # k8s volume VS docker volume
 docker volume no explicit lifetime, volume driver limited functionality
 k8s volume has explict lifetime, same as pod that encloses it

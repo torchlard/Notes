@@ -35,7 +35,7 @@ cluster
 exposing API, schedule deployment, manage overall cluster
 include API server, scheduler, controller, etcd
 
-definition of Kubernetes object (pod,replica set, services) submitted to master
+definition of Kubernetes object (pod, replica set, services) submitted to master
 -> by requirement, availability of resource
 -> schedules pod on specific nodes
 -> node pulls image from container image registry
@@ -109,24 +109,6 @@ node2: pod2 (app B), pod3 (app B)
 node3: pod4 (app A)
 
 ```
-
-
-
-
-
-# Volume
-a directory on disk / in another container
-lifetime same as Pod, data preserved across Container restarts
-if Pod ends, data lost
-
-## namespace
-Kubernetes support multiple virtual clusters backed by same physical cluster
-
-Namespace intended for many users across multiple teams / projects
-name of resources need to be unique within namespace, not across namespace
-  - divide cluster resource between multiple users
-  - objects in same namespace has same access control policy by default
-
 
 
 # API
