@@ -68,6 +68,9 @@ mysql 8.0:
 (CREATE USER 'root'@'%' IDENTIFIED BY 'root';
  mysql> GRANT ALL PRIVILEGES ON *.* TO 'root'@'%' WITH GRANT OPTION;)
 
+## docker autostart
+if set `restart: always` in docker-compose.yml, then will auto start
+
 
 
 # install windows docker with WSL 1

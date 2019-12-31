@@ -44,13 +44,18 @@ si: time handling software interrupt
 # scp
 `scp source_ip:source_file dest_ip:dest_file`
 
+# backup remote host's disk image
+xfs filesystem
+ `ssh <remote> "xfsdump -l 0 - /" > <localhost-path>`
+`ssh <remote> "xfsdump -l 0 - / | gzip -c" > <host-path>`
 
+dumpp xfs to remote host
+`xfsdump -l0 - / | gzip -c | ssh user@host dd of=/backup.dgz`
 
+restore xfs from remote host
+`ssh user@host "dd if="/xx/backup.dgz" | gunzip -c | xfsrestore - /mnt`
 
-
-
-
-
+`dd if=xxx.dgz | gunzip -c | ssh <remote> "xfsrestore - /" `
 
 
 
