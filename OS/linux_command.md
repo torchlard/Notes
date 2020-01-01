@@ -46,6 +46,8 @@ si: time handling software interrupt
 
 # backup remote host's disk image
 xfs filesystem
+
+must use secret key / pwd of root ac
  `ssh <remote> "xfsdump -l 0 - /" > <localhost-path>`
 `ssh <remote> "xfsdump -l 0 - / | gzip -c" > <host-path>`
 
