@@ -25,7 +25,7 @@ NM_CONTROLLED=no
 
 # network
 ## auto connect
-sudo nmtui
+`sudo nmtui`
 use "space bar" check auto connect
 
 
@@ -38,6 +38,24 @@ dnf autoremove
 
 # yum
 sudo yum update
+
+
+# backup disk image 
+xfs filesystem
+
+must use secret key / pwd of root ac
+ `ssh <remote> "xfsdump -l 0 - /" > <localhost-path>`
+`ssh <remote> "xfsdump -l 0 - / | gzip -c" > <host-path>`
+
+dumpp xfs to remote host
+`xfsdump -l0 - / | gzip -c | ssh user@host dd of=/backup.dgz`
+
+restore xfs from remote host
+`ssh user@host "dd if="/xx/backup.dgz" | gunzip -c | xfsrestore - /mnt`
+
+`dd if=xxx.dgz | gunzip -c | ssh <remote> "xfsrestore - /" `
+
+
 
 
 
