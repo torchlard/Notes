@@ -19,6 +19,8 @@ node data: sync; master/slave: async
 galera-3 installed along with mariadb-server-10.3
 
 # config
+centos: /usr/lib64/galera-4/libgalera_smm.so
+
 ## 1st node
 ```
 wsrep_on=ON

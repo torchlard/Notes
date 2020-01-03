@@ -37,16 +37,6 @@ check rules `iptables -S`
 eg. open port 3306
 `iptables -A IN_public_allow -p tcp -m tcp --dport 3306 -m conntrack --ctstate NEW,UNTRACKED -j ACCEPT`
 
-yum install iptables-services
-systemctl disable firewalld
-service iptables save
-systemctl enable iptables
-
-
-
-
-
-
 
 
 
