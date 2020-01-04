@@ -25,10 +25,13 @@ legacy download tool
 problem: support too few protocol, only HTTP 1.0, too complex
 
 
-# firewall
-`systemctl status firewalld`
+# firewalld
+show status `systemctl status firewalld`
+list all `firewall-cmd --list-all`
+get zones (networks) `firewall-cmd --get-active-zones`
 
-`firewall-cmd --list-all`
+
+
 
 # iptables
 check existing `iptables -L -n`
