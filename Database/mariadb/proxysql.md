@@ -57,18 +57,35 @@ mysql_users
 scheduler: ~cron
 
 # config
+```sql
+use main;
 
 insert into mysql_servers(hostgroup_id,hostname,port) values(10,'<ip>',3306); 
-admin> insert into mysql_users(username,password,default_hostgroup) values('root','passwd',10);
+load mysql servers to runtime;
+save mysql servers to disk;
 
+insert into mysql_users(username,password,active,default_hostgroup) values('proxysql','proxysql',1,10);
+load mysql users to runtime; save mysql users to disk;
 
+set mysql-interfaces='<ip>:6033';
+save mysql variables to disk;
 
+insert into mysql_query_rules (active,username,match_pattern,schemaname,destination_hostgroup,apply) values(1,'proxysql','^select','test',1,1);
+load mysql query rules to runtime;save mysql query rules to disk;
+```
+systemctl restart proxysql
 
+in mariadb
+```sql
+create user ...
+GRANT ALL PRIVILEGES ON *.* TO 'monitor'@'%' IDENTIFIED BY 'monitor';
+GRANT ALL PRIVILEGES ON *.* TO 'proxysql'@'%' IDENTIFIED BY 'proxysql';
+```
 
+proxysql is open to public for load balance
+monitor is for monitoring use
 
-
-
-
+check if proxysql connect to db `select * from monitor.mysql_Server_connect_log;`
 
 
 
