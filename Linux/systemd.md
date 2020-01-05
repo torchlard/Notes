@@ -93,6 +93,46 @@ Requires: config dependencies on other units
 Wants: weaker dep than Requires, no impact on activation if not exists
 Conflicts: opposite to Requires
 
+## [<unit-type>]
+### Type
+unit process startup type that affect ExecStart
+- simple: default, start as main process
+- forking: spawn child process
+- oneshot: process exits before starting consequent units
+- dbus: consequent untis start after main process gain D-Bus name
+- notify: consequent untis start after notification msg sent
+- idle: actual execution delayed until all jobs finished
+
+### other
+ExecStart, ExecStop, ExecReload
+Restart: service restart after process exits, except stop by systemctl
+RemainAfterExit: service considered active even when all its process exited
+
+## [Install]
+Alias: alias name to unit
+Also: units installed/uninstalled along with unit
+DefaultInstance: (only instantiated units) 
+
+
+# create custom unit file
+1. prepare executable file with custom service
+2. if required, prepare PID file to hold const PID for main process 
+3. include enironment file to store shell variabels 
+4. create unit file in `/etc/systemd/system/` with correct permission (644), execute as root
+5. add service config to `name.service`
+
+## SystemV LSB to systemd
+for RHEL7, all core service has default unit files
+
+shouldn't directly modify unit files, modification should put config files 
+- create dir for supplementary cconfig files at /et/system/system/unit.d/
+- create copy of original unit files /usr/lib/systemd/system and amke change
+  - copy overwrites original file
+
+
+
+
+
 
 
 
