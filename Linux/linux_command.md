@@ -50,5 +50,16 @@ restore xfs from remote host
 `dd if=xxx.dgz | gunzip -c | ssh <remote> "xfsrestore - /" `
 
 
+# ssh
+run on multiple machine
+```s
+parallel ::: \
+  "ssh <host1> 'bash -s' < ./install.sh" \
+  "ssh <host2> 'bash -s' < ./install.sh" \
+  "ssh <host3> 'bash -s' < ./install.sh" 
+```  
+
+
+
 
 
