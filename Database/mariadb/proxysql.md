@@ -31,6 +31,9 @@ load|save admin variables to runtime|memory
 ```
 
 # admin
+to reload, delete all in /var/lib/proxysql
+
+initial access
 `mysql -h 127.0.0.1 -u admin -padmin -P 6032`
 
 # network
@@ -61,8 +64,7 @@ scheduler: ~cron
 use main;
 
 insert into mysql_servers(hostgroup_id,hostname,port) values(10,'<ip>',3306); 
-load mysql servers to runtime;
-save mysql servers to disk;
+load mysql servers to runtime; save mysql servers to disk;
 
 insert into mysql_users(username,password,active,default_hostgroup) values('proxysql','proxysql',1,10);
 load mysql users to runtime; save mysql users to disk;
@@ -77,8 +79,7 @@ systemctl restart proxysql
 
 in mariadb
 ```sql
-create user ...
-GRANT ALL PRIVILEGES ON *.* TO 'monitor'@'%' IDENTIFIED BY 'monitor';
+create user 'monitor'@'%';  -- only need usage preference
 GRANT ALL PRIVILEGES ON *.* TO 'proxysql'@'%' IDENTIFIED BY 'proxysql';
 ```
 
@@ -86,6 +87,51 @@ proxysql is open to public for load balance
 monitor is for monitoring use
 
 check if proxysql connect to db `select * from monitor.mysql_Server_connect_log;`
+
+`show tables from monitor;`
+
+## mysql_users
+username, password, active
+default_hostgroup: if no matching rules, default direct to this hostgroup
+default_schema: if user connection no specified db name, default use this
+transaction_persistence: if 1, if transaction on one hostgroup, then consequent sql persist on this hostgroup
+frontend: client -> proxysql
+backend: proxysql -> backend db
+fast_forward: ignore query rewrite / cache, directly pass request to DB
+
+## mysql_rules
+active
+username, schemaname
+client_addr: source IP
+destination_hostgroup
+
+flagIN, flagOUT: try match flagIN and flagOUT numbers to form chain of rules
+```
+in=0, out=1
+in=1, out=2
+in=2, out=2 // ends
+```
+### matching
+digest: exact match type of query
+match_digest: regex type of query
+query digest: vague match
+match_pattern: regex  query
+negative_match_pattern
+re_modifiers: modify regex param, eg. ignore case
+
+### action after match
+replace_pattern: query rewrite
+cache_ttl: cache timeout ms; cache_timeout: second
+cache_empty_result
+reconnect
+timeout, retries, delay
+mirror_hostgroup: copy SQL to destination_hostgroup
+
+
+
+
+
+
 
 
 
