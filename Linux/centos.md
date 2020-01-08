@@ -55,7 +55,8 @@ restore xfs from remote host
 
 `dd if=xxx.dgz | gunzip -c | ssh <remote> "xfsrestore - /" `
 
-
+# set hostname
+hostnamectl set-hostname xxx
 
 
 
