@@ -161,6 +161,20 @@ show collections
 use testdb; db.dropDatabase()
 
 
+# DBRef
+3 fields wrapped up for $id field
+- $ref: name of collection where ref doc resides
+- $id: contains value of _id in ref doc
+- $db: name of db where ref doc resides
+
+ObjectId pointed to $ref name for collection that object id in
+$db if in different db
+
+## manual reference
+including one document's _id in another document
+issue second query to resolve referenced fields as needed
+
+
 
 
 
