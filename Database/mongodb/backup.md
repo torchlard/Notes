@@ -42,11 +42,9 @@ rename user
 `db.system.users.update({"user": "<old>"}, {$set: {"user": "<new>"}})`
 
 create user
-```
+```js
 use admin
-db.createUser({user: '<name>', pwd: '<pwd>', roles: [
-    "root"
-]})
+db.createUser({user: '<name>', pwd: '<pwd>', roles: ["root"]})
 ```
 connection
 `mongo -u <user> -p <pwd> --host <host>`

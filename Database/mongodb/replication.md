@@ -10,7 +10,7 @@ check config `rs.config()`
 ## force primary
 ```js
 cfg = rs.conf()
-cfg.members[0].priority = 0.5
+cfg.members[0].priority = 0.2
 cfg.members[1].priority = 0.5
 cfg.members[2].priority = 1
 rs.reconfig(cfg)
@@ -28,13 +28,10 @@ rsync -av /var/lib/mongod/keyfile root@<instance-ip>:/var/lib/mongod
 rsync -av /var/lib/mongod/keyfile root@<instance-ip>:/var/lib/mongod
 ```
 
-
-
-
-
-
-
-
+## maintenance
+enable/disable maintenance mode for secondary member of replica set
+must run on replica
+`{replSetMaintenance: <boolean>}`
 
 
 
