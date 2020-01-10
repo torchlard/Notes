@@ -174,20 +174,6 @@ $db if in different db
 including one document's _id in another document
 issue second query to resolve referenced fields as needed
 
-# write concern
-level of acknowledgement requested from mongodb 
-- write operations to standalone mongod / replica set / sharded cluster
-
-{w: <value>, j: <boolean>, wtimeout: <num>}
-
-w: write operation has propagated to specified num of mongod instance (with specified tags)
-j: write operation has been written to on-disk journal
-wtimeout: time limit to prevent write operations from blocking indefinitely
-
-
-
-
-
 
 
 

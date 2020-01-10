@@ -1,6 +1,18 @@
-# backup
-`mongodump -h=<host> -u=<user> -p=<pwd> -d=<db> -c=<coll> --authenticationDatabase=admin`
+# disaster recovery
+RTO: recovery time objective, recover functionality
+RPO: recovery point objective, recover data
 
+| level | RTO        | RPO       |
+|-------|------------|-----------|
+| 1     | 2d         | 1d-7d     |
+| 2     | >24hr      | 1d-7d     |
+| 3     | >12hr      | n hr - 1d |
+| 4     | n hr - 2d  | n hr - 1d |
+| 5     | n min - 2d | 0-30 min  |
+| 6     | n min      | 0         |
+
+# command
+`mongodump -h=<host> -u=<user> -p=<pwd> -d=<db> -c=<coll> --authenticationDatabase=admin`
 
 ## import, export 
 bson: `mongorestore -d testdb -c test test.bson`
@@ -36,21 +48,27 @@ copy only db `test`
 `mongodump -h=127.0.0.1:27020 -d test --archive | mongorestore -h=127.0.0.1:27021 -d test --archive`
 
 
+# oplog
+mongodb replica use oplog to sync replicas
+record all updates in period of time
 
-# account
-rename user 
-`db.system.users.update({"user": "<old>"}, {$set: {"user": "<new>"}})`
+oplogReplay: replay oplog for point-int-time restore
+oplogLimit: include oplog entries before provided Timestamp
+oplogfile: oplog file for replay of oplog
 
-create user
-```js
-use admin
-db.createUser({user: '<name>', pwd: '<pwd>', roles: ["root"]})
-```
-connection
-`mongo -u <user> -p <pwd> --host <host>`
+1. 
 
-revoke role from user
-`db.revokeRolesFromUser("<user>", ["root"], {})`
+
+
+
+
+
+
+
+
+
+
+
 
 
 
