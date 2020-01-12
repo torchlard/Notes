@@ -10,7 +10,7 @@ characteristics
 - include any related file, eg. log, config file
 - portable only to similar hardware environment
 - performed while MySQL server not running; if running, lock records
-- use `mysqlbackup`
+- use `mysqlbackup` / `mariabackup`
 
 restore
 - ndb_restore

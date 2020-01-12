@@ -90,6 +90,8 @@ set node address to private ip in VPC
 disable SELinux
 
 
+# galera VS group replication
+
 
 
 

@@ -139,7 +139,7 @@ each insert,update,delete performed on each row logged
 default statement-based logging, if not safe, use row-based logging
 
 ## purge log file
-delete all: `RESET MASTER`
+delete all `RESET MASTER`
 delete before certain datetime: 
 `PURGE BINARY LOGS TO 'mariadb-bin.000063'`
 `PURGE BINARY LOGS BEFORE '2013-04-22 09:55:22'`
@@ -166,11 +166,38 @@ same format as binary log, contain record of events affect data/structure
 `mysqlbinlog --start-position=1847 --stop-position=2585 mysql-bin.000008 > test.sql`
 
 
+# binary log format
+```
+#200112 18:41:47 server id 1  end_log_pos 697 CRC32 0xceadcc44 	Annotate_rows:
+#Q> INSERT INTO test.t1 (id,name)
+#Q> 	VALUES (5,'12'
+#200112 18:41:47 server id 1  end_log_pos 745 CRC32 0xe29a031a 	Table_map: `test`.`t1` mapped to number 18
+#200112 18:41:47 server id 1  end_log_pos 787 CRC32 0x977d6c11 	Write_rows: table id 18 flags: STMT_END_F
+```
+Table_map: defines table name used by query
+Write_rows/Update_rows/Delete_rows: defines event type
+
+```
+BINLOG '
+GvcaXhMBAAAAMAAAAPQBAAAAABIAAAAAAAEABHRlc3QAAnQxAAIDDwL8AwJaSvvu
+GvcaXhgBAAAANwAAACsCAAAAABIAAAAAAAEAAv///AQAAAADAGRkZPwEAAAABABkZGRlbQ8Aug==
+'/*!*/;
+### UPDATE `test`.`t1`
+### WHERE
+###   @1=4
+###   @2='ddd'
+### SET
+###   @1=4
+###   @2='ddde'
+```
+row events encoded as base-64 strings 
+actual SQL shown after `###`
 
 
 
-
-
+## argument
+--start-datetime="2015-01-12 21:40:00"  --stop-datetime="2015-01-12 21:45:00" 
+--base64-output=decode-rows: omit base64 binlog string
 
 
 

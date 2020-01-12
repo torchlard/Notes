@@ -102,15 +102,93 @@ manually build inconsistent table
 5. periodically check consistency
 
 
+# GTID
+global transaction identifier
 
+## initiative
+when master failover, slave connect to new master
+not friendly using file & pos
 
+## definition
+unique representatoin of committed transaction in whole replication system
+`gtid_mode=ON`
+format `source_id:transaction_id`
 
+source_id = server-id of server that init tx
+transaction id = related to order tx, start from 1, inc in same originating server
 
+## GTID set
+`uuid:interval [, uuid:interval]`
+interval: eg. 1, 1-5
+```
+select GTID_SUBTRACT(
+  'f76eb90f-82a2-11e5-a162-7ca23e9126c5:1-5,f76eb90f-82a2-11e5-a162-7ca23e9126c5:10-15', 
+  'f76eb90f-82a2-11e5-a162-7ca23e9126c5:1-2')
+```
+return f76eb90f-82a2-11e5-a162-7ca23e9126c5:3-5:10-15
 
+## lifecycle
+can use GTID to know tx from which server
+if tx already committed in certain server, later same GTID tx will be ignored
 
+slave don't need (file&pos) from master anymore
+- `change master to` don't need log file & log pos param
 
+1. tx commit on master, assigned GTID, GTID immediately write to binlog
+2. GTID pass to slave, save in relay log
+3. slave read GTID, set to gtid_next
+4. later slave committed tx must use this GTID
+5. ensure GTID not used in own binlog, start tx; when commit write GTID to binlog
 
+### GTID_NEXT
+session variable, default atomatic (create new)
+when read gtid-event, output set GTID_NEXT
 
+### GTID_EXECUTED
+save all gtid set executed
+
+## replication
+1. when slave connect to master, send executed tx gtid period
+2. master send other tx (not executed in slave) to slave
+
+## failover
+assume master fails
+
+### newwst slave as new master
+just ok
+
+### choose any slave as new master
+assume situation:
+A binlog[1 2 3]  {old master}
+B relaylog[1] binlog[]
+C relaylog[1 2] binlog[1 2]
+D relaylog[1 2 3] binlog[1]
+
+method 1: 
+1. C as master, B connect C, wait B run C's binlog,relaylog
+2. D as master, B connect D, wait B run D's binlog,relaylog
+3. B as master
+
+method 2:
+1. find node with most relay log (ie. D)
+2. wait D run realy log, B connect D, B run relay log
+3. B as master
+
+```
+for slave in slaves:
+  if slave != candidate:
+    candidate(stop slave)
+    candidate(change master to master_host=slave.host, master_port=slave.port)
+    candidate(start slave)
+
+    slave_executed_gtid = slave(select @@GLOBAL.GTID_EXECUTED)
+    slave_queued_gtid = slave(show slave status [column = retrieved_gtid_set])
+    slave_all_gtid = slave_executed_gtid + ':' + slave_queued_gtid
+
+    candidate(select wait_until_sql_thread_after_gtid(slave_all_gtid))
+```
+## problem
+not support create/drop temporary table
 
 
 
