@@ -132,17 +132,45 @@ expand array to rows
 `$exists`: whethere document has specific field
 
 
+# lookup
+```js
+
+db.orders.aggregate([
+{
+    $lookup: {
+        from: "warehouses",
+        let: { order_item: "$item", order_qty: "$ordered" },
+        pipeline: [
+            {
+                $match: { $expr: { $and: [
+                    {$eq: ["$stock_item", "$$order_item"]},
+                    {$gte: ["$instock", "$$order_qty"]},
+                    {$or: [
+                        {$eq: ["$stock_item", "cookies"]},
+                        {$eq: ["$stock_item", "almonds"]}
+                    ]}
+                ]} } 
+            },
+            
+            // {$project: { stock_item: 0, _id: 0}}
+            {$project: {stock_item: 1, _id:0}}
+        ],
+        as: "stockdata"
+    }
+}
+```
+## diacritic-sensitive search
+diacritic: accent, small sign/symbol added to letter
 
 
 
 
-## concurrency
+# concurrency
 takes following locks:
 - read phase => every 100 documents : read lock
 - insert into temp collection => single write : write lock 
 - output collection not exist => create output collection : write lock
 - output collection exist => output action : write lock (global, block all operations)
-
 
 
 ## single purpose aggregation operation

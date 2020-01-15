@@ -56,7 +56,30 @@ oplogReplay: replay oplog for point-int-time restore
 oplogLimit: include oplog entries before provided Timestamp
 oplogfile: oplog file for replay of oplog
 
-1. 
+
+# backup with filesystem snapshot
+"block-level" backup, create copies of device holds data files
+create pointers between live data and special snapshot volume
+  - equivalent to hard links
+use copy-on-write strategy: only stores modified data
+
+restore:
+1. mount snapshot image on fs
+2. copy data from snapshot
+
+## note
+db must be valid when snapshot take place
+all writges accepted by db fully written to disk: to journal / data files
+
+## disk
+snapshot create image of entire disk
+consider isolating DB data files, journal, config on 1 logical disk
+
+no incremental backup
+if journaling enabled, can use any fs / volume/block level snapshot tool to create backups
+
+if using aws EBS with RAID, cannot get consistent state across all disks
+
 
 
 
