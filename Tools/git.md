@@ -9,7 +9,9 @@ no need to re-enter password
 
 commands:
 git remote -v     // check existing url
-git remote set-url origin git@github.com:USERNAME/REPO.git  // new ssh url
+git remote set-url origin git@github.com:USERNAME/REPO.git  // change existing url
+git remote add origin git@github.com:USERNAME/REPO.git  // new ssh url
+
 
 // do following if no key installed
 ssh-keygen -t rsa -b 4096   // generate new key, cannot copy from old file
