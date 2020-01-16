@@ -59,6 +59,11 @@ parallel ::: \
   "ssh <host3> 'bash -s' < ./install.sh" 
 ```  
 
+# ls
+list all with size `ll -h`
+
+# prompt
+PS1="\e[40;0;36m[\u@\h \W]\$ \e[m"
 
 
 

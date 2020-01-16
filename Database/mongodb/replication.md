@@ -34,5 +34,8 @@ must run on replica
 `{replSetMaintenance: <boolean>}`
 
 
+# read preference
+&readPreference=secondaryPreferred
+
 
 
