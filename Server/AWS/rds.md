@@ -265,6 +265,62 @@ alarm: based on metric threshold
 logs: monitor, store, access log
 
 
+# CloudWatch
+## collection
+1. logging
+- billing
+- AWS service distribution
+- custom log
+
+2. internal metric
+- EC2, DynamoDB, S3, ECS, Lambda, API Gateway
+
+3. custom metric
+
+## monitor
+dashboard integration review
+high resolution alarm
+logs and metrics correlation
+
+## Act
+auto scaling
+automate response to oprational changes
+
+## Analyze
+granular data and extended retention
+custom operations opn metrics
+
+
+# Components
+## EC2 (Elastic Compute Cloud)
+web service for cloud
+
+## EBS (Elastic Block Store)
+persistent block storage for amazon EC2
+each EBS volume auto replicated within its availability zone 
+
+## RDS (relational database service)
+eg. postgreSQL, MySQL, MariaDB, Oracle Dataabase, SQL Server
+
+## S3 (Storage for the Internet)
+object storage, retrieve any amount of data
+
+
+
+# warning
+## RDS replica Lag
+cause: 
+- high write workload
+- network issue acros regions / available zones
+
+solutions:
+- occasionally high => read never on read replica/tolerate steal read
+- caused by write workload 
+  => structuring app -> write scheduled and completed async
+  => avoid large spikes in write activity
+- cause by network
+  => create another replica in another availability zone
+
 
 
 

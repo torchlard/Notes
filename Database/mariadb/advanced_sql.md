@@ -209,6 +209,62 @@ handler <tbl> CLOSE;
 suitable to access few rows very quickly
 
 
+# trigger
+
+```sql
+set @sum = 0;
+insert into account values(1,2,3),(4.5.6),(7,2,8);
+select @sum as 'total amount inserted'
+```
+
+```sql
+create trigger ins_transaction before insert on account
+for each row precedes ins_sum
+set
+@deposits = @deposits + if(NEW.amount > 0, NEW.amount, 0),
+@withdrawals = @withdrawals + IF(NEW.amount < 0, -NEW.amount, 0);
+```
+
+```sql
+delimiter //
+create trigger upd_check before update on account
+for each row
+begin
+  if NEW.amount < 0 then
+    set NEW.amount = 0;
+  ELSEIF NEW.amount > 100 then
+    set NEW.amount = 100;
+  END IF;
+END;
+delimiter ;
+```
+can define multiple trigger for given table that have same trigger event, action time
+- eg. can 2 BEFORE UPDATE triggers
+
+affect trigger order, use `for each row`
+
+##
+insert trigger: NEW.col_name
+delete trigger: OLD.col_name
+update trigger: OLD.col_name, NEW.col_name
+
+## error
+before trigger fails: operation not performed
+after trigger executed only if before trigger success
+
+# coalesce
+return first non-null value
+`select coalesce(null, 1, 2, 'W3School.com'`
+
+
+# generated column
+## virtual
+column calculated on the fly when record read from table
+## stored
+column calculated when new record written/updated in table
+only stored can be indexed
+
+
 
 
 
