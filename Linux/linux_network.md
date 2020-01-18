@@ -105,16 +105,79 @@ changes in names of interfaces handled by NetworkManager and supplied to firewal
 
 
 # iptables
+based on netfilter mechanism
 check existing `iptables -L -n`
 check rules `iptables -S`
 
 eg. open port 3306
 `iptables -A IN_public_allow -p tcp -m tcp --dport 3306 -m conntrack --ctstate NEW,UNTRACKED -j ACCEPT`
 
+## principle
+each table has default links
+all links default no rules
+rule: 
+1. matching: match multiple port, ip, packet type; can include module (eg. conntrack)
+2. action: `-j` ACCEPT, DROP, RETURN, SNAT, DNAT
+
+raw: whether packet state traced, built in PREROUTING and OUTPUT
+filter: INPUT, FORWARD, OUTPUT
+nat: PREROUTING, INPUT, OUTPUT, POSTROUTING
+mangle: for changing contnt, PREROUTING, INPUT, FORWARD, OUTPUT, POSTROUTING
+security: for data sercurity, INPUT, FORWARD, OUTPUT
+
+# netfilter
+linux kernel packet filter framework
+
+hooks:
+NF_IP_PRE_ROUTING: L2 -> L3 packet filter before routing
+NF_IP_LOCAL_IN: after routing -> local
+NF_IP_FORWARD: source and destination not local
+NF_IP_LOCAL_OUT: source=localhost, destination=other
+NF_IP_POST_ROUTING: before leaving local after routing
 
 
+# Linux Virtual Server (lvs)
+work on L4 (transport layer), work on TCP,UDP
+one of best load balancer, built into kernel
+- include ipvs (kernel module), ipvsadm (tool)
+
+Director Server: load balancer node
+Real Server: backend service node 
+
+## NAT
+redirect source IP,port to send to real server
+
+director server need to be gateway of real server, must be in same network 
+no special setting in real server
+easy become bottleneck
+
+## DR (direct route)
+modify source MAC redirect to real server
+
+- need set vip on real server's `lo`, set `arp_ignore`, `arp_announce`
+- response not pass director server
+
+## TUN (tunneling)
+encapsulate data into another IP
+directly return msg from real server
+
+don't need director server as gateway
 
 
+# ifconfig
+flags=4163<up,running,broadcast,multicast>
+= 0x1043 = 0x1000 + 0x40 + 0x2 + 0x1
+= multicast + running + broadcast + up
+
+ether: mac address
+txqueuelen: transmit queue length
+prefixlen: prefix length in ipv6 = subnet mask in ipv4
+  - 2001:db8:abcd:0012::0/64 
+    - 2001:db8:abcd:0012:0000:0000:0000:0000 to
+    - 2001:db8:abcd:0012:ffff:ffff:ffff:ffff
+
+scopeid: distinguish specific network refer to link-local address
+RX|TX packets: total number of packets received and transmitted respectively
 
 
 
