@@ -135,6 +135,12 @@ NF_IP_FORWARD: source and destination not local
 NF_IP_LOCAL_OUT: source=localhost, destination=other
 NF_IP_POST_ROUTING: before leaving local after routing
 
+## implement
+use priority as if/elseif/else
+
+classification with rules, then decide restart classification / ends
+
+
 
 # Linux Virtual Server (lvs)
 work on L4 (transport layer), work on TCP,UDP
@@ -178,6 +184,9 @@ prefixlen: prefix length in ipv6 = subnet mask in ipv4
 
 scopeid: distinguish specific network refer to link-local address
 RX|TX packets: total number of packets received and transmitted respectively
+
+
+
 
 
 
