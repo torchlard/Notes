@@ -63,6 +63,8 @@ create pointers between live data and special snapshot volume
   - equivalent to hard links
 use copy-on-write strategy: only stores modified data
 
+must have journaling enabled, in same logical volume as data files
+
 restore:
 1. mount snapshot image on fs
 2. copy data from snapshot
@@ -80,10 +82,23 @@ if journaling enabled, can use any fs / volume/block level snapshot tool to crea
 
 if using aws EBS with RAID, cannot get consistent state across all disks
 
+## flow
+### backup
+after create snapshot
+- mount snapshot, copy data to separate storage
+- OR block level copy 
 
+```
+umount /dev/vg0/mdb-snap01
+dd if=/dev/vg0/mdb-snap01 | gzip > mdb-snap01.gz
+```
 
-
-
+### restore
+```
+lvcreate --size 1G --name mdb-new vg0
+gzip -d -c mdb-snap01.gz | dd of=/dev/vg0/mdb-new
+mount /dev/vg0/mdb-new /srv/mongodb
+```
 
 
 
