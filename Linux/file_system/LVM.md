@@ -14,6 +14,13 @@ lsblk
 2. pvcreate /dev/sdb1
 3. vgextend centosVG /dev/sdb1
 4. lvcreate -n lv01 -l100%(FREE|VG) centosVG
+5. create filesystem of lv
+  - eg. `mkfs -t ext4 /dev/VolGroup00/LogVol00`
+  - `mkfs.xfs /dev/volgroup/logvol`
+6. mount /dev/volgrp/lvol /mnt/mountpoint
+7. use blkid find uuid of lv
+8. append row to /etc/fstab
+
 
 # snapshot
 craete 300G snapshot called snap1 from source /dev/vg/lv (read only)
@@ -38,7 +45,14 @@ merge snapshot `lvconvert --merge /dev/centos/snap1`
   - will merge on next activation of source lv
   - if mounted, need reboot
 
+mount snapshot as rw
+`mount -o nouuid -t xfs /dev/centos/snap1 /mnt/snap`
 
+### mongo
+clone files with overrwire `yes | cp -rf /mnt/snap/* /mnt/mongo/`
+
+if copy db file for mongo,
+need repair `mongod --repair --config /etc/mongod.conf`
 
 
 # merge snapshot for mariadb

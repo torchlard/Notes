@@ -65,6 +65,8 @@ list all with size `ll -h`
 # prompt
 PS1="\e[40;0;36m[\u@\h \W]\$ \e[m"
 
-
+# change timezone
+rm -f /etc/localtime
+ln -sf /usr/share/zoneinfo/America/Los_Angeles /etc/localtime
 
 

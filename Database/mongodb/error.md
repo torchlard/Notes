@@ -20,5 +20,14 @@ incorrect keyfile privilege
 4. start incorrect node
   
 
+# don't know error
+edit config, set fork=false
+journalctl -u mongod
+
+# Failed global initialization: FileNotOpen: Failed probe for
+
+# mongodb exited with code 100
+# exception in initAndListen: Location28596: Unable to determine status of lock file in the data directory /var/lib/mongo: boost::filesystem::status: Permission denied: "/var/lib/mongo/mongod.lock", terminating
+
 
 
