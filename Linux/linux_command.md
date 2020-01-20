@@ -69,4 +69,20 @@ PS1="\e[40;0;36m[\u@\h \W]\$ \e[m"
 rm -f /etc/localtime
 ln -sf /usr/share/zoneinfo/America/Los_Angeles /etc/localtime
 
+# scp
+copy from remote to local using ssh config
+`scp <remote-alias>:<remote-path-to-copy-from> <local-path>`
+
+
+
+
+
+
+
+
+
+
+
+
+
 

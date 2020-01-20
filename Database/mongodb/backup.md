@@ -50,11 +50,47 @@ copy only db `test`
 
 # oplog
 mongodb replica use oplog to sync replicas
+all changes stored in primary node collection `local.oplog.rs`
+secondary node pull oplog from primary, replay in local
+
 record all updates in period of time
 
 oplogReplay: replay oplog for point-int-time restore
 oplogLimit: include oplog entries before provided Timestamp
 oplogfile: oplog file for replay of oplog
+
+## field
+ts: timestamp
+h: id
+op
+- i: insert
+- u: update
+- d: remove
+- c: command
+- n: no-op
+ns: namespace `db.collection`
+o: actual operation content
+o2: only for update, target document
+
+## command
+view oplog
+```js
+rs.printReplicationInfo()
+
+use local
+db.oplog.rs.find().sort({ts: -1})
+```
+clear oplog `db.runCommand({"compact": "oplog.rs", "force": true})`
+resize oplog `db.adminCommand({replSetResizeOplog: 1, size: 16000})`
+
+search oplog after certain timestamp
+```js
+db.oplog.rs.find({$and: [
+    {o:{ $not:{$eq: {"msg" : "periodic noop"}}  } },
+    {ts:{ $gt: Timestamp(new Date("2020-01-20T15:28:43.958+08:00").getTime()/1000,1) } }
+]})
+.sort({ts:-1})
+```
 
 
 # backup with filesystem snapshot
@@ -82,7 +118,7 @@ if journaling enabled, can use any fs / volume/block level snapshot tool to crea
 
 if using aws EBS with RAID, cannot get consistent state across all disks
 
-## flow
+## procedure
 ### backup
 after create snapshot
 - mount snapshot, copy data to separate storage
@@ -100,11 +136,16 @@ gzip -d -c mdb-snap01.gz | dd of=/dev/vg0/mdb-new
 mount /dev/vg0/mdb-new /srv/mongodb
 ```
 
+# full backup
+lock replica db `db.fsyncLock()`
+dump db with oplog to replay `mongodump -u... -p... -h... --oplog`
 
 
+# incremental backup
+get newest timestamp `bsondump dump/oplog.bson`
 
-
-
+hot backup (cannot use "Timestamp(xxx,1)" )
+`mongodump -h 192.168.11.103 -uroot -p123456 -d local -c oplog.rs -q '{"ts":{"$gt":{"$timestamp": {"t":1579512306, "i":1}}}}'`  
 
 
 

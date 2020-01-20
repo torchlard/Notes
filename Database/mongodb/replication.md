@@ -8,6 +8,7 @@ check status `rs.status()`
 check config `rs.config()`
 
 ## force primary
+normal reconfig method
 ```js
 cfg = rs.conf()
 cfg.members[0].priority = 0.2
@@ -15,6 +16,22 @@ cfg.members[1].priority = 0.5
 cfg.members[2].priority = 1
 rs.reconfig(cfg)
 ```
+
+# init replica
+```js
+rs.initiate({
+  _id: "rs0",
+  members: [
+    { _id: 0, host: "192.168.11.102:27017"},
+    { _id: 1, host: "192.168.11.103:27017"},
+    { _id: 2, host: "192.168.11.104:27017"}
+  ]
+})
+```
+don't run compact against primary replica set member
+connect directly to primary, run `rs.stepDown()`
+
+
 
 # security
 make keyfile

@@ -126,5 +126,19 @@ revoke role from user
 `db.revokeRolesFromUser("<user>", ["root"], {})`
 
 
+## role
+db.createRole({
+  role: "compactRole",
+  privileges: [
+      {
+        resource: { "db" : "local", "collection": "oplog.rs" },
+        actions: [ "compact" ]
+      }
+  ],
+  roles: []
+})
+db.grantRolesToUser("admin", ["compactRole"])
+
+
 
 
