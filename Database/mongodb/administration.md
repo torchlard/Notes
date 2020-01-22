@@ -117,7 +117,7 @@ rename user
 create user
 ```js
 use admin
-db.createUser({user: '<name>', pwd: '<pwd>', roles: ["root"]})
+db.createUser({user: 'admin', pwd: '123456', roles: ["root"]})
 ```
 connection
 `mongo -u <user> -p <pwd> --host <host>`

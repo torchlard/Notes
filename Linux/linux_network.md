@@ -186,7 +186,19 @@ scopeid: distinguish specific network refer to link-local address
 RX|TX packets: total number of packets received and transmitted respectively
 
 
+# set fixed ip
+vim /etc/sysconfig/network-scripts/ifcfg-eth0
 
+BOOTPROTO="static"
+NM_CONTROLLED="yes"
+IPADDR=192.168.11.203
+NETMASK=255.255.255.0
+GATEWAY=192.168.11.1
 
+## files to consider
+/etc/resolv.conf : for DNS
+/etc/hosts
+/etc/sysconfig/network-scripts/ifcfg-eth0
+/etc/sysconfig/network
 
 

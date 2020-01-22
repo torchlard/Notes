@@ -93,6 +93,7 @@ db.oplog.rs.find({$and: [
 ```
 
 
+
 # backup with filesystem snapshot
 "block-level" backup, create copies of device holds data files
 create pointers between live data and special snapshot volume
@@ -140,12 +141,31 @@ mount /dev/vg0/mdb-new /srv/mongodb
 lock replica db `db.fsyncLock()`
 dump db with oplog to replay `mongodump -u... -p... -h... --oplog`
 
+## restore
+`mongorestore <dump-dir>`
 
 # incremental backup
 get newest timestamp `bsondump dump/oplog.bson`
 
 hot backup (cannot use "Timestamp(xxx,1)" )
-`mongodump -h 192.168.11.103 -uroot -p123456 -d local -c oplog.rs -q '{"ts":{"$gt":{"$timestamp": {"t":1579512306, "i":1}}}}'`  
+```bsh
+t1=$(node -p 'Math.round(new Date("2020-01-20T20:00:00+08:00").getTime()/1000)')
+mongodump -h 192.168.11.103 -uroot -p123456 -d local -c oplog.rs -q '{"ts":{"$gt":{"$timestamp": {"t":1579512306, "i":1}}}}'
+
+// OR
+query='{"ts":{"$gt":{"$timestamp":{"t":'$t1',"i":1}}}}'
+mongodump -h 192.168.11.201 -uadmin -p666666 --authenticationDatabase=admin -d local -c oplog.rs -q $query --out=op4
+
+// OR
+t1=$(node -p 'Math.round(new Date("2020-01-21T14:20:15+08:00").getTime()/1000)')
+t2=$(node -p 'Math.round(new Date("2020-01-21T14:20:24+08:00").getTime()/1000)')
+query='{"ts":{"$gt":{"$timestamp":{"t":'$t1',"i":1}},"$lt":{"$timestamp":{"t":'$t2',"i":1}}}}'
+
+```
+
+## restore
+restore from oplog
+`mongorestore --oplogReplay <oplog-dir>`
 
 
 
