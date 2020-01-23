@@ -112,13 +112,95 @@ modify scores return by main query with functions
 use matching rules constructed from small set of definitions
 produce sequences of minimal intervals that span terms in body of text
 
-match params: 
-- query, 
+### match
+- *query
 - max_gaps: max num of pos between matching terms (-1: no restriction, 0: next to each other)
-- ordered, analyzer, filter, 
+- ordered, analyzer, filter
 - use_field: match intervals from this field 
 
+### prefix
+- *prefix, analyzer, use_field
 
+### wildcard
+- *pattern: single char`?`, >=0 char`*`
+- analyzer, use_field
+
+### all_of
+- *intervals: array of rules to combine (overall score)
+- max_gaps, ordered, filter
+
+### any_of
+- *intervals, filter
+
+### filter
+- after: query used to return intervals that follow interval from filter
+- before: occur before filter
+- contained_by, containing
+- not_contained_by, not_containing, not_overlapping
+- overlapping, script
+
+
+# common options
+## fuzziness
+0..2 : match exactly
+3..5 : 1 edit allowed
+>5 : 2 edits allowed
+
+```js
+fuzziness: 1,
+fuzzy_transpositions: false
+```
+
+## synonyms
+"ny, new york" = (ny OR ("new york"))
+
+default auto_generate_synonyms_phrase query = true
+
+
+```js
+match_bool_prefix: { message: "quick brown f" }
+
+// ===
+
+bool: {
+  should: [
+    {term: {message: "quick" }},
+    {term: {message: "brown" }},
+    {prefix: {message: "f" }}
+  ]
+}
+```
+# match_phrase
+analyze text, create phrase query out of analyzed text
+
+# match_phrase_prefix
+- *query, analyzer
+- max_expansions: max #terms last provided term of query value will expand
+- slop: max #positions allowed between matching tokens
+- zero_terms_query: whether no documents returned if analyzer removes all tokens
+
+# multi_match
+```js
+multi_match: {
+  query: "this is a test",
+  fields: ["subject", "message"]
+}
+
+fields: ["f*"]  // multiple fields
+
+fields: ["subject^3", "message"]  // subject 3 times importatn
+```
+
+## type
+best_fields: default
+most_fields: doc match nay field, combine _score from each field
+cross_fields
+phrase: use _score from best field
+
+# query string query
+use syntax to parse and split provided string based on operator
+
+`(new york city) OR (big apple)`
 
 
 
