@@ -72,7 +72,7 @@ SSTF: optimal seek time, but higher computation
 performance depend heavily on number and types of requests, file allocation method
   location of directories and index blocks
 if IO performance is only concern, OS can hand over control to disk controller
-if there are other constraints, like order to write, OS chhose to do own disk scheduling, 
+if there are other constraints, like order to write, OS choose to do own disk scheduling, 
   feed request to disk controller one by one
 
 ## formatting
@@ -666,11 +666,11 @@ user process -> kernel IO subsystem -> kernel IO subsystem -> device driver -> i
 ## Streams
 application to assemble pipelines of driver code dynamically
 full-duplex connection between device driver and user-level process
-
+```
 user process <-> stream head | read queue <- read queue   | driver end <-> device
                              | write queue -> write queue |
                              <--------stream module------->
-
+```
 write(): write raw data to stream
 putmsg(): user process to specify message
 
