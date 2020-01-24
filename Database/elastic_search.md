@@ -79,6 +79,7 @@ query: {
 }
 ```
 
+# Compound Query
 ## bool
 more matches is better
 default query for combining multiple leaf / compound query clauses
@@ -107,7 +108,7 @@ modify scores return by main query with functions
   - function may consider popularity, recency, distance, custom algorithm
 
 
-# full text
+# FULL Text Query
 ## intervals
 use matching rules constructed from small set of definitions
 produce sequences of minimal intervals that span terms in body of text
@@ -138,6 +139,90 @@ produce sequences of minimal intervals that span terms in body of text
 - contained_by, containing
 - not_contained_by, not_containing, not_overlapping
 - overlapping, script
+
+## match_phrase
+analyze text, create phrase query out of analyzed text
+
+## match_phrase_prefix
+- *query, analyzer
+- max_expansions: max #terms last provided term of query value will expand
+- slop: max #positions allowed between matching tokens
+- zero_terms_query: whether no documents returned if analyzer removes all tokens
+
+## multi_match
+```js
+multi_match: {
+  query: "this is a test",
+  fields: ["subject", "message"]
+}
+
+fields: ["f*"]  // multiple fields
+
+fields: ["subject^3", "message"]  // subject 3 times importatn
+```
+
+### type
+best_fields: default
+most_fields: doc match nay field, combine _score from each field
+cross_fields
+phrase: use _score from best field
+
+## query string query
+use syntax to parse and split provided string based on operator
+
+`(new york city) OR (big apple)`
++ *query
+
+## simple query string
+simple syntax to parse and split provided query string 
+
++ *query, fields, default_operator
+
+### operator
+AND `+`, OR `|`
+negate `-`, at end of term signify prefix query `*`
+after word signifies fuzziness `~N`
+after phrase signifies slop amount `~N`
+  - after phrase where N = max #position allowed between matching tokens
+
+
+# Geo query
+suuport 2 types of geo data
+1. lat/lon pairs
+2. geo_shape fields: point,line,circle,polygon,multi-polygon
+
+# Shape query
+query doc that contain fields indexed using shape type
+
+# Joining Queries
+very expensive to use full SQL-style joins in elasticsearch
+provide
+1. nested query
+2. has_child, has_parent
+
+# Span queries
+low-level positional query which provide expert control over order and proximity of specified terms
+
+# Specialized queries
+queries that not fit into other groups
+- distance_Feature
+- more_like_this
+- percolate
+- rank_feature
+- script
+- script_score
+- wrapper
+
+# Term-level queries
+find docs based on precise values in structured data
+eg. data range, IP address, price, productID
+
+not analyze exact terms, instead match exact terms stored in fields
+- exists
+- fuzzy
+- ids
+- prefix
+- range
 
 
 # common options
@@ -170,37 +255,98 @@ bool: {
   ]
 }
 ```
-# match_phrase
-analyze text, create phrase query out of analyzed text
 
-# match_phrase_prefix
-- *query, analyzer
-- max_expansions: max #terms last provided term of query value will expand
-- slop: max #positions allowed between matching tokens
-- zero_terms_query: whether no documents returned if analyzer removes all tokens
-
-# multi_match
+# Scripts
 ```js
-multi_match: {
-  query: "this is a test",
-  fields: ["subject", "message"]
+script: {
+  lang: "expression",
+  source: "doc['my_field']*multiplier", // source of script
+  params: { // named param passed into script as variables
+    multiplier: 2
+  }
+}
+```
+all scripts cached by default
+only need recompiled when updates occur
+
+
+# Aggregation
+aggregation framework provide aggregated data based on search query
+unit-of-work builds analytic information over set of documents
+
+## bucketing
+build buckets, each associated with key and document criterion
+  - all buckets criteria evaluated on every doc in context
+  - when criterion matches, doc fall in relevant bucket
+
+## metric
+keep track and compute metrics over set of docs
+
+```js
+aggregations: {
+  '<aggre_name>': {
+    '<aggre_type>': {
+      '<aggre_body'
+    }
+    [, meta: { [...] }] ?
+    [, aggregations: {[ ... ]+ }]
+  }
 }
 
-fields: ["f*"]  // multiple fields
+aggs: {
+  "avg_grade": {
+    avg: {
+      field: "val",
+      script: {
+        lang: "painless",
+        source: "_value * params.correction",
+        params: {
+          correction: 2.0
+        }
+      },
+      missing: 10   // missing value treat as
+    }
+  }
+}
 
-fields: ["subject^3", "message"]  // subject 3 times importatn
+weighted_avg: {
+  value: {field: "grade"},
+  weight: {field: "weight"}
+}
+
+// approximate count of distinct values
+cardinality: { field: "type"}
+
+scripted_metric: {
+  init_script: "stat.transaction = []",
+  map_script: "state.transactions.add(doc.type.value == 'sale' ? doc.amount.value : -1*doc.amount.value)",
+  combine_script: "double profit=0; for(t in state.transactions){ profit += t } return profit",
+  reduce_script: "double profit=0; for(a in states) {profit += a} return profit"
+}
+
 ```
+extended_stats: compute statistics over numeric values (eg. sum_of_sq, variance)
+max, min
 
-## type
-best_fields: default
-most_fields: doc match nay field, combine _score from each field
-cross_fields
-phrase: use _score from best field
 
-# query string query
-use syntax to parse and split provided string based on operator
 
-`(new york city) OR (big apple)`
+## matrix
+operate on multiple fields and produce matrix result based on value extracted from requested doc fields
+not support scripting
+
+## pipeline
+aggreagte output of other aggregations and associated metrics
+
+aggregations can be nested, no hard limit on level/depth 
+
+
+
+
+
+
+
+
+
 
 
 

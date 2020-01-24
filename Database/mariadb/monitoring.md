@@ -9,11 +9,13 @@ from information_schema.TABLES where table_schema="<db>"
 order by (data_length+index_length) desc limit 30;
 ```
 
+## start monitor sql
+change table `performance_schema.setup_consumers` to enable events_statements
 
 
-
-
-
+events_statements_current
+events_statements_history
+events_statements_history_long
 
 
 
