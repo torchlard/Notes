@@ -1,3 +1,5 @@
 .vscode
 *.log
 .ensime_cache
+
+.~lock*

@@ -1,45 +1,3 @@
-# Sound
-ALSA
-
-# UFS
-use 2 lane, 2.1, bandwidth 1200MB/s
-serial transfer, full duplex
-
-# NVMe
-kind of protocol
-data-link use PCIe, now PCIe 3.0, use 4 lane
-bandwidth 4000MB/s, 8GHz
-based on NAND Flash
-have 65535 queue, each queue 65536 command
-can use MSI 2048 interrupt vector, reduce delay
-ATA instruction set
-
-# eMMC
-parallel transfer
-half duplex (read/write)
-UCS instruction set, subset of SCSI
-
-# Optane
-| | DRAM | NAND Flash | PCM |
-| Page size | 64B | 4KB | 64B |
-| read latency | 20-50ns | ~25 mu s| ~50 ns|
-| write latency | 25-50 ns | ~500 mu s| ~1 mu s|
-
-use 3D XPoint technology
-
-# U.2
-4 lane, 4GB/s
-mix SATA, SAS, compatible to SATA, SAS, SATA E
-
-# M.2
-NGFF, aim to replace mSATA/mini PCIe
-special form of SATAe, support AHCI and NVMe
-4 lanes, 4 GB/s
-
-# SATAe
-compatible with SATA
-can use 2 PCIe lane
-
 # PCI
 ## original
 PCI local bus 
@@ -107,16 +65,3 @@ pt  end
 PCIe 3.0,4.0 use 128b/130b encoding -> every 128bit use 130bit to transmit
 
 PCIe card can insert into any PCIe socket, device will auto adjust speed
-
-
-
-
-
-
-
-
-
-
-
-
-

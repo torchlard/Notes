@@ -122,11 +122,13 @@ swap space in:
 
 initial: swap entire process between contiguous disk region and memory
 swap space only for anonymous memory
+```
                          |--swap area--|
                         page slot
                             |
 swap file/swap partition  [  |  |  |  ]   (hold swapped pages)
 swap map                  [ 1  0  3  0]  (array of integer counter for #process)
+```
 
 ## RAID (redundant array of independent disks)
 solid state non-volatile RAM: write-ack cache protected from data loss during power failure
