@@ -129,6 +129,10 @@ for run Kubernets locally, run single-node
 support DNS, NodePorts, ConfigMaps, Secrets, Dashboard, Container Runtime, ingress
 
 
+# configuration
+## taints and toleration
+node affinity: 
+
 
 
 

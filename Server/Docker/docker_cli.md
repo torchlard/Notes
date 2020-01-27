@@ -22,6 +22,8 @@ stop all running images
 delete none images
 `docker rmi -f $(docker images -f "dangling=true" -q)`
 
+remove exited container
+`docker rm $(docker ps -aq -f "status=exited")`
 
 # swarm cluster
 group of machines that are running Docker, joined into a cluster

@@ -9,6 +9,9 @@ print logs from container in pod `kubectl logs xxx`
 execute command on container in pod `kubectl exec xxx`
 
 run bash `kubectl exec -it <pod_name> bash`
+check node `kubectl describe nodes`
+
+type1/name1 type2/name2 ...
 
 ## service
 apply label `kubectl label pod <pod-name> app=v1`
@@ -44,9 +47,20 @@ terminate all replica `kubectl scale deployments/kubernetes-bootcamp --replicas=
   - ...
   
 
+# kubeadm 
+command to bootstrap cluster
+kubeadm init: start control plane
+
+## flow
+`sudo kubeadm init`
+reset `sudo kubeadm reset`
 
 
-
+# reset cluster
+sudo kubeadm reset
+sudo kubeadm init
+sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
+sudo chown $(id -u):$(id -g) $HOME/.kube/config
 
 
 
