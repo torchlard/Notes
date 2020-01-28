@@ -56,6 +56,11 @@ terminate all replica `kubectl scale deployments/kubernetes-bootcamp --replicas=
 command to bootstrap cluster
 kubeadm init: start control plane
 
+## config
+migrate config `kubeadm config migrate`
+
+
+
 ## flow
 `sudo kubeadm init`
 reset `sudo kubeadm reset`
@@ -70,4 +75,13 @@ sudo chown $(id -u):$(id -g) $HOME/.kube/config
 # reset kubectl
 systemctl daemon-reload
 systemctl restart kubelet
+
+
+
+
+
+
+
+
+
 

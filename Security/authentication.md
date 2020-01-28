@@ -261,8 +261,44 @@ new: scope: openid profile
 exchange authorization code for access token and ID token
 
 
+# PKI (public key infrastructure)
+set of rules, policies, hardware, software, procedures needed to create, manage, distribute, 
+use, store, revoke digital certificates; manage public-key encryption
+- simple passwords no enough, need more rigorous proof of identity
 
+registration authority(RA): verifies identity of entites request digital cert stored at CA
+central directory: where key stored and inexed
+certificate management system: manage access to stored cert, delivery of cert
+certificate policy: PKI's requirement, allow outsiders analyze PKI's trustworthiness
+timestamp authority: guarantee time and associates it to specific data
 
+## certificate authority(CA)
+store, issue, sign digital certifiacate
+
+TLS certificate
+major CA: Symantec, Commodo, GoDaddy
+
+### temporary cert
+server as offline CA within single sign-on system
+server issue digital cert into client sytem, never store them
+common used with X.509 bsed cert
+
+### blockchain based PKI
+suitable for storage and management of public keys
+known PKI: CertCoin, FlyClient, BlockQuick
+
+## Use
+Enryption and sender authentication of email
+encryption and auth of documents
+authentication of users to applications
+bootstrap secure communication protocols
+
+## implementation
+OpenSSL: simplest form of CA and tool for PKI
+OpenCA
+XCA
+CFSSL: by CloudFlare
+Libhermetik
 
 
 

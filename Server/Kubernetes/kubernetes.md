@@ -130,7 +130,30 @@ support DNS, NodePorts, ConfigMaps, Secrets, Dashboard, Container Runtime, ingre
 
 
 # configuration
-## taints and toleration
+list of compulsory configuration types depends by action performed (init/join)
+by config option used (defaults / advanced custom)
+can override default values except some security settings (eg. enforce authorization-mode node)
+
+## InitConfiguration
+runtime settings
+config boostrap token, all settings specific to node where kubeadm executed
+
+- NodeRegistration: custom node name, CRI socket, setting to node only (eg. node ip)
+- LocalAPIEndpoint: endpoint of instance of PAI server deployed on this node (eg. advertise address)
+
+## ClusterConfiguration
+cluster wide settings
+- networking
+- etcd configuration
+- kube-apiserver, kube-scheduler, kube-controller-manager
+
+## KubeProxyConfiguration
+config to kube-proxy instance
+
+
+
+
+### taints and toleration
 node affinity: pods attracted to set of nodes
 node taints: allow node to repel set of pods
 
