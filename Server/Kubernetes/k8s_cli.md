@@ -22,6 +22,11 @@ expose service
 delete service with certain label `kubectl delete service -l app=v1`
 
 access service `curl $(minikube ip):<node-ip>`
+get cluster info `kubectl cluster-info`
+
+## dashboard
+kubectl apply -f https://raw.githubusercontent.com/kubernetes/dashboard/v2.0.0-beta8/aio/deploy/recommended.yaml
+
 
 ## image
 `kubectl set image deployments/kubernetes-bootcamp kubernetes-bootcamp=<new>`
@@ -62,5 +67,7 @@ sudo kubeadm init
 sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
 sudo chown $(id -u):$(id -g) $HOME/.kube/config
 
-
+# reset kubectl
+systemctl daemon-reload
+systemctl restart kubelet
 

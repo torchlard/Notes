@@ -131,7 +131,11 @@ support DNS, NodePorts, ConfigMaps, Secrets, Dashboard, Container Runtime, ingre
 
 # configuration
 ## taints and toleration
-node affinity: 
+node affinity: pods attracted to set of nodes
+node taints: allow node to repel set of pods
+
+ensure pods not scheduled onto inappropriate nodes
+
 
 
 

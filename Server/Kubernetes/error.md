@@ -45,6 +45,10 @@ sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
 sudo chown $(id -u):$(id -g) $HOME/.kube/config
 
 #  0/1 nodes are available: 1 node(s) had taints that the pod didn't tolerate.
+untaint all ndoes
+`kubectl taint nodes --all node-role.kubernetes.io/master:NoSchedule-`
+
+
 
 
 
