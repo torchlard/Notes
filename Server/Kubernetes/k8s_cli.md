@@ -67,6 +67,8 @@ reset `sudo kubeadm reset`
 
 
 # reset cluster
+sudo rm -rf /etc/kubernetes
+sudo swapoff -a
 sudo kubeadm reset
 sudo kubeadm init
 sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
@@ -76,7 +78,8 @@ sudo chown $(id -u):$(id -g) $HOME/.kube/config
 systemctl daemon-reload
 systemctl restart kubelet
 
-
+# get secret
+`kubectl describe secret`
 
 
 

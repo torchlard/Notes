@@ -48,6 +48,9 @@ sudo chown $(id -u):$(id -g) $HOME/.kube/config
 untaint all ndoes
 `kubectl taint nodes --all node-role.kubernetes.io/master:NoSchedule-`
 
+# events is forbidden: User "system:bootstrap:oj3cr7" cannot list resource "events" in API group "" in the namespace "default"
+refer to 'Using RBAC Authorization'
+
 
 
 

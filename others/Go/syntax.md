@@ -1,13 +1,3 @@
-# isntall
-```bsh
-sudo add-apt-repository ppa:longsleep/golang-backports
-sudo apt-get update
-sudo apt-get install golang-go
-```
-# build
-cd src/hello
-go build
-
 # basic types
 bool, string
 
@@ -349,6 +339,54 @@ var i interface{} = "hello"
 // trigger panic
 f, ok := i.(float64)  // f=0, ok=false
 ```
+nil interface: holds neither value nor concrete type
+call method on nil interface => runtime error
+
+```go
+fun describe(i interface{}) {
+  fmt.Printf("(%v, %T)\n", i, i)
+}
+
+func main(){
+  var i interface{}
+  describe(i)
+}
+
+// implement string on ipaddr
+func (ip IPAddr) String() string{
+  return ...
+}
+```
+multiple import `import ("fmt"; "strconv")`
+
+# error
+express error state with error values
+error type is builtin interface ~ fmt.Stringer
+```go
+type error interface {
+  Error() string
+}
+```
+
+# reader
+```go
+r := strings.NewReader("hello, reader!")
+b := make([]byte, 8)
+for {
+  n, err := r.Read(b)
+  fmt.Println(n, err, b)
+  fmt.Println(b[:n])
+}
+
+```
+
+
+
+
+
+
+
+
 
 
 
