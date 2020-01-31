@@ -25,7 +25,9 @@ generate private,public key pair           already own private,public key pair
 now anyone can verify signature by CA's public key
 ```
 
-
+# self-signed CA
+create own CA
+ask myself please sign my CSR, me give myself signed by myself 
 
 
 

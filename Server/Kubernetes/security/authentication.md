@@ -1,7 +1,10 @@
 # access to api
 access api using kubectl, client library, making REST requests
-[user,pod] -> authentication -> authorization -> admission control -> resources
-
+```
+authentication -> authorization -> mutating admission -> object validation -> Validating Admission -> etcd
+    |                                    |                                           |
+  user/pod                        mutating webhook                            validating webhook
+```
 api seraver on port 6443
 presents a self signed certificate, $USER/.kube/config contains root certificate
 - used in place of system default root cert
@@ -89,77 +92,3 @@ limit kubelet read write access to resources related to node itself, pods bound 
 kubelet need client cert to access api server
 instead of admin generate cert foreach kubelet, kubelet request cert as it starts up
 build on top of cert api, bootstrap token authenticator
-
-
-
-
-
-# authorization
-request must include username of requester, requested action, object affected by action
-
-```json
-{
-  "apiVersion": "abac.authorization.kubernetes.io/v1beta1",
-  "kind": "Policy",
-  "spec": {
-    "user": "bob",
-    "namespace": "projCaribou",
-    "resource": "pods",
-    "readonly": true
-  }
-}
-```
-bob can only read pod in namespace `projCaribou`
-support multiple auth mode: ABAC mode, RBAC mode, Webhook mode
-if multiple module configured, request only need pass one of module
-- if all denied, return 403
-
-## with RBAC
-default deny all
-
-# admission control
-software modules modify or reject requests
-access contents of object being created/updated/deleted/connected, but not reads
-
-if any admission controller module reject => request rejected
-can set complex defaults for fields
-
-# api server port and IPs
-1. Localhost
-  - testing, bootstrap
-  - other component of master node (eg. scheduler) talk to api
-  - default 8080, no TLS
-  - request bypass authentication and authorization, handled by admission control
-  - protected host access
-
-2. Secure Port
-  - use whenever possible
-  - use TLS, cert, key; default 6443
-  - default ip = first non localhost network interface
-  - handle by authentication, authorization, admission control
-
-at least service account token & 1 other method for user auth
-`system:authenticated` group 
-
-can integrate with other auth protocol (LDAP, SAML, kerberos, x509) 
-using authenticating proxy / authentication webhook
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
