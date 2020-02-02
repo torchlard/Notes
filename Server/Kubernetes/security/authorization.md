@@ -45,11 +45,57 @@ if multiple module configured, request only need pass one of module
 `--authorization-mode=` ABAC/RBAC/Webhook/Node/AlwaysDeny/AlwaysAllow
 
 
-## Node
+# Node
 special purpose, grant permissions to kubelets based on pods scheduled to run
+read operations
+- services, endpoints, nodes, pods
+- secrets, configmaps, persistent volume claims, persistent volumes relted to pods
+
+write operations
+- nodes, node status
+- pods, pod status  
+- events
+
+auth-related operations
+- read/write access to certificationsigningrequests API for TLS bootstrap
+- create tokenreviews, subjectaccessreviews for delegated authentication/authorization
+
+use credential in `system:nodes` group, `system:node:<nodeName>` username
+kubelets outside `system:node` wouldn't be authorized by Node auth mode
+
 
 ## ABAC (attribute-based access control)
 access right granted to user thorugh use of policies
+special resource have to be explicitly exposed via nonResourcePath property
+
+```yaml
+apiVersion: abac.authorization.kubernetes.io/v1beta1
+kind: Policy
+spec:
+  group: "system:authenticated"
+  readonly: true
+  nonResourcePath: *
+---
+apiVersion: abac.authorization.kubernetes.io/v1beta1
+kind: Policy
+spec:
+  user: bob
+  namespace: projectCaribou
+  resource: pods
+  readonly: true
+```
+
+### algorithm
+attribute correspond to properties of policy object
+when request received, attribute determined
+if at least 1 line match request attr => request authorized
+
+permit user do anything: apiGroup,namespace,resource,nonResourcePath
+permit any authenticated user: group = "system:authenticated"
+permit any unauthenticated user: group = "system:unauthenticated"
+
+
+
 
 
 ## RBAC (role-based access control)
@@ -93,25 +139,96 @@ roleRef:
   name: pod-reader  # match name of role/cluster role wish to bind to
   apiGroup: rbac.authorization.k8s.io
 ```
+
 ### Role, ClusterRole
 permissions are purely additive, no deny rules
-role: namespace wide
 
-cluster role: cluster wide
+- role: namespace wide
+- cluster role: cluster wide
   - cluster-scoped resources (eg. nodes)
-  - non-resource endpoint
-
+  - non-resource endpoint )eg. /healthz
+  - namespaced resources (eg. pods) across all namespaces
 
 ### RoleBinding, ClusterRoleBinding
 grant permission defined in role to user / set of users
 holds list of subjects (users, gorups, service accounts)
 
+RoleBinding: only ref role in same namespace
+  - even through through RoleBinding refer to ClusterRole, still only access own namespace
+ClusterRoleBinding: cluster wide
+
+cannot change roleRef (immutable) field directly, must delete and recreate binding object again
+
+### Agregated ClusterRoles
+union rules of any ClusterRole that matches provided label selector
+```yaml
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: monitoring-endpoints
+  labels:
+    rbac.example.com/aggregate-to-monitoring: "true"
+    rbac.example.com/aggregate-to-edit: "true"
+rules:  # rules to be added to "monitoring" role
+- apiGroups: [""]    
+  resources: ["services","endpoints","pods"]
+  verbs: ["get","list","watch"]
+---
+appiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: monitoring
+aggregationRule:
+  clusterRoleSelectors:
+  - matchLabels:  # match above ClusterRole with below label
+    rbac.example.com/aggregate-to-monitoring: "true"
+rules: []   # rules auto filled in by controller manager
+```
+
+### subject
+prefix `system:` reserved for kubernetes system use
+```yaml
+subjects:
+- kind: User
+  name: "alice@example.com"
+  apiGroup: rbac.authorization.k8s.io
+---
+subjects:  
+- kind: Group
+  name: "frontend-admins"
+  apiGroup: rbac.authorization.k8s.io
+```
+all service accounts in `qa` namespace: `name: system:serviceaccounts:qa`
+all default cluster roles and rolebindings labeled with `kubernetes.io/bootstrapping=rbac-defaults`
+
+### discovery roles
+| cluster role              | cluster role binding                                | description                             |
+|---------------------------|-----------------------------------------------------|-----------------------------------------|
+| system:basic-user         | system:authenticated group                          | readonly to basic info about themselves |
+| system:discovery          | system:authenticated group                          | readonly to api discovery endpoints     |
+| system:public-info-viewer | system:authenticated, system:unauthenticated groups | readonly to non-sensitive cluster info  |
+
+### user-facing roles
+roles not `system:` prefixed are user-facing
+include super-suer role (cluster-admin), granted cluster-wide using ClusterRoleBindings (cluster-status)
+
+### privilege changes
+user only create/update role if anyone true:
+1. have all permissions contianed in role at same scope
+2. given explicit permission to perform `escalate` verb on `roles`/`clusterroles`
+
+### service account permission
+default grant scoped permission to control-plane components, nodes, controllers
+no permission to service accoutns outside `kbue-system` namespace
+
+from most secure to least secure
+1. grant role to application-specific service account (best practice)
+2. grant role to default service account in namespace
+3. grant role to all service accounts in a namespace
+4. grant limited role to all service accounts cluster-wide (discouraged)
+5. grant super-user access to all service accounts cluster-wide (discouraged)
 
 
-
-## Webhook
-webhook = http post that occur when something happens 
-simple event notification via http post
 
 
 
