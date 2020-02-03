@@ -140,5 +140,32 @@ db.createRole({
 db.grantRolesToUser("admin", ["compactRole"])
 
 
+# monitor operations
+```js
+db.getSiblingDB("admin").aggregate([
+    {$currentOp: { allUsers: true, idleConnections: false}},
+    // {$match: {"secs_running": {"$gt": 1}, "active": true}},
+    {$project: {op: 1, secs_running: 1, waitingForLock: 1, client: 1, command: 1, lockStats: 1}},
+    { $sort: {"secs_running": -1}} 
+])
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 

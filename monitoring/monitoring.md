@@ -57,6 +57,9 @@ provide visualization for Graphite metrics
 open source solution to visualize elasticsearch data
 use Vega grammar
 
+# Filebeat
+
+
 
 # Prometheus VS Zabbix
 1. better use case
@@ -86,6 +89,8 @@ even hacked, cannot write to monitored system
 | alarming, event tracking         | no      | only event tracking       | complete support           |
 | cloud monitoring                 | best    | some                      | yes                        |
 
+
+
 # ELK stack
 elasticsearch + logstash + kibana
 fulfill need in log management and analytics space
@@ -94,11 +99,6 @@ fulfill need in log management and analytics space
 low efficiency using grep/awk to get info from logs
 difficult to archive logs, slow search on log
 need multi-dimensional query, centralized log management
-
-## logstash
-- log aggregator that collects data from various input sources
-- executes different transformation
-- enhance, ship data to various supported destination
 
 ## small size
 ```

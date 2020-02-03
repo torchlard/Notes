@@ -3,11 +3,6 @@
 convention foir representing a document, not specific reference type
 `$ref`: collection name, `$id`: _id value, `$db`: db name
 
-
-
-
-
-
 # ~sql operation
 ## select
 ```sql
@@ -34,12 +29,21 @@ db.universe.find({
 
 ## update
 - updateOne, updateMany
-```
+```js
 db.people.updateMany(
    { age: { $gt: 25 } },  // condition
    { $set: { status: "C" } }  // set value
 )
+
+// update based on current value
+db.orders.find({}).forEach(function(x){
+    if(x.ordered){
+        x.d4 = x.ordered+1
+        db.orders.save(x)    
+    }
+})
 ```
+
 
 ## save
 update(): update existing value in document
@@ -164,13 +168,6 @@ diacritic: accent, small sign/symbol added to letter
 
 
 
-
-# concurrency
-takes following locks:
-- read phase => every 100 documents : read lock
-- insert into temp collection => single write : write lock 
-- output collection not exist => create output collection : write lock
-- output collection exist => output action : write lock (global, block all operations)
 
 
 ## single purpose aggregation operation
