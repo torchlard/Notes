@@ -200,7 +200,8 @@ including one document's _id in another document
 issue second query to resolve referenced fields as needed
 
 
-
+# getMore
+use in command that return cursor (eg. find, aggregate), return subsequent batches of doc
 
 
 

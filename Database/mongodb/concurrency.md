@@ -46,6 +46,32 @@ when write to primary, also write primary's oplog
 secondaries not allow read while applying write, in order appear in oplog
 
 
+# ticket
+use ticket to limit concurrency number, default 128 (very reasonable)
+if no lock contention, all request redirect to engine level
+- still need queue execution
+
+
+# locking
+when mongodb add lock, 
+globalLock -> DBLock -> CollectionLock
+
+write operation
+1. globalLock
+2. DBLock MODE_IX
+3. Collection MODE_IX
+4. pass request to wiredtiger
+
+read op
+1. globalLock MODE_IS
+2. DBLock MODE_IS
+3. Collection MODE_IS
+4. pass request to wiredtiger
+
+
+
+
+
 
 
 
