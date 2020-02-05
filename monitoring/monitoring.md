@@ -53,10 +53,6 @@ scalable or durable storage
 open source analytics and monitoring solution for every database
 provide visualization for Graphite metrics
 
-# Kibana
-open source solution to visualize elasticsearch data
-use Vega grammar
-
 # Filebeat
 
 

@@ -188,6 +188,12 @@ signed by CA / self-signed
   - cert signed by intermediate CA, eventually reaching trust anchor
 
 
+# security realm
+mechanism used for protecting web application resources
+protect with defined security constraints
+define user role that access protected resource
+
+
 
 
 
