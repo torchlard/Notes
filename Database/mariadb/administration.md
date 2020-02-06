@@ -9,19 +9,20 @@ database, event, package, package body, procedure, table, trigger, view
 show engine innodb status|mutex
 
 
+# change mariadb root password
+`sudo systemctl stop mariadb`
+`sudo mysqld_safe --skip-grant-tables &` connect without a password and with all privileges 
+also enable `--skip-networkingoption`: prevent the other clients from connecting to the database server. 
+`mysql` login as root
 
+```sql
+UPDATE mysql.user SET Password=PASSWORD('NEW-PASSWORD') WHERE User='root';
+FLUSH PRIVILEGES;
+```
+`sudo mysqladmin -u root -p shutdown` shutdown the running database server
+`sudo systemctl start mariadb`
 
-
-
-
-
-
-
-
-
-
-
-
+`mysql -u root -p` verify
 
 
 
