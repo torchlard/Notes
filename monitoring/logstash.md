@@ -6,7 +6,8 @@
 ## command
 sudo /usr/share/logstash/bin/logstash -e 'input { stdin { } } output { stdout {} }'
 
-
+# plugin
+logstash-plugin install logstash-input-jdbc
 
 
 

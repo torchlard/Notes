@@ -51,8 +51,22 @@ must run on replica
 `{replSetMaintenance: <boolean>}`
 
 
+mongo -uadmin -pPwc4admin --authenticationDatabase=admin
+
 # read preference
 &readPreference=secondaryPreferred
+
+# repl set -> standalone
+var doc = db.system.replset.findOne()
+doc._id = 'rs1'
+db.system.replset.save(doc)
+db.system.replset.remove({_id:'rs0'})
+
+
+
+
+
+
 
 
 
