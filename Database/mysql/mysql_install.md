@@ -59,16 +59,6 @@ sudo service mysql start
 
 
 
-# mariadb installed without init password
-$ sudo mysql -u root
-
-[mysql] use mysql;
-[mysql] update user set plugin='' where User='root';
-[mysql] flush privileges;
-[mysql] \q
-
-$ sudo mysql_secure_installation
-
 
 # basedir
 path to installation directory

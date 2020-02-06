@@ -25,6 +25,14 @@ FLUSH PRIVILEGES;
 `mysql -u root -p` verify
 
 
+# mariadb installed without init password
+`sudo mysql -u root`
+```sql
+use mysql;
+update user set plugin='' where User='root';
+flush privileges;
+```
+`sudo mysql_secure_installation`
 
 
 
