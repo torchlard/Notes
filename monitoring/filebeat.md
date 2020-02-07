@@ -1,12 +1,4 @@
-# beats
-filebeat: realtime insight into log data
-packetbeat: analyze network packet data
-winlogbeat: analyze windows event log
-metricbeat: ship, analyze metric
-hearbeat: ping infrastructure
-auditbeat: send audit data to elasticsearch
-functionbeat: cloud data with serverless infrastructure
-journalbeat: analyze journald logs
+
 
 # command
 sudo ./filebeat -e -c filebeat.yml

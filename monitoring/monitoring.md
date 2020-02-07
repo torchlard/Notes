@@ -101,15 +101,13 @@ need multi-dimensional query, centralized log management
 beats             -> [redis|kafka|rabbitmq] -> logstash -> elasticsearch <- kibana
 (data collection)      (optional buffering)   (processing)  (storage)      (analysis)
 ```
- 
-
-# log management
-aggregation: collect and ship logs from multiple data source
-processing: transform log msg into meaningful data for easier analysis
-storage: store data for extended time for monitoring, trend analysis, security use case
-analysis: dissect data by quering, creating visualization and dashboard on top of it
+## disadv
+1. logstash do all collection and filter of log, high resource usage
+2. in high concurrency, if no message queue, data easily lost
 
 
+
+# EFK
 
 
 
