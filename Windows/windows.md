@@ -21,7 +21,21 @@ netstat -ano | findstr "PID :8081"
 taskkill /pid 18264 /f
 
 
+# public key authentication
+```
+Add-WindowsCapability -Online -Name OpenSSH.Client~~~~0.0.1.0
+Add-WindowsCapability -Online -Name OpenSSH.Server~~~~0.0.1.0
+```
 
+Install-Module -Force OpenSSHUtils -Scope AllUsers
+Repair-AuthorizedKeyPermission C:\Users\xxxx\.ssh\authorized_keys
+
+# security
+superuser in unix => System(SY) / AdministratorsGroup (AG) in windows
+permission control more granular than in unix
+
+# service
+Get-Service | findstr 'ssh'
 
 
 
