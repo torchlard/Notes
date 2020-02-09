@@ -146,16 +146,73 @@ xwayland: x server running as wayland client
 capable of displaying native X11 client application in wayland compositor environment
 ~ XQuartz run X applications in macOS
 
+# libinput
+weston code for handling input device split into own library (libinput)
+provide common implementation for multiple compositor
+device detection (via udev), input device event processing and abstraction
 
+# EGL
+the only GL binding api that avoid dependencies on existing window system
+eg. GLX pull in X dependencies, can't link to full GL
+so use OpenGL ES to render
+
+
+# current available
+compositor: Weston, Sway, kde kwin
+display manager: GDM (wayland, gnome), LightDM(x11, cross desktop), Ly(console), SDDM(x11/wayland, QML)
+desktop environment: gnome, kde
+buffer api: GBM, EGL streams
+gui library: gtk3, qt5, clutter, SDL2, GLFW, GLEW, EFL, winit
   
 
-# direct render intrastructure(DRI)
+# direct rendering infrastructure(DRI)
+framework for allowing direct access to graphics hardware under X window
+provide hardware acceleration for MEsa implementation of OpenGL
+implementation scatter in X server and associatged client library
+
+## DRI 1
+in past memory size of video card very small
+single instance of screen front buffer and back buffer shared by all DRI client and X server
+now completely obsolete
+
+to render back buffer, DRI process ensure rendering clipped to area reserved for window
+1. access to DRM device exclusive => DRI client lock at beginning of rendering => blocked
+2. operation not retain memory allocation after release lock => any data uploaded to graphics memory (eg. texture) lost
+
+## DRI 2
+since increasing popularity of compositing window manager like Compiz 
+=> X client support redirect to 'offscreen pixmaps' while direct rendering
+
+every DRI client get own private back buffer
+
+## DRI 3
+client allocate render buffer instead of rely on X server
+get rid of insecure GEM buffer sharing mechanism
+
 
 # direct rendering manager (DRM)
 
 
 
+# waypipe
+transparent proxy application for wayland protocol
 
+waypipe client: pretend to be remote applicaiton
+waypipe server: pretend to be wayland compositor, offer unix socket over which applicaitons can connect
+  - when connect, create new connection handling process
+  - convert wayland protocol message and file descriptor updates -> single data stream
+  - communication channel via ssh
+
+majority of file descriptor update are changes to shared memory buffer
+waypipe maintains private copy of each shared memory region
+ony send data which has changed since last time private copy sync with shared memory region
+
+## highlight
+waypipe support many quality of life feature, eg. command line wrapper for ssh
+hardware accelerated video encoding
+reconnect app when ssh connectionbreaks
+
+challenge: buffer management logic, way interact with multi-threading and reconnection support
 
 
 

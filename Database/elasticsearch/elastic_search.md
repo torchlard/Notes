@@ -34,11 +34,14 @@ bulk insert
 ## post
 new
 
-
 ## delete
+delete document of id 1 `curl -XDELETE "http://localhost:9200/metricbeat-7.5.2/_doc/1"`
+delete index `curl -XDELETE "http://localhost:9200/metricbeat-7.5.2"`
+can use wildcard * `curl -XDELETE "http://localhost:9200/metricbeat*"`
+
 
 ## get
-curl -H "Content-Type: application/json" -XGET "http://localhost:9200/hello/emp/_search?q=name:'laoxiao'"
+prettify `curl -H "Content-Type: application/json" -XGET "http://localhost:9200/hello/emp/_search?q=name:'laoxiao'" | jq .`
 
 dsl
 ```bsh
