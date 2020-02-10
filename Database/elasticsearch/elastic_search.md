@@ -157,6 +157,7 @@ analyze text, create phrase query out of analyzed text
 - *query, analyzer
 - max_expansions: max #terms last provided term of query value will expand
 - slop: max #positions allowed between matching tokens
+- 
 - zero_terms_query: whether no documents returned if analyzer removes all tokens
 
 ## multi_match
