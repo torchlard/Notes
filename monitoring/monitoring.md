@@ -108,7 +108,7 @@ beats             -> [redis|kafka|rabbitmq] -> logstash -> elasticsearch <- kiba
 
 
 # EFK
-
+*beat replace logstash to get logs
 
 
 

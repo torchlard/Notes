@@ -127,6 +127,7 @@ revoke role from user
 
 
 ## role
+```js
 db.createRole({
   role: "compactRole",
   privileges: [
@@ -138,7 +139,7 @@ db.createRole({
   roles: []
 })
 db.grantRolesToUser("admin", ["compactRole"])
-
+```
 
 # monitor operations
 ```js

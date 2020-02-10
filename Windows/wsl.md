@@ -14,6 +14,17 @@ export DISPLAY=localhost:0.0
 sudo apt install ubuntu-desktop
 sudo apt install yad
 
+# share ssh key with WSL
+mv ~/.ssh /c/Users/xxx
+ln -s /c/Users/xxx/.ssh ~/.ssh
+
+# allow window files to retain linux permission
+vim /etc/wsl.conf
+```
+[automount]
+root = /    # change fs mountpoint to /
+options = "metadata"
+```
 
 
 

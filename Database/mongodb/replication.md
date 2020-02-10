@@ -51,20 +51,17 @@ must run on replica
 `{replSetMaintenance: <boolean>}`
 
 
-mongo -uadmin -pPwc4admin --authenticationDatabase=admin
 
 # read preference
 &readPreference=secondaryPreferred
 
 # repl set -> standalone
-var doc = db.system.replset.findOne()
-doc._id = 'rs1'
-db.system.replset.save(doc)
-db.system.replset.remove({_id:'rs0'})
+vim /etc/mongod.conf
+=> change 
+db.system.replset.remove({})
 
-
-
-
+# add node
+rs.add( { host: "mongodb3.example.net:27017", priority: 0, votes: 0 } )
 
 
 

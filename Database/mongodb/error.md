@@ -31,3 +31,11 @@ journalctl -u mongod
 
 
 
+
+
+
+
+
+
+
+
