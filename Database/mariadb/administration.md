@@ -35,4 +35,27 @@ flush privileges;
 `sudo mysql_secure_installation`
 
 
+# variable
+## session variable
+user-defined variable start with @
+`set @messsage = 'current datetiem is';`
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 

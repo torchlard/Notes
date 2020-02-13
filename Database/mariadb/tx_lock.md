@@ -24,8 +24,16 @@ read get shared lock, write exclusive lock
 3. when T2 commit, want get exclusive lock -> blocks
 
 
+# command
+show global variables like 'autocommit';
 
-
+```sql
+set autocommit=0;
+start transaction;
+...
+...
+commit;
+```
 
 
 
