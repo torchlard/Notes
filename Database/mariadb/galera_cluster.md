@@ -79,17 +79,6 @@ other nodes start normally:
 
 `journalctl -fu mariadb`
 
-# problem
-## edit the grastate.dat file manually and set safe_to_bootstrap to 1 
-sudo vim /var/lib/mysql/grastate.dat
-
-change `safe_to_bootstrap: 1`
-
-## ist not allowed
-set node address to private ip in VPC
-disable SELinux
-
-
 # galera VS group replication
 
 

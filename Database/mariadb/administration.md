@@ -16,7 +16,10 @@ also enable `--skip-networkingoption`: prevent the other clients from connecting
 `mysql` login as root
 
 ```sql
-UPDATE mysql.user SET Password=PASSWORD('NEW-PASSWORD') WHERE User='root';
+-- UPDATE mysql.user SET Password=PASSWORD('NEW-PASSWORD') WHERE User='root';
+create user 'root'@'%' identified by '666666';
+alter user 'root'@'localhost' identified by '666666';
+GRANT ALL PRIVILEGES ON *.* TO 'root'@'%' IDENTIFIED BY PASSWORD '123456' WITH GRANT OPTION
 FLUSH PRIVILEGES;
 ```
 `sudo mysqladmin -u root -p shutdown` shutdown the running database server
@@ -42,8 +45,10 @@ user-defined variable start with @
 
 
 
-
-
+alter user 'root'@'localhost' identified by '666666';
+create user 'root'@'%' identified by '666666';
+GRANT ALL PRIVILEGES ON *.* TO 'root'@'%' IDENTIFIED BY '666666' WITH GRANT OPTION;
+flush privileges;
 
 
 
