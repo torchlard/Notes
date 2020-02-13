@@ -82,6 +82,8 @@ special single-field index use to auto remove docs from collection after certain
 ignore compound indexes
 `db.eventlog.createIndex({"lastModifiedDate": 1}, {expireAfterSeconds: 3600})`
 
+check ttl setting ` db.adminCommand({getParameter:1, ttlMonitorSleepSecs: 1})`
+
 ## unique index
 enforce uniqueness for indexed fields
 single/compound index 

@@ -150,7 +150,8 @@ db.getSiblingDB("admin").aggregate([
     { $sort: {"secs_running": -1}} 
 ])
 ```
-
+# check info
+`db.serverBuildInfo()`
 
 
 
