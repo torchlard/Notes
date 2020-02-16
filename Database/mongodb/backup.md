@@ -12,19 +12,6 @@ RPO: recovery point objective, recover data
 | 6     | n min      | 0         |
 
 # command
-`mongodump -h=<host> -u=<user> -p=<pwd> -d=<db> -c=<coll> --authenticationDatabase=admin`
-
-## import, export 
-bson: `mongorestore -d testdb -c test test.bson`
-json: `mongoimport -d testdb -c test test.metadata.json`
-
-import multiple bson + auto read corresponding metadata
-`mongorestore -d <db> --nsInclude '*.bson' <src>`
-
-(not necessary)
-import multiple metadata json
-`cd <src>; ls -1 *.json | sed 's/.metadata.json$//' | while read col; do mongoimport -d <db> -c $col < $col.metadata.json; done`
-
 ### create new dir (only import index)
 ```sh
 #!/bin/bash
@@ -136,6 +123,22 @@ lvcreate --size 1G --name mdb-new vg0
 gzip -d -c mdb-snap01.gz | dd of=/dev/vg0/mdb-new
 mount /dev/vg0/mdb-new /srv/mongodb
 ```
+
+# import, export 
+`mongodump -h=<host> -u=<user> -p=<pwd> -d=<db> -c=<coll> --authenticationDatabase=admin`
+
+bson: `mongorestore -d testdb -c test test.bson`
+json: `mongoimport -d testdb -c test test.metadata.json`
+
+import multiple bson + auto read corresponding metadata
+`mongorestore -d <db> --nsInclude '*.bson' <src>`
+
+(not necessary)
+import multiple metadata json
+`cd <src>; ls -1 *.json | sed 's/.metadata.json$//' | while read col; do mongoimport -d <db> -c $col < $col.metadata.json; done`
+
+`mongorestore --nsFrom='fromDb.fromColl' --nsTo='toDB.toColl' --host=127.0.0.1:27017 --username=xxx --password=xxx --authenticationDatabase=admin dataSrc/`
+
 
 # full backup
 lock replica db `db.fsyncLock()`

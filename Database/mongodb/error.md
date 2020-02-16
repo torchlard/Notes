@@ -30,8 +30,8 @@ journalctl -u mongod
 # exception in initAndListen: Location28596: Unable to determine status of lock file in the data directory /var/lib/mongo: boost::filesystem::status: Permission denied: "/var/lib/mongo/mongod.lock", terminating
 
 
-
-
+#  positional arguments not allowed
+reason: spacing in input param
 
 
 

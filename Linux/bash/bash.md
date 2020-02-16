@@ -30,6 +30,23 @@ change data
 `update table set field=new where field=old`
 
 
+# 2>&1
+file descriptor 1: stdout
+file descriptor 2: stderr
+
+`2>1` redirect stderr to file named 1
+`2>&1` redirect stderr to file descriptor 1
+`&2>&1`: command `&` + command `2>&1`
+
+
+
+
+
+
+
+
+
+
 
 
 
