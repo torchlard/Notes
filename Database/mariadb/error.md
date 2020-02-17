@@ -13,6 +13,16 @@ start slave;
 # Waiting for master to send event
 delete all data, reset again
 
+# [ERROR] Unknown/unsupported storage engine: InnoDB
+solution:
+rm -f ib_logfile0
+rm -f ib_logfile1
+
+
+
+
+
+
 
 
 
