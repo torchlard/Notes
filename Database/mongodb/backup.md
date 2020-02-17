@@ -139,6 +139,10 @@ import multiple metadata json
 
 `mongorestore --nsFrom='fromDb.fromColl' --nsTo='toDB.toColl' --host=127.0.0.1:27017 --username=xxx --password=xxx --authenticationDatabase=admin dataSrc/`
 
+## mongorestore
+only insert into existing db, not peform update of any kind
+if same _id value, not overwirte
+
 
 # full backup
 lock replica db `db.fsyncLock()`
