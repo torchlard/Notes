@@ -73,9 +73,33 @@ ln -sf /usr/share/zoneinfo/America/Los_Angeles /etc/localtime
 copy from remote to local using ssh config
 `scp <remote-alias>:<remote-path-to-copy-from> <local-path>`
 
-# tar.gz
-compress `tar -zcvf xxx.tar.gz <src>`
-uncompress `tar -zxvf xxx.tar.gz`
+# compression
+best compression: xz with -2 level compression
+`time tar -cvf - dir | xz -c -v -2 -T4 > dir.tar.gz`
+
+## tar.gz
+compress `tar zcvf xxx.tar.gz <src>`
+uncompress `tar zxvf xxx.tar.gz`
+
+## only package
+package `tar cvf filemake.tar dirname`
+unpackage `tar xvf filename.tar`
+
+## gzip
+compress `gzip filename`
+uncompress `gzip -d filename.gz`
+
+## bzip2
+compress `bzip2 -z filename`
+uncompress `bzip2 -d filename.bz2`
+
+## tar.bz2
+compress `tar jcvf` 
+uncompress `jar jxvf`
+
+## tar.xz
+compress `tar Jcvf filename.tar.xz dirname`
+uncompress `tar Jxvf filename.tar.xz`
 
 
 

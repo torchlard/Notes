@@ -107,8 +107,54 @@ GB `free -g`
 display list of available block device
 
 
+# disk IO
+## iostat 
+monitor input/output device 
 
+interval: seconds between reports 
+tps: number of transfers per second
+  - transfer = IO request to device
+  - multiple logical requests can combine into single IO request
 
+Blk_read/s (kB_read/s, MB_read/s): num of blocks read from device, block=512 B
+Blk_wrtn/s (kB_wrtn/s, MB_wrtn/s): num of blocks written to device per second
+
+Blk_read (kB_read, MB_read): total num of blocks read
+Blk_wrtn (kB_wrtn, MB_wrtn): total num of blocks written
+
+rrqm/s: num of read requests merged per second, queued to device
+wrqms/s: write req merged/s queued
+
+r/s: num of read (after merges) per second queued
+w/s: num of write (after merges) per second queued
+
+rsec/s (rkB/s, rMB/s): num of sectors read
+wsec/s (wkB/s, wMB/s): num of sectors write
+
+avgrq-sz: average size (in sectors) of req issued to device
+avgqu-sz: average queue length of requests
+
+await: average time (in ms) to serve IO requests
+r_await: average time (in ms) serve read req
+w_await: average time (in ms) serve write req
+
+### param
+c: cpu
+d: device utilization
+`-g <group name>`: stat for gorup of device
+h: human readable
+`-j {ID | LABEL | PATH | UUID}`: display persistent device names
+k: KB/s
+m: MB/s
+N: registered device mapper names (LVM)
+p: stat for block devices and all partitions used
+T: used with option -g, indicate global stat for group
+t: print time
+x: extended stat
+y: omit first report stat since system boot
+z: omit non-active device 
+
+`iostat -p sda -d 2 6` display 6 reports at 2 sec interval for device sda
 
 
 
