@@ -102,7 +102,8 @@ compress `tar Jcvf filename.tar.xz dirname`
 uncompress `tar Jxvf filename.tar.xz`
 
 
-
+# sort log
+sudo du -h . | sort -t . -k 1 -n
 
 
 
