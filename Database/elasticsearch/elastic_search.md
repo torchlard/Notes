@@ -18,7 +18,7 @@ index = database
 index type = table
 
 # command
-`curl -H "Content-Type: application/json" -XPOST "http://localhost:9200/indexname/typename/optionalUniqueId" -d "{ \"field\" : \"value\"}"`
+`curl --user <username>:<password> -H "Content-Type: application/json" -XPOST "http://localhost:9200/indexname/typename/optionalUniqueId" -d "{ \"field\" : \"value\"}"`
 
 get all index `curl --user elastic:123456 'localhost:9200/_cat/indices?v'`
 
