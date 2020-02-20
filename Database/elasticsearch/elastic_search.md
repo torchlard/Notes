@@ -101,6 +101,9 @@ default query for combining multiple leaf / compound query clauses
   - must_not: must not appear
   - filter: must appear
 
+OR = should
+AND = must
+NOR = should_not
 
 ## boosting
 return docs which match positive query, reduce score of docs match negative query
