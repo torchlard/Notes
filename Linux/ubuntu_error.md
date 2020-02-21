@@ -28,7 +28,10 @@ GRUB_CMDLINE_LINUX_DEFAULT="quiet splash mem_sleep_default=deep"
 
 $ sudo grub-mkconfig -o /boot/grub/grub.cfg
 
-
+# dpkg error
+Search for the offending package by name and remove its entry `vim /var/lib/dpkg/status`
+`sudo dpkg --configure -a`
+run `sudo apt-get -f install` just in case
 
 
 
