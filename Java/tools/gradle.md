@@ -71,10 +71,8 @@ ID of dependency: ```<gorup>:<module>:<version>```
 ### api 
 dependencies requried for compiling both modules and any modules depend on it
 
-### sourceCompatibility
-which version java source file treated as
-### targetCompatibility
-min JVM version code should run on
+sourceCompatibility: which version java source file treated as
+targetCompatibility: min JVM version code should run on
 
 ### quiet run
 ./gradlew -q run
@@ -83,12 +81,14 @@ min JVM version code should run on
 gradle run --console=plain
 
 
-
 # Windows
 1. download zip folder
 2. unzip to C:\
 3. set GRADLE_HOME to gradle\bin
 
+# assemble
+assembile: build artifact
+build: assemble artifacts with additioanl checks
 
 
 

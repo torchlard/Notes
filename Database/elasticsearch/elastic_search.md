@@ -354,9 +354,14 @@ aggreagte output of other aggregations and associated metrics
 aggregations can be nested, no hard limit on level/depth 
 
 
+# plugin
+`sudo /usr/share/elasticsearch/bin/elasticsearch-plugin install analysis-smartcn`
+analyzer support simplified chinese and mixed  chinese-english text, traditional not supported
+integrate smart chinese analyzer into elasticsearch
 
-
-
+lucene provide support for chinese sentence and word segmentation with 
+- HMM Chinese Tokenizer
+- SmartChineseAnalyzer
 
 
 

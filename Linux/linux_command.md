@@ -105,6 +105,8 @@ uncompress `tar Jxvf filename.tar.xz`
 # sort log
 sudo du -h . | sort -t . -k 1 -n
 
+# count files without .git/
+find . -type f | grep -v ./.git | wc -l
 
 
 

@@ -83,9 +83,60 @@ create new image based on current state
 current working directory called build context
 
 
+# multi-stage build
+challenge: keep image size down
+each instruciton in dockerfile add layer to image
+need to clean up artifact don't need before moving on next layer
 
+prev: shell trick keep as small as possible
+  - one Docerfile for dev, one for production => builder pattern
 
+example
+```Dockerfile
+FROM golang:1.7.3
+WORKDIR /go/src/github.com/xxx
+COPY app.go .
+RUN go get -d -v golang.org/x/net/html \
+  && CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o app .
+```
+artifically compress 2 RUN command together to avoid creating additional layer in image
+=> hard to maintina
 
+## now
+use multipel `FROM`, each `FROM` can use different base
+each begins new stage of build, can selectively copy artifacts from one stage to another
+
+```Dockerfile
+FROM golang:1.7.3
+WORKDIR /go/src/github.com/alexellis/href-counter/
+RUN go get -d -v golang.org/x/net/html  
+COPY app.go .
+RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o app .
+
+FROM alpine:latest  
+RUN apk --no-cache add ca-certificates
+WORKDIR /root/
+COPY --from=0 /go/src/github.com/alexellis/href-counter/app .
+CMD ["./app"]  
+```
+only need single dockerfile, run `docker build .`
+`COPY --from=0` copies just built artifact from previous stage
+Go SDK and intermediate artifacts left behind, not savedin final image
+
+## naming
+default stages not named, refer to them by integer start from 0
+```Dockerfile
+FROM golang:1.7.3 as builder
+....
+
+FROM alpine:latest
+COPY --from=builder ...
+```
+
+stop at specific build stage `docker build --target builder -t xxx .`
+usage: debug specific build stage
+
+can use external image / previous stage as stage
 
 
 
