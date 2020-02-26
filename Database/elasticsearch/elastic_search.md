@@ -364,8 +364,32 @@ lucene provide support for chinese sentence and word segmentation with
 - SmartChineseAnalyzer
 
 
+# backup
+elasticdump
 
+Copy an index from production to staging with analyzer and mapping: 
+```
+elasticdump \
+  --input=http://production.es.com:9200/my_index \
+  --output=http://staging.es.com:9200/my_index \
+  --type=analyzer
+```
 
+backup index data to file
+```
+elasticdump \
+  --input=http://production.es.com:9200/my_index \
+  --output=/data/my_index_mapping.json --limit=10000 \
+  --type=mapping
+```
+
+backup template
+```
+elasticdump \
+  --input=http://es.com:9200/template-filter \
+  --output=templates.json \
+  --type=template
+```
 
 
 

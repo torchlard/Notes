@@ -106,6 +106,7 @@ GB `free -g`
 ## lsblk
 display list of available block device
 
+disk usage `df -h`
 
 # disk IO
 ## iostat 
@@ -137,6 +138,9 @@ avgqu-sz: average queue length of requests
 await: average time (in ms) to serve IO requests
 r_await: average time (in ms) serve read req
 w_await: average time (in ms) serve write req
+
+### command
+install `sysstat`
 
 ### param
 c: cpu
