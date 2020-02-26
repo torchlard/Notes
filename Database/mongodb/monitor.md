@@ -6,7 +6,29 @@ get url for monitor
 
 # mongostat
 show current db status
-`mongostat -h <host> -u <user> -p <pwd> --authenticationDatabase admin`
+`mongostat -h <host> -u <user> -p <pwd> --authenticationDatabase admin --discover`
+
+insert: #obj inserted into db per sec
+query: #query /s
+update, delete
+getmore: #get_more /s
+command: #command /s
+flushes: num of wiredtiger checkpoints triggered between each polling interval
+dirty: % WiredTiger cache with dirty bytes
+used: % WiredTiger cache with dirth bytes
+vsize: virtual memory (MB) used by process
+res: resident memory (MB) used by process
+locked: only for pre-3.0 instance
+qr: queue length client waiting read
+qw: queue length client waiting write
+ar: active clients performing read
+aw: active clients performing write
+netIn: network traffic (B) received
+netOut: network traffic (B) sent
+conn: total num of open connection
+set: repl set
+repl: replication status of member
+
 
 # mongotop
 show running query

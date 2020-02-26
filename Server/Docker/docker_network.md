@@ -51,7 +51,7 @@ ping -c 2 alpine2
 ping -c 2 alpine3
 ```
 
-
+docker logs -f <docker-id>
 
 
 
