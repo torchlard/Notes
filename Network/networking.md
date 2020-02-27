@@ -52,4 +52,21 @@ provide global view of network as if there's only 1 central controller
    hide detials of physical network
 
 
+# network in vpn
+error: cannot resolve host
+solution:
+1. install resolvconf
+2. vim /etc/resolvconf/resolv.conf.d/head 
+3. add
+nameserver 8.8.8.8
+nameserver 8.8.4.4
+
+
+
+
+
+
+
+
+
 
