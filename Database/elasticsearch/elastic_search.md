@@ -391,6 +391,35 @@ elasticdump \
   --type=template
 ```
 
+# from / size
+default index.max_result_window = 10,000
+```
+{
+  from: 0, size: 10,
+  query: {
+    term: {
+      user: "kimchy"
+    }
+  }
+}
+```
+from = offset from first result
+size = max amount of hits returned
+
+
+# scroll
+search request returns single "page" result
+scroll API used to get large numbers of results from single search request
+
+not intended for real time user requests, rather for processing large amounts of data
+
+
+
+
+
+
+
+
 
 
 

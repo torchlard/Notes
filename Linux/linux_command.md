@@ -109,7 +109,10 @@ sudo du -h . | sort -t . -k 1 -n
 find . -type f | grep -v ./.git | wc -l
 
 
-
+# cron job
+install/overwrite cronjob `crontab <filename>`
+remove all cron job of current user `crontab -r`
+edit current cronjob `crontab -e`
 
 
 
