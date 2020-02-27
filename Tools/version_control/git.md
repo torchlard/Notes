@@ -22,5 +22,9 @@ go to setting > SSH and GPG keys > New SSH key, paste key content
 # remove all uncommitted change
 git reset --hard HEAD
 
+# revert file
+git checkout -- <filename>
+
+
 
 
