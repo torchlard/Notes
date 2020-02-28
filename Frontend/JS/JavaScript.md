@@ -301,7 +301,8 @@ can get and set inline css
 avoid begin new line with ( [ `
 
 
-
+# new date certain timezone
+new Date().toLocaleString("en-US", {timeZone: "Asia/Hong_Kong"})
 
 
 

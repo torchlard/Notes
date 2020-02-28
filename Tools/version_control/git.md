@@ -8,22 +8,51 @@ git push origin master
 no need to re-enter password
 
 commands:
+```bsh
 git remote -v     // check existing url
 git remote set-url origin git@github.com:USERNAME/REPO.git  // change existing url
 git remote add origin git@github.com:USERNAME/REPO.git  // new ssh url
-
+```
 
 // do following if no key installed
+```bsh
 ssh-keygen -t rsa -b 4096   // generate new key, cannot copy from old file
 ssh-add ~/.ssh/xxx  // add key to system
 xclip -sel clip < ~/.ssh/xxx.pub    // copy key content to clipboard
 go to setting > SSH and GPG keys > New SSH key, paste key content
+```
 
 # remove all uncommitted change
 git reset --hard HEAD
 
 # revert file
 git checkout -- <filename>
+
+git config [--global|--local] --list
+
+git config [--global|--local] user.name "xxx"
+git config [--global|--local] user.email "xxx"
+
+
+# personal access token 
+use https protocol
+username: as usual
+pwd: access token
+
+clear setting `git config --global --unset credential.helper`
+
+# file status
+tracked: file previously staged or committed
+untracked: file not been staged or committed
+ignored: file git explicitly told to ignore
+
+
+
+
+
+
+
+
 
 
 
