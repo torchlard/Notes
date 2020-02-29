@@ -114,6 +114,32 @@ install/overwrite cronjob `crontab <filename>`
 remove all cron job of current user `crontab -r`
 edit current cronjob `crontab -e`
 
+# jq
+transform JSON in various ways
+select, iterate, reduce, mangle JSON documents
+
+`jq 'map(.price) | add'` take array of json objects as input, 
+return sum of price fields
+
+always single quote the jq program
+
+## filters
+`.` no change
+`.foo` {"foo": 42, "bar":"less interesting"} => 42
+`.["foo"]` {"foo": 42} => 42
+`.foo?` not output even an error occurs when . not an array / object
+`.[0]` [{"n":1},{"n":2}] => {"n":1}
+`.[2:4]` [1,2,3,4,5] => 
+
+
+
+
+
+
+
+
+
+
 
 
 

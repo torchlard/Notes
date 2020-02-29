@@ -152,12 +152,16 @@ dump db with oplog to replay `mongodump -u... -p... -h... --oplog`
 `mongorestore <dump-dir>`
 
 # incremental backup
-get newest timestamp `bsondump dump/oplog.bson`
+get newest timestamp 
+```
+bsondump dump/oplog.bson > oplog.ndjson
+tail -n 1 oplog.ndjson | jq '.ts."$timestamp"' -c > last_run
+```
 
 hot backup (cannot use "Timestamp(xxx,1)" )
 ```bsh
 t1=$(node -p 'Math.round(new Date("2020-01-20T20:00:00+08:00").getTime()/1000)')
-mongodump -h 192.168.11.103 -uroot -p123456 -d local -c oplog.rs -q '{"ts":{"$gt":{"$timestamp": {"t":1579512306, "i":1}}}}'
+mongodump -h 192.168.11.103 -uroot -p123456 -d local -c oplog.rs -q '{"$and":[{"ts":{"$gt": {"$timestamp": {"t": 1582957979,"i":0}}}}, {"o.msg":{"$not":{"$eq":"periodic noop"}}}]}'
 
 // OR
 query='{"ts":{"$gt":{"$timestamp":{"t":'$t1',"i":1}}}}'
@@ -172,7 +176,28 @@ query='{"ts":{"$gt":{"$timestamp":{"t":'$t1',"i":1}},"$lt":{"$timestamp":{"t":'$
 
 ## restore
 restore from oplog
-`mongorestore --oplogReplay <oplog-dir>`
+`mongorestore -u=xxx -p=xxx --oplogReplay <oplog-dir> --oplogLimit=<time_t>:<ordinal>`
+
+time_t: seconds since unix epoch
+ordinal: counter of operations in oplog occured in specified second
+
+### options
+--noIndexRestore
+--noOptionsRestore
+--restoreDbUsersAndRoles
+--maintainInsertionOrder
+--numParallelCollections
+--stopOnError
+
+--oplogFile
+--nsInclude|--nsExclude=<namespace pattern>
+--drop: before restoring collection, drop from target databases
+--preserveUUID: restored collections use UUID fromrestore data instead of creating new UUID for collection
+  - use with --drop
+
+
+
+
 
 
 
