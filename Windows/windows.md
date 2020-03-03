@@ -39,6 +39,28 @@ Get-Service | findstr 'ssh'
 
 
 
+# mysqld
+## install
+1. download zip of mariadb
+2. mysql_install_db.exe 
+
+## run
+mysqld --console  // start with debug
+
+## default config
+C:\my.ini
+C:\my.cnf
+
+INSTALLDIR\data\my.ini
+INSTALLDIR\data\my.cnf
+
+%MYSQL_HOME%\my.ini
+%MYSQL_HOME%\my.cnf
+
+
+
+
+
 
 
 
