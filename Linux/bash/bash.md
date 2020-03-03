@@ -39,8 +39,13 @@ file descriptor 2: stderr
 `&2>&1`: command `&` + command `2>&1`
 
 
+# if then else
+if [[ -e $file ]]; then echo 'a'; fi
+[ -e $file ] && echo 'a'
 
-
+# date
+second since epoch `date +%s`
+show certain day `date -d "2019-02-01"`
 
 
 

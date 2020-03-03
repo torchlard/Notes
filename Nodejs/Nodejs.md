@@ -39,6 +39,56 @@ block nodejs event loo, pausing additional code untila spawned process exit
 ### execFileSync
 same as execFile except method will not return until child process has fully closed
 
+# stream
+type: readable, writable, duplex, transform
+
+can consume: fs.createReadStream
+can write: fs.createWriteStream
+duplex: TCP socket
+=> instance of EventEmitter
+
+```
+a.pipe(b).pipe(c).pipe(d)
+
+readableSrc
+  .pipe(transformStream1)
+  .pipe(transformStream2)
+  .pipe(finalWritableDest)
+```
+
+## readable
+### events
+data: stream send a chunk to consumer 
+end: no consumable data in stream
+error
+close
+readable
+
+### functions
+pipe, unpipe
+read, unshift, resume
+pause, isPAused
+
+## writable stream
+### event
+drain: writable stream can accept more data
+finish: all data written to system
+
+## flow mode
+paused: pull (default)
+flowing: push
+```
+paused --stream.resume()--> flowing
+      <--stream.paused()---
+```
+when in paused mode, use read() to get data
+when in flowing mode, use listener
+  - if no listener, data may lost
+
+
+
+
+
 
 
 
