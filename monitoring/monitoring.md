@@ -24,6 +24,12 @@ standalone, in nature time-series database
 `Metricname{key1="value1",key2="value2"}value`
 eg. 3 cpu load for web_01 host `cpu_load{host_name="web_01"}3`
 
+## metric type
+counter
+gauge
+histogram
+summary
+
 ## features
 - multi-dimensional data model with time series data identified by metric name and key/value pair
 - PromQL (flexible query language)
@@ -34,10 +40,11 @@ eg. 3 cpu load for web_01 host `cpu_load{host_name="web_01"}3`
 - multiple mode graphing and dashboard
 
 ## components
-- Prometheus server which scrapes, store time series data
-- push gateway
-- exproter for services HAProxy,StatsD, Grphite
-- alertmanager to handle alerts
+Prometheus server: scrapes, store time series data
+push gateway: temporary job push
+exproter: expose 3rd party service's metric to server (eg. HAProxy,StatsD, Grphite)
+Alertmanager: handle alerts (eg. email, pagerduty, OpenGenie, Webhook)
+client library: return live metrics
 
 ## use case
 work well for recording purely numeric time series

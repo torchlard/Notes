@@ -131,7 +131,8 @@ always single quote the jq program
 `.[0]` [{"n":1},{"n":2}] => {"n":1}
 `.[2:4]` [1,2,3,4,5] => 
 
-
+# curl
+download file `curl <url> --output xxx`
 
 
 

@@ -73,6 +73,14 @@ qemu + kvm = complete virtualization platform
 someone modify qemu, simulate cpu,memory -> kvm; keep network card, display
 for kvm, can use other userspace tools, eg. libvirt, virsh, virt-manager
 
+# virsh
+main interface for managing virsh guest domain (create, pause, shutdown)
+
+domain: numeric domain id / domain name / UUID
+
+`virsh [option] <command> <domain> [arg]`
+virsh list --all
+log `virsh -l` 
 
 
 

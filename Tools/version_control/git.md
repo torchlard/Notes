@@ -47,9 +47,16 @@ untracked: file not been staged or committed
 ignored: file git explicitly told to ignore
 
 
+# push to ec2
+// in ec2
+git init --bare
 
+// in local
+git remote add ec2 <host-from-ssh-config>:/path/to/project_dir.git
+git push ec2 master
 
-
+git remote remove origin
+git remote add origin <original-git>
 
 
 
