@@ -133,7 +133,7 @@ always single quote the jq program
 
 # curl
 download file `curl <url> --output xxx`
-
+download without specify name `curl -OJ http://xxx`
 
 
 

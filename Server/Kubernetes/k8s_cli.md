@@ -13,6 +13,12 @@ check node `kubectl describe nodes`
 
 type1/name1 type2/name2 ...
 
+### level
+get pods --all-namespaces
+get pods -o wide 
+kubectl describe pods --namespace=monitoring
+
+
 ## service
 apply label `kubectl label pod <pod-name> app=v1`
 get pods of label app=v1 `kubectl get pods -l app=v1`

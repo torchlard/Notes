@@ -26,6 +26,15 @@ root = /    # change fs mountpoint to /
 options = "metadata"
 ```
 
+# config k8s
+mkdir -p ~/.kube
+ln -sf /c/users/<YOUR_USER>/.kube/config ~/.kube/config
+
+
+
+
+
+
 
 
 

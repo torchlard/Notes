@@ -82,6 +82,15 @@ domain: numeric domain id / domain name / UUID
 virsh list --all
 log `virsh -l` 
 
+##
+virsh define filename.xml
+
+## network
+virsh net-list
+virsh net-info default
+
+brctl show
+
 
 
 
