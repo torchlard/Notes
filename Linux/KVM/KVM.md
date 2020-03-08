@@ -82,7 +82,7 @@ domain: numeric domain id / domain name / UUID
 virsh list --all
 log `virsh -l` 
 
-##
+## 
 virsh define filename.xml
 
 ## network
@@ -91,11 +91,45 @@ virsh net-info default
 
 brctl show
 
+# install
+## 1. init
+packages: qemu-kvm libvirt libguestfs-tools virt-install
+```
+systemctl enable libvirtd
+systemctl start libvirtd
 
+lsmod | grep -i kvm
+brctl show
 
+sudo virsh net-list
+sudo virsh net-dumpxml default
+```
 
+set network
+```
+sudo virsh net-autostart defaults
+```
+setting pos: /etc/libvirt/qemu/networks
 
+## 2. create VM
+cd /var/lib/libvirt/boot
 
+# command
+shutdown vm `virsh shutdown <vm-name>`
+destroy domain `virsh destroy <vm-name>`
+delete vm `virsh undefine <vm-name>`
+
+connect to vm1 `sudo virsh console vm1` 
+
+# make domain persistent
+virsh dumpxml vm_name > vm_name.xml
+virsh define vm_name.xml
+To check:
+
+virsh list --all --persistent
+The VM should now be listed. Or
+
+virsh dominfo vm_name
 
 
 

@@ -34,6 +34,9 @@ ls -alS --block-size=M
 # scp
 `scp source_ip:source_file dest_ip:dest_file`
 
+# rsync
+rsync -avz --exclude-from '../exclude-list.txt' host:source destination
+
 # backup remote host's disk image
 xfs filesystem
 

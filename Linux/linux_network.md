@@ -194,6 +194,9 @@ NM_CONTROLLED="yes"
 IPADDR=192.168.11.203
 NETMASK=255.255.255.0
 GATEWAY=192.168.11.1
+DNS1=8.8.8.8
+DNS2=8.8.4.4
+
 
 ## files to consider
 /etc/resolv.conf : for DNS

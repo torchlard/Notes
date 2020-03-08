@@ -51,6 +51,21 @@ untaint all ndoes
 # events is forbidden: User "system:bootstrap:oj3cr7" cannot list resource "events" in API group "" in the namespace "default"
 refer to 'Using RBAC Authorization'
 
+# The connection to the server localhost:8080 was refused - did you specify the right host or port?
+sudo cp /etc/kubernetes/admin.conf $HOME/
+sudo chown $(id -u):$(id -g) $HOME/admin.conf
+export KUBECONFIG=$HOME/admin.conf
+
+# no endpoints available for service \"kubernetes-dashboard\"
+kubectl apply -f https://docs.projectcalico.org/v3.11/manifests/calico.yaml
+
+# cannot login to dashboard remotely
+kube proxy dashboard only allow localhost
+
+must reference to remote admin.conf and run `kubectl proxy` in local
+
+
+
 
 
 
