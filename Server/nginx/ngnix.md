@@ -119,7 +119,7 @@ Keepalived: virtual ip map to 1 nginx server
 ## reverse proxy
 `root` -> `proxy_pass`
 request -> Nginx -> Tomcat
-aloow custom HTTP header
+allow custom HTTP header
 ```
 server {
   listen 80;
@@ -292,6 +292,7 @@ location /proxy/ {
   proxy_pass http://127.0.0.1/;
 }
 ```
+
 http://127.0.0.1/proxy/test.html
 ```
 location /proxy/ {
@@ -305,6 +306,7 @@ location /proxy/ {
   proxy_pass http://127.0.0.1/aaa/;
 }
 ```
+
 http://127.0.0.1/aaatest.html
 ```
 location /proxy/ {
@@ -363,9 +365,50 @@ in http, config for certain URL
 use SMTP/IMAP/POP3 proxy, share some config
 
 
+# cache
+proxy_cache_path:
+when enable cache, server response save to disk, won't direct to backend
+
+levels: setup 2-level directory under /path/to/cche
+keys_zone: setup shred memory zone for storing cache keys and medatadata
+  - metadata: eg. usage times
+  - 1M zone : can store data about 8000 keys
+
+max_size: upper limit of cache size
+inactive: how long item can remain in cache without being accessed  
+  - default 10m
+  - expired content deleted only when not accessed by inactive time
+
+proxy_cache [zone name]
+`proxy_cache_valid 200 304 2m` 2m timeout for request state 200 and 304
+
+## header
+X-Accel-Expires: how long to store fastcgi / proxy cache 
+Expires: temp save page to client browser
+  - -1 = always expire
+
+if source website tell nginx Expires/Cache-Control setting max-age
+- want to let nginx's cache time as standard, so ignore source website header
+- control by proxy_cache_valid
+
+`add_header X-Cache-Status $upstream_cache_status`
+response caching status, know whether hit cache
 
 
+`proxy_ssl_server_name on;`
+pass hostname to backend server, let remote server get hsot in TLS status
 
+
+# rewrite
+rewrite <rule> <redirect path> <rewrite type>
+
+type
+  - last: finish rewrite, URL unchange
+  - break: after matching this rule, stop matching later rules, URL unchange
+  - redirect: return 302 redirect, browser show redirect url
+  - permanent: return 301, browser show redirect url
+
+`rewrite /last.html /index.html last` 
 
 
 
