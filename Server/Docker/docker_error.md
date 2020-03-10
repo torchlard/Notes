@@ -21,6 +21,16 @@ $ newgrp - docker
 # ERROR: Couldn't connect to Docker daemon at http+docker://localhost - is it running?
 solution: sudo docker-compose up
 
+# Error response from daemon: Get https://registry-1.docker.io/v2/library/hello-world/manifests/
+docker logout
+docker login
+
+# Unable to connect to the server: x509: certificate signed by unknown authority (possibly because of "crypto/rsa: verification error" while trying to verify candidate authority certificate "kubernetes")
+mkdir -p $HOME/.kube
+sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
+sudo chown $(id -u):$(id -g) $HOME/.kube/config
+
+
 
 
 
