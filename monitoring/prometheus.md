@@ -29,8 +29,21 @@ remote_read:
 
 ```
 
+# query expression
+## time series
+http_requests_total{job="prometheus",group="canary"}
+http_requests_total{environment=~"staging|testing|development",method!="GET"}
 
+= : equal
+!= : not equal
+=~ : regular expression
+!= : not matching regex
 
+## range 
+http_requests_total{job="prometheus"}[5m]
+
+## offset
+5 min before `http_requests_total offset 5m`
 
 
 

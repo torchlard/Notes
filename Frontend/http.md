@@ -141,10 +141,23 @@ indicate MIME types advertised in Content-Type headers should not change
 - prevent browser sniff MIME type
 
 
+# referer
+tell server where user from
 
+not sent: 
+  - user type url in browser
+  - choose bookmark
 
+sent:
+  - click link on webpage
+  - submit form
+  - static resource
 
-
+## referrer policy
+no-referrer
+no-referrer-when-downgrade: https link to http website
+same-origin
+origin
 
 
 
