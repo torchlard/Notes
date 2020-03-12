@@ -58,8 +58,9 @@ INSTALLDIR\data\my.cnf
 %MYSQL_HOME%\my.cnf
 
 
-
-
+# switch window
+switch window  `ctrl+super+(left/right arrow)`
+overview of task windows  `super+tab`
 
 
 
