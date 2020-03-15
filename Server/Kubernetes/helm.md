@@ -66,8 +66,14 @@ wordpress/
 ## template 
 written in Go template language
 
+# repo
+helm repo list
+```
+stable          https://kubernetes-charts.storage.googleapis.com
+mumoshu         https://mumoshu.github.io/charts
+```
 
-
+helm repo update
 
 
 

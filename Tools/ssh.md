@@ -73,7 +73,7 @@ use:
 2. connect to service on internal network from outside
 
 ### example
-`ssh -L 80:intra.example.com:80 gw.example.com`
+`ssh -L 80:localhost:80 remote`
 
 open connection to gw.example.com jump server,
 forward any connection to port 80 local -> intra.example.com port 80

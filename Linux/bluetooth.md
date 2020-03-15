@@ -26,4 +26,17 @@ Attempting to connect to XX:XX:XX:XX:XX:XX
 Connection successful
 [bluetooth]# quit
 
+# cannot pair to airpod
+sudo vi /etc/bluetooth/main.conf
+Uncomment and manually set ControllerMode to BR/EDR:
+```conf
+# Restricts all controllers to the specified transport. Default value
+# is "dual", i.e. both BR/EDR and LE enabled (when supported by the HW).
+# Possible values: "dual", "bredr", "le"
+ControllerMode = bredr
+```
+sudo systemctl restart bluetooth
+
+
+
 
