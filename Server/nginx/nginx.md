@@ -410,9 +410,15 @@ type
 
 `rewrite /last.html /index.html last` 
 
+```
+rewrite ^(/download/.*)/media/(\w+)\.?.*$ $1/mp3/$2.mp3 last;
+rewrite ^(/download/.*)/audio/(\w+)\.?.*$ $1/mp3/$2.ra  last;
+```
+match url that begins with string `/download`, then include `/media` or `/audio` later in path
+replace those elements with /mp3/ and adds appropriate file extensions .mp3 or .ra
+$1, $2 capture path elements that aren't changing
 
-
-
+eg. /download/cdn-west/media/file1 -> /download/cdn-west/mp3/file1.mp3
 
 
 
