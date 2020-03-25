@@ -56,8 +56,11 @@ characteristics
 restore
 - use LOAD DATA / mysqlimport
 
-```
+
+check status `show table status like 'xxx' \G`
+```bsh
 mysqldump --all-databases --master-data --single-transaction > backup_sunday_1_PM.sql
+mysqldump -h $host -u$user -p$pwd --master-data --single-transaction $db $table > xxx.sql
 
 mysql < backup_sunday_1_PM.sql
 

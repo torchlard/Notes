@@ -36,6 +36,7 @@ restore
 ```
 mysqldump --all-databases --master-data --single-transaction > backup_sunday_1_PM.sql
 
+
 mysql < backup_sunday_1_PM.sql
 
 mysqlbinlog gbichot2-bin.0007 gbichot2-bin.0008 | mysql
