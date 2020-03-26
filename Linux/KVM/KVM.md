@@ -132,6 +132,19 @@ The VM should now be listed. Or
 virsh dominfo vm_name
 
 
+# OVMF (Open Virtual Machine Firmware)
+project to enable UEFI support for virtual machines
+start from linux kernel 3.9 and recent QEMU, now possible passthrough GPU
+
+
+
+
+
+
+
+
+
+
 
 
 

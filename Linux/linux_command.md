@@ -138,6 +138,9 @@ always single quote the jq program
 download file `curl <url> --output xxx`
 download without specify name `curl -OJ http://xxx`
 
+# check hardware
+## pcie device
+lspci -nnk
 
 
 

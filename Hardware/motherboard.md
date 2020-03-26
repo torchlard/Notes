@@ -36,7 +36,15 @@ can use on CPU, GPU, APU
 point to point process interconnect, replace QPI in Xeon
 interconnect or scalable multiprocessor system with shared address space
 
+# PCH (platform controller hub)
+PCIE lane = cpu lane + PCH lane
 
+family of intel chipset (from 2008)
+controls certain data paths and support functions used in conjunction with intel CPU
+  - include clocking, flexible display interface (FDI), direct media interface (DMI)
+
+some north bridge functions, memory controller and PCIe lanes integrated into CPU
+PCH take over remaining functions in addition to southbridge roles
 
 
 
