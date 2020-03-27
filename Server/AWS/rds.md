@@ -321,10 +321,12 @@ solutions:
 - cause by network
   => create another replica in another availability zone
 
+### solution 1
+// skip error
+call mysql.rds_skip_repl_error();
 
-
-
-
+show slave status \G
+show procedure status where db='mysql';
 
 
 
