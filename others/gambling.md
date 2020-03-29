@@ -50,6 +50,36 @@ first time deposit discount
 create 2 accounts in two cassino, then play same match
 - each account opposite bet => overall no lose in money, but gain effective bet
 
+## 波膽 (correct score)
+投注一場球賽的全場比數
+
+## 半場波膽
+guess first half match score
+
+## 讓球 (handicap)
+經讓球調整後, guess home/away team win
+
+## 即場主客和 (home/away/draw)
+bet on ongoing match, guess finally who win	
+
+## 水位
+參考總結的情況下，判斷對陣雙方獲勝或者進球數大小的概率
+
+## 上下盤
+上盤: 讓球一方
+下盤: 被讓球的一方 
+
+eg.
+strong_team -1 , weak_team +1
+
+## 大小盤
+大球: score1 + score2 > 盤口
+小球: score1 + score2 < 盤口
+
+eg. 大小球盤口為2.5球
+if 2:1, then 大球
+if 1:1, then 小球
+
 
 # game type 
 球版，體育，運動彩票
@@ -71,6 +101,8 @@ save cash to system first, settlement immediately
 
 
 # 盤口
+博彩公司開出來體驗比賽雙方差距的一個參照物
+
 all possibility: lose all, lose half, no lose no win, win half, win all
 
 | 盤口  | explanation                                                          |
