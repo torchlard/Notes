@@ -162,7 +162,7 @@ inode: data structure storing file system metadata, with pointers to data
   also have checksum for inode
 
 Disks gathered together via RAID sets into pools of storage, a pool can hold >=1 ZFS
-
+```
 traditional:
 FS -- volume
 FS -- volume
@@ -172,14 +172,13 @@ ZFS:
 ZFS --|                  |-- disk
 ZFS --|-- storage pool --|-- disk
 ZFS --|                  |-- disk
-
+```
 disk write outcome:
 1. success
 2. partial failure: failure occur in the midst of transfer, so only some sectors written with new data, some corrupted
 3. total failure: fail before start, previous data remain intact
 
 # file system
-
 collection of file, directory structure
 file attribute: name, identifier, type, location, size, protection, time, date, user identification
 extended file attribute: character encoding, file checksum, ..
@@ -187,7 +186,7 @@ file operation: create, write, read, repositioning within file (file seek: searc
   truncate(erase content of file but keep attribute)
 
 file pointer: read(), write() use same pointer
-file-open ocunt: trace number of opens and closes and reaches zero on last close
+file-open count: trace number of opens and closes and reaches zero on last close
 disk location: information needed to locate file on disk kept in memory
 access right: stored on per-process table so OS can allow/deny IO
 

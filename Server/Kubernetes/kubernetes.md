@@ -179,9 +179,5 @@ ensure pods not scheduled onto inappropriate nodes
 any machine want to join cluster, must get ca certificate of server
 use token to proof validity of node
 
-```
-kubeadm join 192.168.0.233:6443 --token sd8a51.017go0q0mj7kiu4p \
-  --discovery-token-ca-cert-hash sha256:94e0877bd0852665528c7fd124f6fdd8559283451e30747df3a35a3bc7dec1f2
-```
 
 

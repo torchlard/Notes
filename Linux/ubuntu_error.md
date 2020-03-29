@@ -33,9 +33,16 @@ Search for the offending package by name and remove its entry `vim /var/lib/dpkg
 `sudo dpkg --configure -a`
 run `sudo apt-get -f install` just in case
 
+# cannot snap run
+option 1: (before boot)
+sudo apparmor_parser -r /etc/apparmor.d/*snap-confine*
+sudo apparmor_parser -r /var/lib/snapd/apparmor/profiles/snap-confine*
 
+option 2:
+sudo systemctl start apparmor
 
-
+# error: cannot find app "redis-desktop-manager" in "redis-desktop-manager"
+http://www.cxybcw.com/127634.html
 
 
 
