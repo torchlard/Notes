@@ -1,4 +1,11 @@
 # terms
+賠率: line / odds / price
+讓分投注: handicap / spread
+冠軍賠率: outright
+彩金 Payoff/Payout: 下注獲勝的獎金
+平手: push / tie / draw
+博彩: wager / bet / lay / gamble
+
 ## 抽水(rake)
 player playing any game need take certain amount of money first
 default 5%
@@ -122,12 +129,43 @@ a : win more than this number
 
 上盤: 讓球方，下盤: 被讓球方
 
+| 盤口      | 數字盤口 | 解釋                                                                                            |
+|---------|----------|-----------------------------------------------------------------------------------------------|
+| 平手      | 0        | 雙方開平，雙方獲勝的概率一樣大，誰贏球就贏盤，打平則走盤                                           |
+| 平手/半球 | 0/0.5    | 1. 誰贏球誰贏盤； 2.打平時，上盤贏一半，下盤輸一半                                                 |
+| 半球      | 0.5      | 1. 誰贏球誰贏盤；2.打平的話下盤贏盤； 3.下盤贏球下盤贏盤                                          |
+| 半球/一球 | 0.5/1    | 1.上盤淨勝1個球，上盤贏一半；2.上盤淨勝2個球或以上；上盤贏全部； 3.雙方打平或者下盤贏球的話下盤贏盤 |
+| 一球      | 1        | 1.上盤淨勝1個球，走盤； 2.上盤淨勝2個球或以上；上盤贏全部； 3.雙方打平或者下盤贏球的話下盤贏盤.     |
+
+## 走盤, 升盤, 降盤
+走盤: 平手盤，一球盤，兩球盤等偶數盤口，在雙方打平，上盤淨勝一球或兩球的情況下會被當成和局
+升盤：match uprising
+降盤：match down
+
+# 盤口受注的三個階段
+## 初盤
+odds before accept betting, banker decide appropriate odds
+
+## 中盤
+after accepting odds, 5-10 hours before match begins 
+
+## 臨場盤
+2-3 hours before match begins
+
+
 ## 歐洲盤
 賠率式的足球博奕
 different odds for 2 sides
 
 
+# 亞洲盤
+popular in asia
 
+## 單票
+一場比賽中一支球隊開出一個讓球盤, 全部投注在該讓球盤的盤口上
+
+## 套票
+一場比賽中一支球隊開出兩個讓球盤, 一半投注在雷擊納讓半球的盤口上，另一半則投注在雷擊納讓一球的盤口上
 
 
 
