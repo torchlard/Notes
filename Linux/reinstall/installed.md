@@ -50,7 +50,11 @@ sudo cp -r /media/lkit/7ac42414-61e5-4f3c-8c00-bee4add272d3/usr/share/icons/Papi
 shadowfox
 
 
-
+# chrome
+curl -sS https://dl-ssl.google.com/linux/linux_signing_key.pub | sudo apt-key add -
+sudo echo 'deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main' > /etc/apt/sources.list.d/google.list
+sudo apt upgrade
+sudo apt install google-chrome-stable
 
 
 

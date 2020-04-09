@@ -144,7 +144,16 @@ incremental recover
 10. 
 
 
+# csv/tsv import
+export data with bit(1) type
+```bsh
+mysql -h xxx -u xxx -pxxx -D xxx --batch --quick -e "select a,b,c+0 as c from db.tbl" > tbl.tsv
+```
 
+import data with bit(1) type
+```sql
+LOAD DATA infile 'D:/xxx/tbl.tsv' INTO TABLE db.tbl (c1,c2,@c3) ignore 1 lines SET c3=cast(@c3 AS signed)
+```
 
 
 

@@ -30,4 +30,7 @@ createdb mydb -U ade
 psql -d mydb -U ade
 
 
+# start
+jdbc:mariadb://127.0.0.1:3306
 
+/usr/lib/postgresql/12/bin/pg_ctl -D /var/lib/postgresql/12/main -l logfile start
