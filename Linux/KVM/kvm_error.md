@@ -8,3 +8,4 @@ sudo virsh undefine xxx --nvram
 
 
 
+
