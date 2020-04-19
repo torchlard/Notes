@@ -47,6 +47,18 @@ some north bridge functions, memory controller and PCIe lanes integrated into CP
 PCH take over remaining functions in addition to southbridge roles
 
 
+# form factor
+WTX     356x425
+HPTX    345x381
+EE-ATX  347x330
+EEB   305x330
+standard-ATX   305x244
+micro-ATX   244x244
+mini-ITX  170x170 mm
+mini-STX(5x5) 147x140
+intel nuc   102x102
+mini lake   102x64
+compute stick   30x90
 
 
 
