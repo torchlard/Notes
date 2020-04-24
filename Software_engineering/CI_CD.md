@@ -1,13 +1,18 @@
-Continuous Integration | Continuous Delivery
+# Continuous Integration (CI)
+merge all code being produced by developer
+several times a day in shared repository
 
-# target
-continuously verify system development result, ~TDD
-eg. environment setting, unit test, logging, deployment
+## usage
+detects errors as quickly as possible
+reduce integration problems
 
-1. lower risk
-2. reduce manual work
-3. make release that can deploy easily
-4. enhance transparency
+# Continuous Delivery (CD)
+software can be released to production at any time
+automatically pushing changes to staging system
+
+## usage
+ensure every change is releasable
+faster customer feedback loop
 
 # job
 - build
@@ -17,7 +22,7 @@ eg. environment setting, unit test, logging, deployment
 
 # tools
 Jenkins (most popular)
-git
+gitlab
 github
 CircleCI
 Docker
