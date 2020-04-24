@@ -142,8 +142,13 @@ download without specify name `curl -OJ http://xxx`
 ## pcie device
 lspci -nnk
 
+# substring
+// show first 1000 char
+echo xxx | cut -c -1000
 
-
+# sed
+// replace first occurrence
+sed -e '0,/ROW_FORMAT=FIXED/ s/ROW_FORMAT=FIXED//' xxx.sql > yyy.sql
 
 
 

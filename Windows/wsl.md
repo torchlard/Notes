@@ -31,8 +31,9 @@ mkdir -p ~/.kube
 ln -sf /c/users/<YOUR_USER>/.kube/config ~/.kube/config
 
 
-
-
+# run cmd
+cmd.exe /c xxx.bat
+powershell.exe xxx
 
 
 

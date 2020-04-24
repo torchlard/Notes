@@ -62,6 +62,8 @@ INSTALLDIR\data\my.cnf
 switch window  `ctrl+super+(left/right arrow)`
 overview of task windows  `super+tab`
 
+# hosts file location
+/c/Windows/System32/drivers/etc/hosts
 
 
 

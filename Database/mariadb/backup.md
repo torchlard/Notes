@@ -155,6 +155,9 @@ import data with bit(1) type
 LOAD DATA infile 'D:/xxx/tbl.tsv' INTO TABLE db.tbl (c1,c2,@c3) ignore 1 lines SET c3=cast(@c3 AS signed)
 ```
 
+# generated column
+remove strict mode
+`SET sql_mode = 'ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION';`
 
 
 
