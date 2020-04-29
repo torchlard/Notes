@@ -86,6 +86,31 @@ include: include external YAML
 variables: job variables in job level
 interruptibale: cancel job when newer run
 
+# cache
+speeding time job executed by reusing same content of previous job
+useful when fetch library from internet during build time
+
+don't use caching pass artifacts abetween stages
+  - disabled if not defined globally / per job
+  - can use in subsequent pipelines by same job which cache was created
+  - stored when Runner installed
+
+## caching practices
+for max availability of cache:
+- tag runner, use tag share cache
+- use sticky runner only available to particular project
+- use key (eg. different caches on each branch)
+
+## modes
+1. single runner for all jobs
+2. multiple runners that use distributed caching (eg. in S3 buckets)
+3. multiple runners that share NFS
+
+# artifacts
+stage results that pass between stages
+  - can only enabled per job, not globally
+  - always uploaded to gitlab (coordinator)
+  - can have expiration value for controlling disk usage (30 days default)
 
 
 

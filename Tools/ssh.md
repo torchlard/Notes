@@ -5,8 +5,12 @@
 trust and remember host's key when first connecting to it
 - stored host keys in `known_hosts` in openssh
 
-ssh-agent: hold user's decrypted private key in memory, use it to authenticate logins
+# ssh-agent
+hold user's decrypted private key in memory, use it to authenticate logins
 connection to ssh agent can be forwarded to a server => single sign-on
+
+after `eval $(ssh-agent)`, run `ssh-add`
+
 
 ## key size
 RSA: 2048 bits
