@@ -80,7 +80,9 @@ most GUI terminal support 256 color
 
 export PS1="\033[01;32m[\u@\h \W]# \033[0m"
 
-
+# change shortcut
+show shortcut `stty -a`
+set ctrl-k as interrupt `stty intr \^k`
 
 
 
