@@ -62,6 +62,10 @@ lvconvert --merge /dev/centos/snap1
 mount /dev/centos/lv01 /mnt/mydata
 systemctl start mariadb
 
+# activate lvm
+vgchange -ay
+sudo lvscan
+sudo mount /dev/xxx/xxx /mnt/disk
 
 
 
