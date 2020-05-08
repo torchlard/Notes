@@ -1,0 +1,33 @@
+assumes that the binary log file name is the same on both the slave and the master
+
+# IO lag
+Bytes behind master = Position - Read_Master_Log_Pos
+
+## slave SQL lagged behind replication
+Bytes behind master = Position - Exec_Master_Log_Pos
+
+## slave SQL lagged begind IO
+Bytes behind master = Read_Master_Log_Pos - Exec_Master_Log_Pos
+
+To work out what's causing the lag, you must determine which replication thread is getting backed up. Replication relies on three threads per master/slave connection: one is created on the master and two are created on the slave.
+
+1. The Slave I/O Thread. 
+  When you issue START SLAVE on a slave server, the slave creates this thread which connects to the master and requests a copy of the master's binary log.
+2. The Binlog Dump Thread. 
+   When the slave connects to the master, the master uses this thread to send the slave the contents of its binary log.
+3. The Slave SQL Thread. 
+  The slaves creates this SQL (or applier) thread to read the contents of the retrieved binary log and apply its contents.
+
+
+
+
+
+
+
+
+
+
+
+
+
+

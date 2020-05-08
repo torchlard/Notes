@@ -22,6 +22,14 @@ index type = table
 
 get all index `curl --user elastic:123456 'localhost:9200/_cat/indices?v'`
 
+## help
+`curl -s "http://localhost:9200/_cat/indices?help"`
+
+`.../indices?v&h=dc,i` get document count and index name
+`.../indices?format=json&pretty&h=dc,i` set json format and prettify
+`.../indices?v&h=i,dc&s=dc:desc` sort by document count desc
+
+
 ## put
 update
 
