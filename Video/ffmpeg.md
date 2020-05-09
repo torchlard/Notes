@@ -33,6 +33,8 @@ force frame rate of input file (raw format only) to 1 fps, output file to 24 fps
 out2.wav only accepts audio stream, so only audio stream from B.mp4 selected
 out3.mov (-map 1:a) select all audio stream from B.mp4
 
+`ffmpeg -y -analyzeduration 100M -probesize 100M -ss 05:00 -t 00:20 -threads 6 -i DA130.vob -map 0:1 -map 0:5 -map 0:7 -map 0:2 -map 0:4 -c:s copy -metadata:s:a:0 language=eng -metadata:s:a:1 language=chi -metadata:s:s:0 language=eng -metadata:s:s:1 language=chi ../test/DA130.mp4`
+
 
 ## filtering
 before encoding, ffmpeg can process raw audio and video frames using filters from libavfilter lib
