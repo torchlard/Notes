@@ -90,8 +90,47 @@ UDP on port 53 to serve request
 signle UDP request from client followed by single UDP reply form server
 TCP for zone transfer
 
+# record 
+## CNAME (canonical name record)
+kind of record in dns
+map domain name to true domain name, CNAME is real name
+
+| name             | type  | value            |
+|------------------|-------|------------------|
+| bar.example.com  | CNAME | foo.example.com. |
+| foo.example.com. | A     | 192.0.2.23       |
+
+query "bar.example.com" -> foo.example.com -> 192.0.2.23
+CNAME must not contain any other record (eg. MX, A)
+
+## DNAME
+proxy name
+map subdomain of certain domain to another domain name
+
+| foo.example.com.       | DNAME | bar.example.com. |
+|------------------------|-------|------------------|
+| bar.example.com.       | A     | 192.0.2.23       |
+| xyzzy.bar.example.com. | A     | 192.0.2.24       |
+| *.bar.example.com      | A     | 192.0.2.25       |
+
+foobar.foo.example.com -> 192.0.2.25
+
+## A 
+map domain name to host IP
+
+## AAAA
+domain name -> ipv6
+
+## SRV
+define service in specific host location, eg. hostname, port number
+
+## NAPTR
+use regular expression to map domain name
 
 
+# root name server
+originally restrict to 13 (A - M)
+using anycast scale up to 1008 name servers
 
 
 

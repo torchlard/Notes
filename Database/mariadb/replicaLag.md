@@ -22,12 +22,15 @@ To work out what's causing the lag, you must determine which replication thread 
 
 
 
+1748911
+
+Read_Master_Log_Pos: 2632851
+Relay_Log_Pos: 4742161
+Exec_Master_Log_Pos: 4741852
 
 
 
-
-
-
-
+ Slave_SQL_Running_State: Waiting for room in worker thread event queue
+=> 
 
 

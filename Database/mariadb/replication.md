@@ -6,14 +6,13 @@ server_id=1
 log-basename=master1
 ```
 
-server_id: unique number for each mariadb in network,, 1 to 2^32-1
+server_id: unique number for each mariadb in network, 1 to 2^32-1
 
 ## check
 cannot skip-networking, cannot bind-address to 127.0.0.1
 
 ## run
 flush tables with read lock
-
 
 ```
 change master to
@@ -189,6 +188,23 @@ for slave in slaves:
 ```
 ## problem
 not support create/drop temporary table
+
+
+# param
+## slave_IO_state
+waiting for master update
+> connecting master
+> checking master version
+> registering slave on master
+> requesting binlog dump
+> waiting to reconnect after failed binlog dump request
+> reconnecting after failed binlog dump request
+
+
+
+
+
+
 
 
 
