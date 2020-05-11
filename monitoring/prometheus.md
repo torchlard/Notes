@@ -1,3 +1,18 @@
+# intro
+
+
+# sotorage
+## local storage
+### on-disk layout
+store time series data in custom format on disk
+samples grouped into blocks of 2 hours
+each block consist of directory containing >= 1 chunk files 
+  - contain all time series sample for that window of time
+
+
+
+
+
 # config
 ```yaml
 global:

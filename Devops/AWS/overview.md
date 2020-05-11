@@ -438,6 +438,7 @@ handle sudden and volatile traffic patterns
 ### Classic Load Balancer
 balance across multiple EC2, operate at both Layer 7 and 4
 
+
 # Security
 ## Security Hub
 comprehensive view of high-priority security alerts and compliance status across AWS accounts
