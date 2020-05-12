@@ -61,6 +61,32 @@ http_requests_total{job="prometheus"}[5m]
 5 min before `http_requests_total offset 5m`
 
 
+# Prometheus Operator
+main controller 
+custom resource definition (CRD) to manage and deploy Prometheus Server
+
+## prometheus server
+by content 
+
+## ServiceMonitor
+operator monitors resource to determine Scrape targets
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
