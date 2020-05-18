@@ -151,8 +151,8 @@ echo xxx | cut -c -1000
 sed -e '0,/ROW_FORMAT=FIXED/ s/ROW_FORMAT=FIXED//' xxx.sql > yyy.sql
 
 
+du -h --max-depth=1 | sort -hr
 
-
-
+docker volume
 
 

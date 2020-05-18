@@ -22,7 +22,7 @@ scrape_config:
   job_name
   metrics_path
   honor_labels: 
-    control how handle conflicts between labels that already present in scraped data and labl attach server-side
+    control how handle conflicts between labels that already present in scraped data and label attach server-side
   honor_timestamp: <boolean>
   params: optional http url parameters
   basic_auth:
@@ -43,6 +43,17 @@ remote_write:
 remote_read:
 
 ```
+
+## relabel_config 
+applied before scraping
+select which targets want to scrpae, and what target labels will be
+
+## metric_relabel_configs
+applied afer scrape has happened, before data ingested by storage system
+eg. drop expensive metrics
+
+
+
 
 # query expression
 ## time series
