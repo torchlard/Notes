@@ -93,7 +93,7 @@ brctl show
 
 # install
 ## 1. init
-packages: qemu-kvm libvirt libguestfs-tools virt-install
+packages: qemu-kvm libvirt-daemon libvirt-daemon-system libvirt-clients libguestfs-tools virt-install virt-manager
 ```
 systemctl enable libvirtd
 systemctl start libvirtd
@@ -110,6 +110,9 @@ set network
 sudo virsh net-autostart defaults
 ```
 setting pos: /etc/libvirt/qemu/networks
+
+sudo usermod -aG kvm $USER
+sudo usermod -aG libvirt $USER
 
 ## 2. create VM
 cd /var/lib/libvirt/boot

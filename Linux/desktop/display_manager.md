@@ -1,3 +1,7 @@
+# check display manager
+cat /etc/X11/default-display-manager
+sudo service xxx restart
+
 # SDDM (simple desktop display manager)
 display manager for x11 and wayland
 written from scratch in c++11, support theme via QML
