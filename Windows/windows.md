@@ -66,5 +66,23 @@ overview of task windows  `super+tab`
 /c/Windows/System32/drivers/etc/hosts
 
 
+# Dark mode
+go to registry `Computer\HKEY_CURRENT_USER\Software\Microsoft\Windows\DWM`
+set `AccentColor`,`AccentColorInactive` to `0d0d0d`
+set `ColorPrevalence` to `1`
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 

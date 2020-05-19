@@ -58,6 +58,10 @@ git push ec2 master
 git remote remove origin
 git remote add origin <original-git>
 
+# add files except 1
+git add -u
+git reset -- xxx/xxx.js
+
 
 
 
