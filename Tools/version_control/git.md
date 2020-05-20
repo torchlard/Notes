@@ -58,9 +58,18 @@ git push ec2 master
 git remote remove origin
 git remote add origin <original-git>
 
-# add files except 1
+# git add
+## add files except 1
 git add -u
 git reset -- xxx/xxx.js
+
+## interactive
+git add -i
+>> choose 2, type 1,2,3 (if want to add file 1,2,3)
+>> press enter again, back to menu
+
+
+
 
 
 
