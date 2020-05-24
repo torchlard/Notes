@@ -315,6 +315,61 @@ mv hooks/post-update.sample hooks/post-update
 chmod a+x hooks/post-update
 ```
 
+### SSH
+`git clone ssh://[user@]server/project.git`
+
+#### cons
+doesn't support anonymous access to Git repo
+
+## Git protocol
+special daemon that comes packed with Git
+listen on dedicated port (9418) taht provides service similar to SSH protocol
+for repo to be served over git protocol, must create git-daemon-export-ok file
+
+no security, available for everyone to clone or not
+
+### pros
+fastest network transfer protocol available
+
+### Cons
+lack of authentication, usually pair with SSH/HTTPS access
+
+# getting git on server
+`git clone --bare my_project my_project.git`
+
+git daemon --reuseaddr --base-path=/srv/git /srv/git/
+
+
+# Distributed git
+## centralized workflow
+one central hub/repo that can accept code, everyone synchronize work with it
+
+## Integrated manager workflow
+each developer has write access to own public repo, read access to everyone else
+include canonical repo that represents "official" project
+
+1. create own public clone of project, push changes to it
+2. send request to maintainer of main project to pull your changes
+3. maintainer can add your repo as remote, test changes locally, merge into their branch
+
+## Dictator and Lieutenants workflow
+generally used by huge projects with hundreds of collaborators (eg. Linux kernel)
+
+lieutenants: various integration managers in charge of certain parts of repo 
+all lieutenants have 1 integation manager (benevolent dictator)
+
+1. regular developer work on topic branch, rebase their work on top of master
+  - master = reference repo that dictator pushes
+2. Lieutenants merge developers' topic branches into their master branch
+3. dictator merge lieutenants' master branches into dictator's master brnch
+4. dictator push master to reference repo so other developers can rebase on it
+
+
+
+
+
+
+
 
 
 
