@@ -29,6 +29,10 @@ secure: info related to authentication and authorization
 wtmp/utmp: login records
 faillog: user failed login attemps
 
+dbus.log
+ifcfg.log: network scripts
+syslog: hardware-related system msg
+
 ## other logs
 httpd/apache2
 lighttpd: light httpd access_log

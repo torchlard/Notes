@@ -15,6 +15,10 @@ eg. `inst.vncpassword=<password>`
 ## edit grub2 menu
 on UEFI, kernel command line starts with `linuxefi`
 
+# troubleshoot
+some BIOS type not support booting from RAID cards
+/boot must on same drive with boot loader
+
 
 
 
