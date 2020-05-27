@@ -180,4 +180,20 @@ any machine want to join cluster, must get ca certificate of server
 use token to proof validity of node
 
 
+# ConfigMap
+reusable yaml config
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 

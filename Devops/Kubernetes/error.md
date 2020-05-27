@@ -166,10 +166,12 @@ reason: namespace already exists, helm cannot install it again
 "Lost" means that something deleted PVs that were bound to the PVCs. Check your audit logs what and when did that.
 
 
+# grafana operator "Context deadline exceeded" for responsive target
+reason: certain metrics only listen to local port (xxx:20249/metrics)
+solution: change to 0.0.0.0:10249, delete to restart kube-proxy
 
-
-
-
+# prometheus-operator-grafana
+ error="http: proxy error: dial tcp 10.96.70.52:9090: i/o timeout"
 
 
 
