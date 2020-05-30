@@ -160,7 +160,9 @@ z: omit non-active device
 
 `iostat -p sda -d 2 6` display 6 reports at 2 sec interval for device sda
 
-
+## disk health
+`sudo smartctl -a /dev/sda1` view test result
+`sudo smartctl -t long -a /dev/sda1` do long test
 
 
 

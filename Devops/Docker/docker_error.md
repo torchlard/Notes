@@ -25,10 +25,22 @@ solution: sudo docker-compose up
 docker logout
 docker login
 
+# cannot connect to https //registry-1.docker.io/v2/ 
+change /etc/hosts
+
 # Unable to connect to the server: x509: certificate signed by unknown authority (possibly because of "crypto/rsa: verification error" while trying to verify candidate authority certificate "kubernetes")
 mkdir -p $HOME/.kube
 sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
 sudo chown $(id -u):$(id -g) $HOME/.kube/config
+
+
+
+
+
+
+
+
+
 
 
 
