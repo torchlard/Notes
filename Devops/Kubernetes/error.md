@@ -173,7 +173,7 @@ solution: change to 0.0.0.0:10249, delete to restart kube-proxy
 # prometheus-operator-grafana
  error="http: proxy error: dial tcp 10.96.70.52:9090: i/o timeout"
 
-
+# pod has unbouind PersistentVolumeClaims
 
 
 

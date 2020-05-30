@@ -183,6 +183,60 @@ use token to proof validity of node
 # ConfigMap
 reusable yaml config
 
+# StatefulSet
+deployment that can maintain state
+when using StatefulSets need to use PV and PVC
+statefulSet ensure same PVC stays bound to same Pod throughout its lifetime
+
+## requirement
+1. stable network identifier
+2. persistent storage
+3. elegant deployment and elastic
+4. elegant delete and stop
+5. rolling update
+6. (if want fixed Pod IP)
+
+after Pod re-schedule, still keep network identifier (hostname, DNS in cluster)
+  - IP may change
+
+## best practice
+1. pod storage created by StorageClass, each pod create PVC by VolumeClaimTempalte
+2. for data security, when delete Pods / rescale SatefulSet, will not delete PV
+  - when you ensure data useless, manually delete
+  - delete or not depends on ReclaimPolicy
+    - Retain
+    - Recycle
+    - Delete (default, storage system implement)
+3. since deployment is stateful, need to create headless service, note that Label must match with Label in Pods
+  - create SRV records, including all backend Pods
+4. Spec.selector match spec.template.metadata.labels
+5. before rescale volume, ensure Pods ready
+
+## hostname
+${statefulset name}-${ordinal} // 0 to N-1
+label: statefulset.kubernetes.io/pod-name
+
+## DNS
+headless dns: $(service name).$(namespace).svc.cluster.local
+pod dns: $(hostname).$(service name).$(namespace).svc.cluster.local
+
+## PV
+each pod correspond to PVC (volumeClaimTemplates.name)-(volumeClaimTemplates.name)-(pod's hostname)
+by VolumeClaimTemplate create N PVC
+
+## StatefulSet VS deployment
+if N replica, must create with index 0-N-1, next pod creation when pod ready / next pod delete when pod shutdown
+pod.Spec.TerminationGracePeriodSeconds don't set 0
+
+
+
+
+
+# Headless Service
+service that don't need load-balancing and single service IP
+load-balancing will return IPs of associated pods, don't have Cluster IP allocated
+not proxied by kube-proxy, instead elasticsearch will handle service discovery
+
 
 
 

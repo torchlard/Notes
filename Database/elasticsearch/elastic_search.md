@@ -36,11 +36,11 @@ update
 create new
 `curl -H "Content-Type: application/json" -XPUT "http://localhost:9200/hello/emp/2" -d '{"name":"laoxiao"}'`
 
+## post
+new
 bulk insert
 `curl -H "Content-Type: application/json" -XPOST "localhost:9200/bank/_bulk?pretty&refresh" --data-binary "@accounts.json"`
 
-## post
-new
 
 ## delete
 delete document of id 1 `curl -XDELETE "http://localhost:9200/metricbeat-7.5.2/_doc/1"`
