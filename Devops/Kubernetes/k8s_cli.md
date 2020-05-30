@@ -65,6 +65,9 @@ kubeadm init: start control plane
 ## config
 migrate config `kubeadm config migrate`
 
+### multiple configs
+`export KUBECONFIG=~/.kube/config1:~/.kube/config2`
+
 # reset cluster
 
 sudo swapoff -a

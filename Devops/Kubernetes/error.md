@@ -177,6 +177,8 @@ solution: change to 0.0.0.0:10249, delete to restart kube-proxy
 not login as admin account
 solution: create admin account
 
+# pod has unbouind PersistentVolumeClaims
+
 
 
 
