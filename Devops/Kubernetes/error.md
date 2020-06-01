@@ -178,7 +178,8 @@ not login as admin account
 solution: create admin account
 
 # pod has unbouind PersistentVolumeClaims
-
+reason: no persistent volume (PV) for PVC bound to
+solution: create PV without storageClassName
 
 
 

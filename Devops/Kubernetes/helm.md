@@ -1,5 +1,5 @@
 # intro
-version control, managementm, udpate yaml config of k8s
+version control, management, update yaml config of k8s
 package all yaml files into chart collection
   - use arguments to manage and set these yaml files
 
@@ -65,6 +65,10 @@ wordpress/
 ```
 ## template 
 written in Go template language
+
+## debug
+helm install xxx --dry-run --debug ./mychart --set service.internalPort=8080
+helm lint ./mychart
 
 # repo
 helm repo list

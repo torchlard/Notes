@@ -125,8 +125,8 @@ support hostPort
 
 
 
-## kubenet plugin
-
+# port-forward
+`kubectl port-forward <pod-name> <host-port>:<container-port>`
 
 
 
