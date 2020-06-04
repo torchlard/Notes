@@ -200,6 +200,30 @@ waiting for master update
 > waiting to reconnect after failed binlog dump request
 > reconnecting after failed binlog dump request
 
+# replica lag tune
+default replication only 1 thread running
+require SQL_thread, IO_thread
+
+if no parallel replication, do one by one
+if parallel, use other threads to mange transactions
+  - will know whether jobs are related, much quicker
+
+## tune
+if each transaction log within `slave-parallel-max-queued` size, can help parallel execution
+total memory consumed = slave-parallel-max-queued * slave_parallel_threads
+  - if slave-parallel-max-queued set too high, and slave far behind master
+    - then SQL threads fill up memory with huge amount of binlog
+  - if set too low, not sufficient space queuing enough events keep worker threads busy
+    => reduce performance
+
+## Seconds_Behind_Master
+diff between 
+  - TS logged on master for event that slave is processing
+  - current TS on slave
+0 if slave is not processing event
+
+seconds_behind_master updated only after transactions commit
+
 
 
 

@@ -1,4 +1,6 @@
-## Object.assign
+# key functional operation
+
+## add key: Object.assign
 a ways to copy object with modification, used in fp
 ```js
 const one = {
@@ -8,7 +10,14 @@ const two = Object.assign(one, {'c': 4, 'a':9, 'd':3})
 console.log(two) // {'a':9, 'b':2, 'c':4, 'd':3}
 ```
 
-## pattern matching
+## remove key
+```js
+const rm = (key, {[key], ...rest}) => rest
+rm('a', {a: 1, b: 2}) === {b:2}
+```
+
+
+# pattern matching
 ```js
 let [a,b,c] = [1,[2,3], {'ok': 3}, 5 ]
 // a = 1, b = [2,3], c = {'ok': 3}

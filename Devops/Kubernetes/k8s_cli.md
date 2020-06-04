@@ -55,7 +55,7 @@ terminate all replica `kubectl scale deployments/kubernetes-bootcamp --replicas=
 7. delete and clean up deployment, services
   - kubectl delete deployment -l app=redis
   - kubectl delete service -l app=redis
-  - ...
+  - ... 
   
 
 # kubeadm 

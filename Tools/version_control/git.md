@@ -231,6 +231,16 @@ instead of just moving branch pointer forward, create new snapshot that result f
 suggest to merge branch first, then delete it (eg. hotfix branch)
 `git branch -d b2`
 
+## list remote branch
+git fetch --all
+git branch -r
+
+## origin/master
+master: branch in local repository
+remotes/origin/master: branch named `master` on remote named `origin`
+  - can refer as `origin/master`
+
+`git diff origin/master..master` show diff between local master and remote master
 
 ## merge conflict
 when conflict occur Git won't auto create new merge commit, but puse until resolve conflict
