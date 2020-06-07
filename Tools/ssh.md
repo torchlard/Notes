@@ -93,6 +93,14 @@ conn tunnel back to client host => make conn to port 80 on localhost
 
 sshd_config can control
 
+# encryption
+openssl enc -aes-256-cbc -iter 2 -in file -out file.enc
+
+
+
+
+
+
 
 
 
