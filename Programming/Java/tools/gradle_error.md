@@ -18,5 +18,9 @@ gradle --daemon
 # Could not find method bootJar() for arguments
 
 
+# Failed to ping owner of lock for file hash cache
+reason: currently used by another gradle instance 
+solution: `find ~/.gradle -type f -name "*.lock" -delete`
+
 
 

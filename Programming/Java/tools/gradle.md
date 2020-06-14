@@ -35,13 +35,13 @@ gradle init
 
 ### compileJava
 compile all java files under 'src/main/java'
-### compileTestJava
+### compileTestJavadisplaya
 source files under 'src/test/java'
 ### test
 run unit test from 'src/test/java'
 ### jar
 package 'main' compiled class and resource from 'src/main/resources' into single 
-```<project>-<version>.jar```
+```<project>-<version>.jar``` 
 ### javadoc
 generate Javadoc for main classes
 

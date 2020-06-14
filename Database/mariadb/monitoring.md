@@ -11,12 +11,11 @@ order by (data_length+index_length) desc limit 30;
 
 ## start monitor sql
 change table `performance_schema.setup_consumers` to enable events_statements
-
+`update performance_schema.setup_consumers set enabled='yes' where name like 'events_statements_%';`
 
 events_statements_current
 events_statements_history
 events_statements_history_long
-
 
 
 
