@@ -70,15 +70,15 @@ EJB: very complicated kind of bean with many requirement
 
 ## @Component VS @Bean
 @Component, @Service, @Repository
-- for type
-- for auto-detect, auto-configure beans using classpath scanning
-- implicit one bean per class
-- control of wiring limited, purely declarative
+  - for type
+  - for auto-detect, auto-configure beans using classpath scanning
+  - implicit one bean per class
+  - control of wiring limited, purely declarative
 
 @Bean
-- for method
-- explicitly declare single bean, rather than spring auto ddo it
-- let you create and configure beans
+  - for method
+  - explicitly declare single bean, rather than spring auto ddo it
+  - let you create and configure beans
 
 
 # Stereotype annotation

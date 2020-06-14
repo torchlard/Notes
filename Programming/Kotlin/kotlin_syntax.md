@@ -1,18 +1,3 @@
-# run
-## compile
-`kotlinc hello.kt -include-runtime -d hello.jar`
-`java -jar hello.jar`
-
-compile library for use by other kotlin application
-`kotlinc hello.kt -d hello.jar`
-
-## REPL
-`kotlinc-jvm`
-
-## run as script
-`kotlinc -script list_folders.kts <path>`
-
-
 # call Java from kotlin
 methods returning void => Unit
 
@@ -195,7 +180,8 @@ priamry constructor in class (..), many secondary constructor
 ## data class
 - primary constructor at least 1 param, param must mark as var/val
 - data class cannot be abstract,open,sealed,inner
-
+  
+```java
 public boolean JDBC.AgGameType.equals(java.lang.Object)
 public java.lang.String JDBC.AgGameType.toString()
 public int JDBC.AgGameType.hashCode()
@@ -218,7 +204,7 @@ public JDBC.AgGameType()
 public JDBC.AgGameType(java.lang.String, java.lang.String, java.lang.String)
 public JDBC.AgGameType(java.lang.String,java.lang.String,java.lang.String,int,
   kotlin.jvm.internal.DefaultConstructorMarker)
-
+```
 
 ## sealed class
 restricted class hierarchy, 
