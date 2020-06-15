@@ -120,18 +120,7 @@ Keepalived: virtual ip map to 1 nginx server
 `root` -> `proxy_pass`
 request -> Nginx -> Tomcat
 allow custom HTTP header
-```
-server {
-  listen 80;
-  server_name localhost;
-  client_max_body_size 1024M;
 
-  location / {
-    proxy_pass http://localhost:8080;
-    proxy_set_header Host $host:$server_port;
-  }
-}
-```
 request: localhost -> localhost:8080
 
 ## load balance (upstream)
@@ -146,83 +135,8 @@ fair: short response time higher priority
 url_hash: assign by hash of url, every url map to same server
 
 ### RR
-```
-// load balance core code
-// 9 times to 8080, 1 time to 8081
-upstream test {
-  // ip_hash;
-  fair;
-  server localhost:8080 weight=9;
-  server localhost:8081 weight=1;
-}
-
-server {
-  listeen 81;
-  server_name localhost;
-  client_max_body_size 1024M;
-
-  location / {
-    proxy_pass http://test;
-    proxy_set_header Host $host:$server_port;
-  }
-}
-```
 if nginx found that localhost:8081 is not accessible, will only direct to localhost:8080
 
-
-
-
-## url_hash
-```
-upstream backend {
-  hash $request_url;
-  hash_method crc32;
-  server localhost:8080;
-  server localhost:8081;
-}
-```
-
-## separate dynamic static
-```
-upstream test {
-  server localhost:8080;
-  server localhost:8081;
-}
-
-server {
-  listen 80;
-  server_name localhost;
-}
-
-location / {
-  root e:wwwroot;
-  index index.html;
-}
-
-location ~ .(gif|jpg|jpeg|css|js)$ {
-  root e:wwwroot;
-}
-
-location ~ .(jsp|do)$ {
-  proxy_pass http://test;
-}
-```
-
-## proxy
-```
-resolver 114.114.114.114 8.8.8.8;
-server {
-  resolver_timeout 5s;
-  listen 81;
-
-  access_log e:wwwrootproxy.access.log;
-  error_log e:wwwrootproxy.error.log;
-
-  location / {
-    proxy_pass http://$host$request_url;
-  }
-}
-```
 
 # request handling process
 1. init HTTP Request object
@@ -283,68 +197,9 @@ after content generation phase, send to filter module
 
 
 # settings
-## proxy_pass
-for `http://192.168.1.1/proxy/test.html` =>
-
-http://127.0.0.1/test.html
-```
-location /proxy/ {
-  proxy_pass http://127.0.0.1/;
-}
-```
-
-http://127.0.0.1/proxy/test.html
-```
-location /proxy/ {
-  proxy_pass http://127.0.0.1;
-}
-```
-
-http://127.0.0.1/aaa/test.html
-```
-location /proxy/ {
-  proxy_pass http://127.0.0.1/aaa/;
-}
-```
-
-http://127.0.0.1/aaatest.html
-```
-location /proxy/ {
-  proxy_pass http://127.0.0.1/aaa;
-}
-```
 ## sendfile
 sendfile = system call after linux 2.0
 more performance than read,write 
-
-## root VS alias
-[root]
-root path
-default: root html
-config: http, server, location, if
-root => root + location
-
-[alias]
-alias path
-config: location
-alias => replace location with alias 
-
-alias = directory definition
-root = root directory definition
-
-request `/t/a.html`, return `/www/root/html/t/a.html`
-```
-location ^~ /t/ {
-  root /www/root/html/;
-}
-```
-
-request `/t/a.html`, return `/www/root/html/new_t/a.html`
-```
-location ^~ /t/ {
-  alias /www/root/html/new_t/;
-}
-```
 
 
 # command scope
@@ -394,9 +249,12 @@ if source website tell nginx Expires/Cache-Control setting max-age
 `add_header X-Cache-Status $upstream_cache_status`
 response caching status, know whether hit cache
 
-
 `proxy_ssl_server_name on;`
 pass hostname to backend server, let remote server get hsot in TLS status
+
+## dynamic add cors header
+proxy_hide_header Access-Control-Allow-Origin;  
+add_header 'Access-Control-Allow-Origin' '*' always;
 
 
 # rewrite
@@ -419,6 +277,27 @@ replace those elements with /mp3/ and adds appropriate file extensions .mp3 or .
 $1, $2 capture path elements that aren't changing
 
 eg. /download/cdn-west/media/file1 -> /download/cdn-west/mp3/file1.mp3
+
+# CDN VS nginx
+CDN is less important than setting server side header caching, 
+but CDN can provide significant performance gains 
+
+CDN in some rare case can slower than server if over optimize, 
+employ too much parallelization of resources (eg. multi subdomains)
+=> possible end up slowing down user experience
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

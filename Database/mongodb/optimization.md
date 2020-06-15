@@ -76,28 +76,3 @@ to change mongod ulimit setting using systemd
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
