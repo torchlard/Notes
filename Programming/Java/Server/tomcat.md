@@ -34,6 +34,18 @@ META-INF/context.xml used to define Tomcat specific config options
 - eg. access log, data sources, session manager ...
 
 
+# jetty VS tomcat
+Java http server, Java servlet container
+implement part of JEE standard (servlet & jsp)
+
+Jetty is simpler than Tomcat, higher extensibility
+- based on Handler
+- default NIO
+
+Tomcat built based on container
+- default BIO
+- support is better and more complete standard support
+
 
 # HTTP Request
 header1 \r\n

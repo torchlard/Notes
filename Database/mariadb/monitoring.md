@@ -18,7 +18,13 @@ events_statements_history
 events_statements_history_long
 
 
+# threads count
+show global status like '%thread%';
 
+select command,state from information_schema.processlist where command !='Sleep' ;
+
+# view deadlock
+show engine innodb status|mutex
 
 
 

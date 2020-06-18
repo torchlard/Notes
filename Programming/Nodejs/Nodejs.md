@@ -1,3 +1,9 @@
+# install
+```bash
+sudo npm i -g n
+sudo n <version>  # install node versions
+sudo n            # switch node version
+```
 # module
 if internal module, no need resolve path
 

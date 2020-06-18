@@ -10,7 +10,7 @@ validate nginx.conf, manage worker process
 each worker manage a thread, avoid switching thread
 manage connection and request
 worker process ~ CPU number by default
-- each worker has own connection pool (max=worker_connections)
+  - each worker has own connection pool (max=worker_connections)
 
 ## hot deploy
 nginx -s reload
@@ -33,7 +33,12 @@ abstraction of TCP, include socket, read/write event
 use linked list free_connnections keep all idle ngx_connection_t
 - each time get connection, get one from linked list
 
-# main components
+## mechanism
+use Linux epoll model
+event driven, check if event is ready; if OK, put in epoll queue
+
+
+# files
 ## Nginx
 binary executable, execute file from modules
 ## Nginx.conf
@@ -43,9 +48,6 @@ record every HTTP request message
 ## error.log
 for error debugging
 
-# mechanism
-use Linux epoll model
-event driven, check if event is ready; if OK, put in epoll queue
 
 # introduction
 high performance HTTP and reverse proxy server
@@ -60,27 +62,16 @@ both apache and ngnix are http server
 Tomcat can run alone, but performance is not good
 so use eg. ngnix for reverse proxy
 
-## jetty VS tomcat
-Java http server, Java servlet container
-implement part of JEE standard (servlet & jsp)
-
-Jetty is simpler than Tomcat, higher extensibility
-- based on Handler
-- default NIO
-
-Tomcat built based on container
-- default BIO
-- support is better and more complete standard support
 
 ## nginx work with tomcat
 1. separate dynamic and static resource
 Tomcat: dynamic page
 Nginx: static resource like CSS, JavaScript, video, image
-- lower pressure of Tomcat
+  - lower pressure of Tomcat
 2. load balance
 when we horizontally scale Tomcat, Nginx can load balance to Tomcat instance
 
-## design
+# nginx design
 1. core module
 HTTP, Event, Mail
 2. fundamental
@@ -133,9 +124,6 @@ weighted: assign request probability
 ip_hash: 1 client only access 1 server, request assigned by ip's hash value
 fair: short response time higher priority
 url_hash: assign by hash of url, every url map to same server
-
-### RR
-if nginx found that localhost:8081 is not accessible, will only direct to localhost:8080
 
 
 # request handling process
