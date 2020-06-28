@@ -24,13 +24,8 @@ computational effect can be mapped to monads
 
 # Curry-Howard Isomorphism
 
-
-
-
-
 ## universal construction
 definition of object as "unique-up-to-isomorphism object satisfying certian universal property"
-
 
 
 # Products and Coproducts
@@ -130,8 +125,12 @@ in category of set
 empty set has unique morphism to any set, no morphism come back
 
 
+## order
+a <= b, b <= c
+example of category: associative, identity
 
-
+# monomorphism
+generalization of the notion of injective map of sets from the category Set to arbitrary categories
 
 
 

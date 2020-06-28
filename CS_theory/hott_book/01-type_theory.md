@@ -89,36 +89,6 @@ eg. family of finite sets `Fin: N -> U`, where Fin(n) is type with exactly n ele
 
 constant type family = `(λ(x: A).B): A -> U`
 
-# dependent function type (Π)
-dependent function = functions whose codomain type vary depending on element of domain 
-
-given A:U, family B:A->U, construct dependent function type
-`Π[x:A] B(x):U` = `Π[x:A] B(x)`
-
-if B is constant family, then `Π(x:A) B ≡ (A -> B)`
-λ-abstarction: `λx.Φ : Π[x:A] B(x)`
-
-idₐ(x) = x
-id = `λ[A:U].λ[x:A].x`
-id : `Π[A:U] A -> A`
-
-eg. function returns "largest" element of nonempty finite type
-`fmax: Π[n:N] Fin(n+1)` = `fmax(n) = n[n+1]`
-
-## polymorphic function
-takes type as one of its arguments, act on element of that type
-`id: Π[A:U] A->A`   define `id[A(x)] = x`
-
-`swap: Π[A:U] Π[B:U] Π[C:U] (A->B->C) -> (B->A->C)`
-define as `swap(A,B,C,g) = λb.λa.g(a)(b)`
-`swap[A,B,C](g)(b,a) = g(a,b)`
-
-since B may depends on A, C may depends on B,
-ie. `B : A->U, C : Π[x:A] B(x)->U`
-`Π[x:A] Π[y:B(x)] C(x,y)`
-
-another possibility: `Π(x:A) Π(y:B(x)) C(x,y)`
-given a:A, b:B(a) => `f(a)(b): C(a,b)`
 
 
 # Product type
@@ -155,6 +125,15 @@ pr2: A x B -> B  ` `  pr2((a,b)) = b
 we can invoke function definition once, in universal case => apply resulting fn in other cases
 
 ### recursor
+defined for every type except function, dependent function and universe
+recursor: dependent eliminator, defined uniquely in terms of its constructor
+
+recursor: define regular functions
+inductor: define dependantly typed functions
+
+objective: provide a way of discriminating between values of a type => use them to define functions
+  - think of it as describing how pattern matching works on a given type
+
 define `rec[AxB]: Π[C:U](A->B->C) -> AxB -> C`  by `rec[AxB](C,g,(a,b)) = g(a)(b)`
 where C=result type, A,B=two possible types, g=projection function
 (just ignore C in rec(C, ...))
@@ -191,6 +170,37 @@ define `ind[1]: Π[C:1->U] C(*) -> Π[x:1] C(x)` by `ind[1](C,c,*) = c`
 only inhabitant is *, so to construct `uniq[1]: Π[x:1] x = *` by `uniq[1](*) = refl[*]`
 or using induction `uniq[1] = ind[1](λx.x = *, refl[*])`
 
+
+# dependent function type (Π)
+dependent function = functions whose codomain type vary depending on element of domain 
+
+given A:U, family B:A->U, construct dependent function type
+`Π[x:A] B(x):U` = `Π[x:A] B(x)`
+
+if B is constant family, then `Π(x:A) B ≡ (A -> B)`
+λ-abstarction: `λx.Φ : Π[x:A] B(x)`
+
+idₐ(x) = x
+id = `λ[A:U].λ[x:A].x`
+id : `Π[A:U] A -> A`
+
+eg. function returns "largest" element of nonempty finite type
+`fmax: Π[n:N] Fin(n+1)` = `fmax(n) = n[n+1]`
+
+## polymorphic function
+takes type as one of its arguments, act on element of that type
+`id: Π[A:U] A->A`   define `id[A(x)] = x`
+
+`swap: Π[A:U] Π[B:U] Π[C:U] (A->B->C) -> (B->A->C)`
+define as `swap(A,B,C,g) = λb.λa.g(a)(b)`
+`swap[A,B,C](g)(b,a) = g(a,b)`
+
+since B may depends on A, C may depends on B,
+ie. `B : A->U, C : Π[x:A] B(x)->U`
+`Π[x:A] Π[y:B(x)] C(x,y)`
+
+another possibility: `Π(x:A) Π(y:B(x)) C(x,y)`
+given a:A, b:B(a) => `f(a)(b): C(a,b)`
 
 # dependent pair type Σ
 generalize product type to allow 2nd component of pair vary by choice of 1st component

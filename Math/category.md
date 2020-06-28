@@ -77,6 +77,7 @@ for every category C you can create opposite category C_op
 
 ## monad
 monad in X is just monoid of endofunctors of X
+just special way of composing functions
 
 ## functor
 functor is type-oriented programming
