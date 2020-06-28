@@ -1,5 +1,12 @@
+# reference
+https://zhuanlan.zhihu.com/p/103565709
+
+# terms
+MLTT: Martin-Löf type theory
+
 # definition of cutt
 type theory giving homotopy type theory computational meaning
+a version of HoTT
 
 # homotopy type theory
 traditional type theory augmented with higher inductive types and univalence axiom
@@ -8,14 +15,24 @@ traditional type theory augmented with higher inductive types and univalence axi
 type equipped with custom equality
 eg. write type similar to natural numbers with equality between all even numbers
 
+# proof
+in MLTT, since it includes K theorem, Equality type only remain 1 inhabitant: refl
+in HoTT, equality proof = Path, Path and Path can be different
+  - => infinitely many proofs, each proof = inhabitant = interval
+
+## notation
+a ≡ b => Path _ a b
+
+
+
 # UA
 gives universe strongest possible euality in advance (only 1 universe)
 
-# what is equality?
+## what is equality?
 types within which different equalities defined from your perspective
 equality = dependent case
 
-# manipulate equality
+## manipulate equality
 indices assigned to referents of single equality
 
 capping = construct ceiling of cubical building given its floor and pillars
@@ -90,6 +107,48 @@ cap i T(h := h /\i) {
 ```
 if i=1, because 1/\h=h,
 filling gives us ceiling modulo name of dimension
+
+# concept 
+## function extensionality
+if every points on 2 functions are equivalent, then 2 functions equivalent
+hoTT can proof it structurally
+
+
+functionExtensionality : {A B : Set}
+→ {f g : A → B}   // accept 2 function from A to B
+→ (p : ∀ a → f a ≡ g a)   // proof each point the same
+→ f ≡ g   
+
+functionExtensionality p i = λ a → p a i
+// create path from f a to g a == apply a to path = p a
+
+for every value a : A, there exists interval on path connecting (f a) and (g a)
+
+## square
+path = λ-expression accepting 1 I (interval)
+square = λ-expression accepting 2 I
+
+## heterogeneous equality
+(p : a ≡ b)
+(q : c ≡ d)
+
+we cannot write something : p ≡ q, because two types must be same
+=> heterogeneous equality
+
+create two different paths between p and q => obtain square
+(s : p ≡ q)
+
+# hcomp
+another name: Kan operator
+## objective
+fill up missing side in cube / higher dimensions
+
+## requirement
+1. bottom (path if 1D, square if 2D)
+2. a functionto map a interval from bottom to side of that shape
+
+## principle
+pattern matching on several intervals
 
 
 
