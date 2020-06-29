@@ -73,6 +73,9 @@ git commit --amend
 ``` 
 redo that commit, make additional changes
 
+## revert latest 2 published commit
+git revert HEAD~2..HEAD
+
 ## unstaging staged file
 `git reset HEAD <file>`
 

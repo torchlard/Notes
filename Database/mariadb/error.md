@@ -31,7 +31,14 @@ mysqlcheck xxx
 only MyISAM storage engine can run repair
 if InnoDB idnex corrutped, drop index and add again
 
-
+# general log empty
+solution: must set config after `[mariadb]`
+```conf
+general_log
+general_log_file=xxx.log
+log_output=FILE
+```
+sql_log_off=ON
 
 
 

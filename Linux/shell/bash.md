@@ -84,8 +84,14 @@ export PS1="\033[01;32m[\u@\h \W]# \033[0m"
 show shortcut `stty -a`
 set ctrl-k as interrupt `stty intr \^k`
 
-
-
+# restart process if failed
+```bash
+while true
+do
+  mongod -f /etc/mongod.conf
+  sleep 10
+done
+```
 
 
 
