@@ -56,14 +56,19 @@ must run on replica
 &readPreference=secondaryPreferred
 
 # repl set -> standalone
-vim /etc/mongod.conf
-=> change 
-db.system.replset.remove({})
+1. reconfig rs.config to memmbers include own db
+2. vim /etc/mongod.conf => comment whole security, replication set
+3. restart mongodb, drop `local` database
+4. change replication set name in .conf, restart db
+5. rs.initiate()
+
 
 # add node
 rs.add( { host: "mongodb3.example.net:27017", priority: 0, votes: 0 } )
 
 
+172.27.1.72
+172.27.0.113
+rs.initiate({_id:"rs1",members:[{_id:0,host:"172.27.1.72"},{_id:1,host:"172.27.0.113"}]})
 
-
-
+rs.initiate({_id:"rs1",members:[{_id:0,host:"172.27.0.113"}]})

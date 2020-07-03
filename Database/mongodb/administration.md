@@ -114,6 +114,9 @@ createIndex()
 rename user 
 `db.system.users.update({"user": "<old>"}, {$set: {"user": "<new>"}})`
 
+change password
+`db.updateUser("user", {pwd: "123456"})`
+
 create user
 ```js
 use admin
