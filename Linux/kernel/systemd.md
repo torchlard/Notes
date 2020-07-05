@@ -10,13 +10,19 @@ device: device file recognized by kernel
 mount: file system mount point
 path: file/dir in file system
 
-scope: externally created process
-slice: group of hierarchically organized units that manage system processes
+## scope
+externally created process
+use fork() to start and stop, systemd registered process
+eg. user session, container, virtual machine
+
+## slice
+group of hierarchically organized units that manage system processes
+slice not include process, but will build layer, include scope and service
 
 snapshot: saved state of systemd manager
 socket: inter-process communication socket
 swap: swap device/swap file
-timer
+timer: cron job
 
 ## unit file location
 /usr/bin/systemd/system/: unit files installed with rpm packages
@@ -130,6 +136,10 @@ shouldn't directly modify unit files, modification should put config files
   - copy overwrites original file
 
 
+# transactional
+systemd ensure no cyclic reference among units
+if detect cyclic dep, try to remove `wants` see if break cycle
+if cannot recover, systemd throw error
 
 
 
