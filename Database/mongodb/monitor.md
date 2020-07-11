@@ -93,6 +93,9 @@ cache: cache and page eviction from cache
 `db.adminCommand({hostInfo: 1})`
 system mem, os type, metadata, operation time
 
+`db.adminCommand({getParameter:"*"})`
+check configuration
+
 ## get command line config
 `db.adminCommand({getCmdLineOpts: 1})`
 

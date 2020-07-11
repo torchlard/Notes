@@ -12,40 +12,40 @@ data navigation: data navigation between objects different
 
 ## architecture
 Entity manager factory
-- factory class of EntityManager
+  - factory class of EntityManager
 Entity Manager
-- interface, manage persistence operations on objects
-- factory for Query instance
+  - interface, manage persistence operations on objects
+  - factory for Query instance
 Entity
-- persistence objects, stored as records in db
+  - persistence objects, stored as records in db
 Entity transaction
-- one-to-one relationship with EntityManager
+  - one-to-one relationship with EntityManager
 Query
-- implemented by each JPA vendor to obtain relational objects that meet criteria
+  - implemented by each JPA vendor to obtain relational objects that meet criteria
 Persistence
-- obtain EntityManagerFactory instance
+  - obtain EntityManagerFactory instance
 
 one -> many: 
-- EntityManagerFactory -> EntityManager
-- EntityManager -> Query
-- EntityManager -> Entity
-- EntityManager -> EntityTransaction
+  - EntityManagerFactory -> EntityManager
+  - EntityManager -> Query
+  - EntityManager -> Entity
+  - EntityManager -> EntityTransaction
 
 ## ORM (Object Relational Mapping)
 map object type <-> relational type
 
 ### phases
 1. Object data contains POJO, service interface, class
-- POJO with attributes ID, name, salary, designaiton; methods of setter, getter
-- DAO/service class, eg. create, find, delete employee
+   - POJO with attributes ID, name, salary, designaiton; methods of setter, getter
+   - DAO/service class, eg. create, find, delete employee
 2. Mapping/persistence phase
-- JPA provider: javax.persistence (eg. Hibernates)
-- mapping file: eg. ORM.xml
-- JPA Loader: work like cache memory, load relational grid data
-- Object grid: temp location store copy of relational data
+   - JPA provider: javax.persistence (eg. Hibernates)
+   - mapping file: eg. ORM.xml
+   - JPA Loader: work like cache memory, load relational grid data
+   - Object grid: temp location store copy of relational data
 3. Relational data phase
-- when business component commit data, stored in db physically
-- modified data stored in cache memory as grid format
+   - when business component commit data, stored in db physically
+   - modified data stored in cache memory as grid format
 
 mapping.xml
 ```xml
@@ -75,8 +75,8 @@ mapping.xml
 @Embedded: embeddable class
 @Id: primary key
 
-@GeneratedValue: how id initialized (eg. aotumatic, manual, value)
-- IDENTITY: let db handle -> some db use it as PK
+@GeneratedValue: how id initialized (eg. automatic, manual, value)
+- IDENTITY: let db handle -> some db use it as PK; unique per type hierarchy
 - AUTO: default, let persistence engine decide
 - SEQUENCE: refer to generator
 - @Embeddable: coomposite key

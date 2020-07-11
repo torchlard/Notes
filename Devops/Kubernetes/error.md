@@ -181,6 +181,19 @@ solution: create admin account
 reason: no persistent volume (PV) for PVC bound to
 solution: create PV without storageClassName
 
+# cannot connect to master node / kubectl get node failed
+reason: you are using dynamic ip assigned by dhcp wifi network, so ip changed and cannot connect again
+
+
+# dashbaord: Error trying to reach service: 'tls: first record does not look like a TLS handshake'
+
+
+
+# The ClusterRoleBinding "kubernetes-dashboard" is invalid: roleRef
+
+
+
+
 
 
 
