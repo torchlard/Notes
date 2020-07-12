@@ -93,7 +93,7 @@ brctl show
 
 # install
 ## 1. init
-packages: qemu-kvm libvirt-daemon libvirt-daemon-system libvirt-clients libguestfs-tools virt-install virt-manager
+packages: qemu-kvm libvirt-daemon libvirt-daemon-system libvirt-clients libguestfs-tools virt-manager
 ```
 systemctl enable libvirtd
 systemctl start libvirtd
