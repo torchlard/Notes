@@ -25,8 +25,8 @@ roles:
 - webapp
 ```
 
-
-
+# command
+ansible multi -a "df -h" -f 1  // do one by one
 
 
 
