@@ -4,9 +4,15 @@ sudo rabbitmq-server stop
 
 ## set users
 // create a user
-rabbitmqctl add_user <username> <password>
+`rabbitmqctl add_user <username> <password>`
 // tag the user with "administrator" for full management UI and HTTP API access
-rabbitmqctl set_user_tags <username> administrator
+`rabbitmqctl set_user_tags <username> administrator`
+
+```bash
+rabbitmqctl add_user admin admin
+rabbitmqctl set_user_tags admin administrator
+rabbitmqctl set_permissions -p / admin ".*" ".*" ".*"
+```
 
 # introduction
 messge broker, accept and forward msg

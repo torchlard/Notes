@@ -15,6 +15,8 @@ vagrant init
 vagrant box add geerlingguy/centos7
 vagrant up
 ```
+`vagrant ssh <boxname>`
+
 
 # VS virtualbox
 1. forward ports to VM, share public network connection
