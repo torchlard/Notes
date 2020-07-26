@@ -21,7 +21,8 @@ sudo ln -s /usr/local/var/run/libvirt/libvirt-sock /var/run/libvirt/libvirt-sock
 
 # Kernel arguments are only supported with location or kernel installs.
 
-
+# cannot connect to network
+nmtui-edit > create ethernet
 
 
 

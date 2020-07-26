@@ -73,6 +73,11 @@ mysql 8.0:
 ## docker autostart
 if set `restart: always` in docker-compose.yml, then will auto start
 
+## snapshot
+`docker commit <id> <image name>:<version>`
+
+`docker save <image> > xxx.tar`
+
 
 
 # install windows docker with WSL 1
@@ -89,4 +94,9 @@ export DOCKER_HOST=127.0.0.1:2375
 6. source ~/.profile
 7. test using `docker run hello-world`
 8. install docker-compose
+
+# docker-compose
+docker-compose -f mysql2.yml up -d --force-recreate --remove-orphans
+
+
 

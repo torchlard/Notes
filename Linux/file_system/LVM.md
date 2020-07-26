@@ -32,19 +32,31 @@ normally 10% of source lv
 when data changes, snapshot size increase until 100%, then becomes not available
 `lvs` check snapshot size
 
+## restore snapshot
+```
+docker stop xxx
+umount /root/data/3306
+lvchange -a n /dev/centos/lv01    // deactivate
+lvconvert --merge /dev/centos/snap1   // restore from snapshot
+lvchange -a y /dev/centos/lv01    // activate again
+mount /dev/centos/lv01 /root/data/3306
+```
+
+## copy logical volume
+```
+umount /root/data/3306
+lvchange -a n /dev/centos/lv01
+lvconvert --type mirror --alloc anywhere -m 1 /dev/db/d01
+lvchange -a y /dev/centos/lv01
+lvconvert --splitmirrors 1 --name d02 /dev/db/d01
+mkfs.xfs -f /dev/db/d02
+```
+
 ## note
 for non long-term storage
 once backup done, snapshot discarded
 
 if block A updated in source LV, then copy original A to snapshot
-
-deactivate `lvchange -a n /dev/centos/lv01`
-  - need ensure filesystem not in use
-
-merge snapshot `lvconvert --merge /dev/centos/snap1`
-  - will merge on next activation of source lv
-  - if mounted, need reboot
-
 mount snapshot as rw
 `mount -o nouuid -t xfs /dev/centos/snap1 /mnt/snap`
 
