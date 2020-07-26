@@ -23,14 +23,18 @@ lsblk
 
 
 # snapshot
-craete 300G snapshot called snap1 from source /dev/vg/lv (read only)
-`lvcreate -L 300G -s -n snap1 -p r /dev/vg/lv`
+craete 300G snapshot called snap1 from source /dev/vg/lv (read write)
+`lvcreate -L 300G -s -n snap1 -p rw /dev/vg/lv`
 
 snapshot also kind of logical volume
 
 normally 10% of source lv
 when data changes, snapshot size increase until 100%, then becomes not available
 `lvs` check snapshot size
+
+## mount snapshot
+since snapshot is only special logical volume, 
+if it can RW, then it can be mounted independently
 
 ## restore snapshot
 ```
@@ -78,6 +82,60 @@ systemctl start mariadb
 vgchange -ay
 sudo lvscan
 sudo mount /dev/xxx/xxx /mnt/disk
+
+# LVM attrs
+## volume type
+C: cahce
+m: mirrored
+M: mirrored without initial sync
+o: origin
+O: origin with merging snapshot
+r: raid
+R: raid without initial sync
+s: snapshot, merging
+S: snapshot
+p: pvmove
+v: virtual
+i: image
+I: image out of sync
+l: log device
+V: thin volume
+t: thin pool
+T: thin pool data
+
+## permission
+w: writable, r: readonly, R: readonly activation of non-readonly volume
+
+## allocation
+a: anywhere
+c: contiguous
+i: inherited
+c: cling
+n: normal
+
+## state
+a: active
+h: historical
+s: suspended
+I: invalid snapshot
+S: suspended snapshot
+
+## device
+o: open, X: unknown
+
+## target
+groups logical volumes related to same kernel target together
+
+newly allocation data blocks are overwritten with 0's before use
+
+## volume health
+
+
+
+
+
+
+
 
 
 
