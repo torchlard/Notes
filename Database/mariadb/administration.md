@@ -51,10 +51,11 @@ GRANT ALL PRIVILEGES ON *.* TO 'root'@'%' IDENTIFIED BY '666666' WITH GRANT OPTI
 flush privileges;
 
 
+# move table
+alter table old_db.tbl rename new_db.tbl
 
-
-
-
+ALTER TABLE test ROW_FORMAT=DYNAMIC;
+ watch --interval=1 "mysql -uroot -p666666 -h127.0.0.1 -e \"SELECT INFO FROM information_schema.PROCESSLIST p WHERE command != 'Sleep' AND info NOT like '%information_schema%'\" | column -t |tr -s ' '"
 
 
 

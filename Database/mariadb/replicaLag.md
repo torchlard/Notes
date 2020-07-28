@@ -19,18 +19,20 @@ To work out what's causing the lag, you must determine which replication thread 
   The slaves creates this SQL (or applier) thread to read the contents of the retrieved binary log and apply its contents.
 
 
+# rds recover
+1. on read replica, call mysql.rds_stop_replication to correct error
+2. `CALL mysql.rds_skip_repl_error` to skip 1062 error
+3. change sql_slave_skip_counter to speed up slave
 
+# command 
+since rds_skip_repl_error can only skip 1 error, need to repeat many times
+```sql
+call mysql.rds_start_replication; call mysql.rds_skip_repl_error; call mysql.rds_skip_repl_error; call mysql.rds_skip_repl_error; call mysql.rds_skip_repl_error; call mysql.rds_skip_repl_error; call mysql.rds_skip_repl_error; call mysql.rds_skip_repl_error; call mysql.rds_skip_repl_error; call mysql.rds_skip_repl_error; call mysql.rds_skip_repl_error; call mysql.rds_skip_repl_error; call mysql.rds_skip_repl_error; call mysql.rds_start_replication; call mysql.rds_skip_repl_error; call mysql.rds_skip_repl_error; call mysql.rds_skip_repl_error; call mysql.rds_skip_repl_error; call mysql.rds_skip_repl_error; call mysql.rds_skip_repl_error; call mysql.rds_skip_repl_error; call mysql.rds_skip_repl_error; call mysql.rds_skip_repl_error; call mysql.rds_skip_repl_error; call mysql.rds_skip_repl_error; call mysql.rds_skip_repl_error;
+```
 
-
-1748911
-
+# sample
 Read_Master_Log_Pos: 2632851
 Relay_Log_Pos: 4742161
 Exec_Master_Log_Pos: 4741852
-
-
-
- Slave_SQL_Running_State: Waiting for room in worker thread event queue
-=> 
 
 

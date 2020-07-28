@@ -151,9 +151,18 @@ echo xxx | cut -c -1000
 // replace first occurrence
 sed -e '0,/ROW_FORMAT=FIXED/ s/ROW_FORMAT=FIXED//' xxx.sql > yyy.sql
 
-
+# find volume
 du -h --max-depth=1 | sort -hr
 
+// get total size of files
+find . -mtime +22 -mtime -24 | xargs du -ach
+find . -mtime +22 -mtime -24 | xargs du -ach
+
+
 docker volume
+
+# remoive extra permission (green highlight)
+chmod -R a-x,o-w,+X dir
+
 
 

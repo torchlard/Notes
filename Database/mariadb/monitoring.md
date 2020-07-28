@@ -26,21 +26,22 @@ select command,state from information_schema.processlist where command !='Sleep'
 # view deadlock
 show engine innodb status|mutex
 
+# command
+```sql
+SELECT trx_state,trx_query from information_schema.INNODB_TRX it 
 
+-- trx_query,trx_rows_modified 
 
+SELECT info FROM information_schema.PROCESSLIST p WHERE COMMAND != 'Sleep'
 
+SELECT * FROM information_schema.INNODB_LOCK_WAITS;
 
+SELECT * FROM information_schema.INNODB_LOCKS;
 
+SHOW status WHERE Variable_name LIKE '%conn%'
 
-
-
-
-
-
-
-
-
-
+SELECT @@global.time_zone, @@session.time_zone
+```
 
 
 
