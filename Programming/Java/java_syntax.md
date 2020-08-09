@@ -277,7 +277,7 @@ StringBuilder: not thread-save, ~StringBuffer, most efficient
 
 # stream
 ## intermediate
-map, filter, distinct, sorted, pek, limit
+map, filter, distinct, sorted, peek, limit
 skip, parallel, sequential, unordered
 ## terminal
 forEach, forEachOrdered, toArray, reduce

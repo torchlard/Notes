@@ -21,3 +21,14 @@ QFileSystemWatcher::removePaths: list is empty
 Using Wayland-EGL
 Using the 'xdg-shell' shell integration
 QSocketNotifier: Can only be used with threads started with QThread
+QSocketNotifier: Can only be used with threads started with QThread
+Using Wayland-EGL
+Using the 'xdg-shell' shell integration
+qt.qpa.wayland: Non-toplevel surfaces can't request window states
+qt.qpa.wayland: Non-toplevel surfaces can't request window states
+qt.qpa.wayland: Non-toplevel surfaces can't request window states
+QProcess: Destroyed while process ("/usr/lib/x86_64-linux-gnu/libexec/ksysguard/ksgrd_network_helper") is still running.
+org.kde.ksysguard.plugin.network: Helper process terminated abnormally!
+org.kde.ksysguard.plugin.network: ""
+QFileSystemWatcher::removePaths: list is empty
+QFileSystemWatcher::removePaths: list is empty
