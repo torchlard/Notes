@@ -1,0 +1,23 @@
+QSocketNotifier: Can only be used with threads started with QThread
+wl_display@1: error 0: invalid object 673
+KCrash: Attempting to start /usr/bin/latte-dock directly
+KCrash: crashing... crashRecursionCounter = 2
+KCrash: Application Name = latte-dock path = /usr/bin pid = 100334
+KCrash: Arguments: /usr/bin/latte-dock 
+KCrash: Attempting to start /usr/lib/x86_64-linux-gnu/libexec/drkonqi directly
+QSocketNotifier: Can only be used with threads started with QThread
+QSocketNotifier: Can only be used with threads started with QThread
+wl_display@1: error 0: invalid object 200
+KCrash: Attempting to start /usr/bin/latte-dock directly
+KCrash: crashing... crashRecursionCounter = 2
+KCrash: Application Name = latte-dock path = /usr/bin pid = 103045
+KCrash: Arguments: /usr/bin/latte-dock 
+KCrash: Attempting to start /usr/lib/x86_64-linux-gnu/libexec/drkonqi directly
+QSocketNotifier: Can only be used with threads started with QThread
+QSocketNotifier: Can only be used with threads started with QThread
+"An instance is already running!, use --replace to restart Latte"
+QFileSystemWatcher::removePaths: list is empty
+QFileSystemWatcher::removePaths: list is empty
+Using Wayland-EGL
+Using the 'xdg-shell' shell integration
+QSocketNotifier: Can only be used with threads started with QThread
