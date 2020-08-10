@@ -92,8 +92,27 @@ do
   sleep 10
 done
 ```
+# ~/.profile
+default shell (Bourne shell) reads commands from ~/.profile when invoked as login shell
+bash is Bourne-like shell, reads commands from ~/.bash_profile
+  - if file not exist, read ~/.profile
+can invoke shell directly at any time
 
+login shell => doesn't read ~/.profile
+interactive shell (not run script) => reads ~/.bashrc
 
+.profile: apply to whole session
+.bashrc: apply only to bash itself, eg. alias, function def, shell options
+.bash_profile: can replace ~/.profile, but only read by bash, not any other shell
+
+# parallel
+while xxx
+do {
+  xxx
+  WAITPID="$WAITPID $!"
+} &
+done <<< "$xxx"
+wait $WAITPID
 
 
 

@@ -71,8 +71,11 @@ go to registry `Computer\HKEY_CURRENT_USER\Software\Microsoft\Windows\DWM`
 set `AccentColor`,`AccentColorInactive` to `0d0d0d`
 set `ColorPrevalence` to `1`
 
-
-
+# setup intellij/cmd git
+1. add git.exe dir to environment variable
+2. run C:\Program Files\Git\cmd\start-ssh-agent.cmd
+3. add id_rsa.pub to remote git repository ssh key setting
+4. restart intellij
 
 
 

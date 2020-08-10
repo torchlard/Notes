@@ -13,7 +13,7 @@ impossible to change contents of any file/dir without Git knowing (checksum: SHA
 
 when do actions in Git, all of them only add data to Git database
 for any VCS, can lose / mess up changes you haven't committed
-after commit snapshot into git, very difficult to lsoe
+after commit snapshot into git, very difficult to lose
 
 # Three States
 1. modified: changed file, not commmitted to local db
@@ -30,7 +30,7 @@ staging area: a file contained in Git directory
 Git dir: store metadata, object database 
 
 ## workflow
-1. modify fiels in working tree
+1. modify files in working tree
 2. selectively stage just those changes want in next commit
 3. do commit, takes files in staging area, store snapshot permanently to Git directory
 
@@ -142,16 +142,17 @@ ignored: file git explicitly told to ignore
 git remote rename pb paul
 
 ## push to ec2
-// in ec2
+```bash
+# in ec2
 git init --bare
 
-// in local
+# in local
 git remote add ec2 <host-from-ssh-config>:/path/to/project_dir.git
 git push ec2 master
 
 git remote remove origin
 git remote add origin <original-git>
-
+```
 ## switch to ssh connection
 no need to re-enter password
 
@@ -378,6 +379,27 @@ all lieutenants have 1 integation manager (benevolent dictator)
 3. dictator merge lieutenants' master branches into dictator's master brnch
 4. dictator push master to reference repo so other developers can rebase on it
 
+
+# GIT VS SVN
+git clone  | svn checkout  :	Copy a repository	
+git commit | svn commit    :	Record changes to file history
+git show   | svn cat       :	View commit details	
+git status | svn status    :	Confirm status	
+git diff	 | svn diff      : Check differences	
+git log    | svn log       :	Check log	
+git add    | svn add       :	Addition	
+git mv	   | svn mv        : Move	svn 
+git rm	   | svn rm        : Delete	svn 
+git checkout | svn revert  :	Cancel change	
+git reset  | svn revert    :	Cancel change	
+git branch | svn copy      :	Make a branch	
+git checkout | svn switch  :	Switch branch	
+git merge  | svn merge     :	Merge	
+git tag	   | svn copy      : Create a tag	
+git pull   | svn update    :	Update	
+git fetch  | svn update    :	Update	
+git push   | svn commit    :	It is reflected on the remote	
+.gitignore | .svnignore    :	Ignore file list	
 
 
 
