@@ -5,10 +5,8 @@
 3. move scala to /usr/local/share
 4. export PATH="$PATH:/usr/local/share/scala/bin" write in .bashrc
 
-
 ## compile & run
 sbt run under config build.sbt
-
 
 ## import
 no need to import within same package
@@ -16,11 +14,15 @@ no need to import within same package
 if naming conflict, need to import sth from root of project: prefix with _root_
 eg. import _root_.users._
 
+## call by
+call-by-value: it evaluates every function only once
+call-by-name: function arg not evaluated if parameter unused in evaluation of function body
+
 # syntax
 ## final
 cannot be override
 
-#type
+# type
 ## sealed trait
 extended only in same file
 alternatives to enums
