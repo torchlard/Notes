@@ -20,7 +20,7 @@ lsblk
 6. mount /dev/volgrp/lvol /mnt/mountpoint
 7. use blkid find uuid of lv
 8. append row to /etc/fstab
-
+9. `vgcreate vg1000 /dev/sdb1`
 
 # snapshot
 craete 300G snapshot called snap1 from source /dev/vg/lv (read write)
