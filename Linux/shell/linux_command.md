@@ -139,6 +139,13 @@ always single quote the jq program
 download file `curl <url> --output xxx`
 download without specify name `curl -OJ http://xxx`
 
+curl http://xxx
+curl -X POST --data "email=test&press=p" http://xxx
+curl -X POST -H "Content-Type: application/json" -d '{"status":false}' http://xxx
+curl -X PUT -H "Content-Type: application/json" -d '{"status":false}' http://xxx
+curl -X DELETE "http://www.example.com/api/resources/1"
+
+
 # check hardware
 ## pcie device
 lspci -nnk

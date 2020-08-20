@@ -41,4 +41,18 @@ log_output=FILE
 sql_log_off=ON
 
 
+#  The user specified as a definer ('mariadb.sys'@'localhost') does not exist
+starting from 10.4, can use SELECT user FROM mysql.global_priv ;
+grant privilege to mariadb.sys
+
+
+
+
+
+
+
+
+
+
+
 

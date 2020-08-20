@@ -86,9 +86,12 @@ systemctl restart kubelet
 # get secret
 `kubectl describe secret`
 
+# enter pod
+`kubectl exec --stdin --tty <pod-name> -n <namespace> -- /bin/bash`
+`kubectl exec <pod-name> -n <namespace> -- ls`
 
-
-
+more than one container in pod
+`kubectl exec -i -t my-pod --container main-app -- /bin/bash`
 
 
 
