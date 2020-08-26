@@ -6,12 +6,14 @@ storage: HDFS
 ## components
 Spark Core
 - IO, Spark cluster, task dispatching fault recovery, RDD
+
 Spark SQL
 - distributed framework for structured data processing
 - cost based optimizer
 - mid query fault-tolerance
 - compatible with Hive data
 - DataFrame, SQL to get data source: Hive, Avro, Parquet,ORC,JSON, JDBC
+
 Spark Streaming
 - add-on to core spark API: scalable, high-throughput
 - data source: Kafka, Flume, Kinesis, TCP socket
@@ -25,12 +27,14 @@ MLlib
 - clustering, regression, classification, collaborative filtering
 - switch to DataFrame based API, more user friendly
 - use Breeze linear algebra package
+
 GraphX
 - API for graphs, graph parallel execution
 - network graph analytics engine, data store
 - clustering, classification, traversal, searching, pathfinding
 - can use vertex, edge when primitive data type
 - fumdamental operations on graph => Pregel API
+
 SparkR (R on spark)
 - exlore different technique to integrate usability of R with scalability of R
 - data source API
@@ -39,7 +43,7 @@ SparkR (R on spark)
 
 support lang: R,python,Scala,Java
 
-## RDD (Resilient distributed dataset)
+## Dataset (Resilient distributed dataset)
 resilient: if memory lost, can be recreated
 distributed: across cluster
 dataset: initial data come from file / created programmatically
