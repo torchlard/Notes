@@ -28,6 +28,62 @@ in SQL, need to parse whole script, jumping around to fully grasp what's happeni
 when speed isn't everything, want a more loose constraint
 
 
+# index
+indexes are a big mapping (big dict)
+set of labels -> integer locations
+
+any series of data can be converted to an index
+
+## under the hood
+tons of lookup => Klib
+super fast dict implementation specialized for each type
+pull out entire ndarray worth of values without bubbling up to Python level
+
+## getting data
+CSV
+  - specialized reader read subset of cloumns and handle comments/headers
+  - iterate over possible dtypes, try convert each one on all rows
+
+Excel
+  - use external library, take adv of hinting
+  - use TextParser Python internals
+
+
+# data frame data structure
+data split into blocks by type under the hood
+
+BlockManager 
+- handles translation between dataframe and blocks
+- manage indexes
+- DataFrame -> high level API
+
+Blocks 
+- specialized by type
+- only cares about locations
+- operating within types with numpy
+
+slicing within dtype no copy
+cross dtype slicing generally requires copy
+
+# groupby, hierarchical indexes, categorical
+Klib against for fast dicts and lookups
+
+# dtype
+float | flat64
+int | int64
+datetime | datetime64[ns]
+string
+object
+
+
+
+
+
+
+
+
+
+
 
 
 
