@@ -95,6 +95,34 @@ scrum limit amount of time allowed to complete particular amount of work
     VS
 Kanban limits amount of work allowed in any one condition
 
+## usage
+### scrum
+budget planed based on release dates
+target date-driben release
+
+- new application dev
+- major/minor enhancement
+
+### kanban
+budget plan based on resources
+supports isolated / independent changes well
+target content driven releases
+
+- production support
+- art design and production
+- patch releases
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
