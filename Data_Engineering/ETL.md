@@ -59,10 +59,19 @@ transform only data you need
 3. quicker loading
 
 
+# working principle
+1. load data incrementally
+extract data incrementally at regular interval
 
+2. process historic data
+need data go back further than date push new code into production
 
+start_date parameter in DAG to specify start date
+backfill task to process data all way back to that start date
 
-
+3. partition ingested data
+parallelize dag runs, avoid write locks on data being ingested
+optimize performance when same data being read
 
 
 

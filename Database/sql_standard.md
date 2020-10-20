@@ -58,10 +58,18 @@ take T1,T2 as input table, match rows according to use defined join criterion mi
 # row pattern recognition
 search ordered partition of rows for matches to regular expression
 
+# T-SQL (Transact-SQL)
+set of programming extensions from Sybase and Microsoft
+  - add several features to SQL
+  - include transaction control, exception, error handling, row processing
 
+T-SQL contains procedural programming and local variable, SQL not
+T-SQL is proprietary, SQL is open format
+T-SQL is extension to SQL, SQL is programming language
 
-
-
+# ANSI-SQL
+official features of SQL language
+every brand of SQL RDBMS implements a subset of ANSI SQL
 
 
 
