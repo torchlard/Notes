@@ -92,8 +92,21 @@ scanning materialized view much faster than scanning table
 - up to date data
 
 
+# referential integrity constraint
+referential integrity informational
+constraints other than NOT NULL are not enforced
 
 
+# design
+## specify column length
+snowflake compress column data effectively
+minimal impact for max length declaration / smaller precision
+
+- produce error when exceed length
+- 3rd party tools use more client-side memory when column length unspecified
+
+## variant
+semi-structured data use VARIANT column
 
 
 
