@@ -36,6 +36,21 @@ cmd.exe /c xxx.bat
 powershell.exe xxx
 
 
+# install windows docker with WSL 1
+1. install window version of docker
+2. enable hyper-v
+3. tick 'Expose daemon on tcp://localhost:2375 without TLS' in docker setting
+4. run in bash
+sudo apt update
+sudo apt install docker.io
+sudo usermod -aG docker $USER
+
+5. write to ~/.profile
+export DOCKER_HOST=127.0.0.1:2375
+6. source ~/.profile
+7. test using `docker run hello-world`
+8. install docker-compose
+
 
 
 
