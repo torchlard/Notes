@@ -26,7 +26,7 @@ a ≡ b => Path _ a b
 
 
 # UA
-gives universe strongest possible euality in advance (only 1 universe)
+gives universe strongest possible equality in advance (only 1 universe)
 
 ## what is equality?
 types within which different equalities defined from your perspective
