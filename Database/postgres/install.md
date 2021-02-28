@@ -20,7 +20,8 @@ Should be
 
 local   all             postgres                                md5
 
-After altering this file, don't forget to restart your PostgreSQL server. If you're on Linux, that would be sudo service postgresql restart.
+After altering this file, don't forget to restart your PostgreSQL server. 
+f you're on Linux, that would be sudo service postgresql restart.
 
 
 # createdb with user
@@ -34,3 +35,18 @@ psql -d mydb -U ade
 jdbc:mariadb://127.0.0.1:3306
 
 /usr/lib/postgresql/12/bin/pg_ctl -D /var/lib/postgresql/12/main -l logfile start
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
