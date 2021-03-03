@@ -13,4 +13,11 @@ clear shortcut ctrl+shift+e
 install openjdk source
 wrong java home path
 
-
+# custom language file association
+```js
+{
+    "files.associations": {
+        "**/snowflake/**/*.sql": "snowscriptjs"
+    }
+}
+```
