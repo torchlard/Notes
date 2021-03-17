@@ -97,7 +97,7 @@ middle: fuel
 
 # mirror
 used when 
-- signaling
+- signaling 
 - changing direction
 - changing speed
 
