@@ -320,11 +320,180 @@ to corrrect rear-wheel skid
 - steer into it
 - try to steer in same direction to recover control
 
+coasting downhill is wrong
+- vehicle will get faster
+- less braking and steering control
+
+travelling in neutral for long distance wrong
+- no engine braking
 
 
+# driving on motorway
+join motorway
+- use slip road adjust speed
+- give way to traffic already on motorway
+
+all traffic whatever speed should normally use left-hand lane
+- middle and right lane for overtaking 
+- normally turn right to overtake
+- can overtake on left if traffic on right moving more slower
+
+when uphill, separate lane for slow-moving vehicles
+
+when travelling in left lane, traffic joining from slip road
+- move to another lane if safe
+
+overtake on left when
+- queue of slow-moving traffic to right 
+- that is moving more slowly than you are
+
+## speed limit
+national speed limit: 70 mph
+
+vehicle towing trailer
+- restrict to 60 mph
+- not allowed to travel in right lane (>= 3 lanes)
+
+## hard shoulder
+swtich on hazard light, sidelight at night
+leave vehicle 
+
+use emergency roadside teephone
+- allow easy location by emergency services
+
+rejoin main carriageway of motorway
+- move out onto carriageway, then build up speed
+
+how to use emergency telephone on motorway
+- face oncoming traffic
+
+must not use motorways
+- learner car driver
+- farm tractor
+- horse riders
+- cyclists
+
+## agency
+Highways Agency Traffic Officers
+- able to stop and direct anyone on a motorway
+
+reduce traffic bunching: variable speed limi
 
 
+# road type
+## single carriageway
+road with >= 1 lanes arranged within single carriageway 
+with no central reservation to separate opposing flows of traffic
 
+two-lane road: 1 lane for each direction
+
+## dual carriageway
+highway for traffic travelling in opposite directions separated by central reservation
+
+
+# speed limit
+
+built-up | single carr | dual carr | motorway
+cars | 30 | 60 | 70 | 70
+cars towing trailer | 30 | 50 | 60 | 60
+buses, coaches ( <= 12m length) | 30 | 50 | 60 | 70
+goods vehicle (<= 7.5 tonnes) | 30 | 50 | 60 | 70
+goods vehicles (> 7.5 tonnes) | 30 | 40 | 50 | 60
+
+## crossroad
+turning right at crossroad when oncoming driver also turn right
+- keep other vehicle to right, turn behind it
+
+can wait when oncoming traffic prevent you from turning right
+
+## roundabouts
+signal left just after pass exit before the one you want
+
+## reverse
+neve reverse from side road into main road
+
+no speed limit signs on road, 30mph indicated by street lighting
+
+cross 30: end of minimum speed 30mph
+
+# one-way street
+may park on right-hand side
+may overtake either on right / left
+
+when intend to turn right, oncoming driver also turn right
+- keep other vehicle to your RIGHT and turn behind it
+
+## must not park
+- near brow of a hill
+- at or near a bus stop
+- within 10m of a junction
+
+park at night on road with 40mph limit
+- should park with parking lights on
+
+if travel in wrong direction in main road
+- don't turn round / reerse from a side road into main road
+- should turn into side road on right and reverse into main road
+
+never reverse from a side road into a main road
+
+in a road car coming towards you
+- pull into a passing place on your left
+
+when a vehicle is overtaking you
+- dip light as soon as vehicle passes you
+
+signals given by direction indicator and brake lights
+
+safest way to turn vehicle around to go opposite way
+- find quiet side road to turn round in
+
+must have blue badge to park in a disabled space
+
+amber flashing beacon for salting vehicle
+
+min speed of 30mph: circle blue background white text
+
+contraflow bus and cycle lane: one-way street
+
+signal to turn right in busy traffic: give an arm signal
+
+-> : two way traffic crosses a one-way road
+<-
+
+hump bridge
+direction to park-and-ride car park
+
+white arrow on road ahead: keep left of the hatched markings
+
+## hazard warning
+when there's queuing traffic ahead 
+- you have to slow down / stop
+- show hazard warning lights, alert following traffic to hazard
+- switch them off as queue forms behind you
+
+
+# essential documents
+## vehicle registration certificate (V5C)
+- vehicle: make, model, engine size, year of registration
+- registered keeper
+
+must tell DVLA when you change
+- vehicle, name, permanent address
+
+buy second-hand vehicle
+- tell DVLA keeper changed
+
+if not using vehicle on public road
+- won't have to pay road tax as long as tell DVLA in advance
+- Statutory Off-Road Notification declaration, last for 12 months
+
+must have provisional driving license to drive on public road
+
+probation period for 2 years after pass first practical test
+- if get >= 6 penalty points, will lose licese
+- then need reapply and pass tests again
+- points will transfer to new license after pass test again
 
 
 

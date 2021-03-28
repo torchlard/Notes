@@ -81,9 +81,11 @@ read and memory restored to its pre-suspend state
 swsusp (swap suspend): write memory content to free swap space
 - some restrictions, work most cases
 
-
-
-
+# want to install newer qt5 library
+sudo add-apt-repository ppa:beineri/opt-qt-5.15.1-bionic
+sudo apt update
+sudo apt install qt515base
+export LD_LIBRARY_PATH=/opt/qt515/lib
 
 
 
