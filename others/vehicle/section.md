@@ -409,6 +409,8 @@ can wait when oncoming traffic prevent you from turning right
 ## roundabouts
 signal left just after pass exit before the one you want
 
+when approach roundabout: move nearer to centre line and signal direction
+
 ## reverse
 neve reverse from side road into main road
 
@@ -494,6 +496,182 @@ probation period for 2 years after pass first practical test
 - if get >= 6 penalty points, will lose licese
 - then need reapply and pass tests again
 - points will transfer to new license after pass test again
+
+## insurance
+must have at least 3rd party insurance cover before driving on public roads
+include
+- injury to another person
+- damage to someone else's property
+- damage to other vehicles
+
+driving without insurance is criminal offence
+vehicle is insured for any other one to drive that vehicle
+
+if vehicle unused, must have either SORN / valid insurance
+need to show insurance cert when tax vehicle / police officer asks you 
+- insurer give you temp cover note until receive insurance cert (1 month)
+
+insurance cost lower if take Pass Plus scheme
+highest level of insurance: comprehensive
+
+
+## MOT test
+ensure vehicle meets road safety and environmental standards
+need MOT test when >= 3 years old, valid for 1 year
+
+trailers and caravans don't need an MOT
+can drive without MOT when
+- driving to / from appointment at MOT centre
+- have MOT repairs carried out
+
+when you renew vehicle excise Duty, you need valid insurance
+drive car without MOT could invalidate your insurance
+
+## tax disc
+need insurance and MOT cert
+
+## supervise
+at least 21 years old
+have held full licence for at least 3 years
+
+
+# emergency
+## breakdown
+signal: warning light shows, tyre burst, smell petrol
+
+tyre burst
+=> hold steering wheel firmly
+=> pull up slowly / roll to a stop at the side of road
+
+## emergency phone
+ask:
+- number on phone, tell service where you are
+- detail of yourself and vehicle
+- whether belong to motoring organisation
+
+### breakdown on level crossing
+get everyone out of vehicle, clear of crossing
+call signal operator from phone provided
+ony move vehicle if operator tells you to do so
+
+## hazard light
+- suddenly slow down / stop on motorway / high-speed road because of sth ahead
+- vehicle has broken down and temporarily obstructing traffic
+
+warning triangle place 45m behind vehicle
+- never do it on motorway
+
+## tunnel
+if vehicle involved in an incident / breaks down in tunnel
+- switch off engine
+- put hazard light on
+- call help from nearest emergency telephone point
+
+variable message signs warn you of congestion / incident ahead
+
+vehicle catch fire while driving throught tunnel
+- try to drive it out of tunnel if you can
+
+make sure radio is tuned to frequency shown
+
+## stop at an incident
+call emergency service
+ensure engines switched off
+move uninjured people away from scene
+
+## help others and give first aid
+keep warm and comfortable
+keep them calm by talking to them reassuringly
+make sure they're not left alone
+
+- never offer a casualty any food / drink / cigarette
+- don't move injured person if area is safe
+
+## someone unconscious
+DRABC code
+
+Danger: check for danger
+Response: ask casualty question, gently shake shoulder
+Airway: check airway is clear
+Breathing: check breathing up to 10 sec
+Compression: use 2 hands in centre of chest, press down 4-5cm 100rpm
+  - child gently, 2 fingers for an infant
+
+if isn't breathing
+- clear mouth and airway
+- tilt head back gently
+- pinch their nostrils together
+- place mounth over theirs
+  - 30 chest compressions, 2 breaths as a cycle
+
+check breathing at least 10 sec
+10 min: shortest time burn needs to be cooled
+
+first priority of casualty: breathing
+check airway, breathing, circulation
+
+## bleeding
+- apply firm pressure to wound
+raise arm if arm wound
+
+suffer from shock: pale grey skin
+
+## report incident
+must sto if involved in an incident
+report to owner about damage to another vehicle, property or animal
+
+find out
+- who owns vehicle
+- make, registration number
+- other driver's name, address, tel no.
+
+# vehicle loading
+## keep your car stable
+make sure vehicle isn't overloaded
+- affect steering and braking
+
+carry / tow heavy load
+- increase air pressure in tyres
+- adjust aim of headlights
+
+- distribute weight evenly
+- make sure load is fastened
+- ensure loads don't obstruct your view when driving
+
+load on roof rack
+- increase wind resistance
+- make vehicle less stable
+
+animals
+- should be restrained to ensure not interfere with driver / block driver's view
+- travel in special cage
+
+## towing
+use stabiliser fitted to your towbar
+if caravan / trailer has braking system, can fit breakaway cable as extra safety device
+- pull on brakes of braked trailer
+
+if trailer / caravan starts to swerve
+- ease off accelerator
+- reduce speed gradually to regain control
+
+cannot use right lane in 3 lanes motorway
+passengers not allowed to ride in caravan
+
+breakaway cable can fit to trailer braking system
+- if towbar fails the cable activate trailer brakes
+
+## inflate tyre
+inflate tyre more than normal
+- driving fast for a long distance
+- carry a heavy load
+
+
+
+
+
+
+
 
 
 
