@@ -69,6 +69,46 @@ register_sidebar(array(
 1. create sidebar.php, display using dynamic_sidebar()
 2. load theme using get_sidebar()
 
+# navigation
+```php
+function register_my_menus(){
+  register_nav_menus(
+    array(
+      'header-menu' => __('Header Menu'),
+      'extra-menu' => __('Extra Menu')
+    )
+  );
+}
+add_action('init', 'register_my_menus')
+
+// display additional content
+wp_nav_menu(
+  array(
+    'menu' => 'primary',
+    'theme_location' => '__no_such_location',
+    'fallback_cb' => false // not fallback to wp_page_menu
+  )
+)
+
+```
+
+# pagination
+allow user page back and forth through multiple pages
+
+next/prev link: next/previous_posts_link()
+numerical: the_posts_pagination()
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
