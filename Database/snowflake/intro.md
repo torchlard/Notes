@@ -19,11 +19,6 @@ use MPP compute cluster, eacho node in cluster store portion of entire dataset l
 ```
 
 
-automate data pipeline
-AVM
-
-
-
 
 
 
