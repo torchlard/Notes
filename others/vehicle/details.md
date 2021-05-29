@@ -390,15 +390,33 @@ two-lane road: 1 lane for each direction
 ## dual carriageway
 highway for traffic travelling in opposite directions separated by central reservation
 
+## dual carriageway VS motorway
+motorway
+- only allow motorisd vehicle, no pedestrian / cyclist
+- don't permit tractor and some other slow moving vehicle
+- has hard shoulder 
+- have 'M' designation before / after road number, eg. M1, A1(M)
+  - A1(M): former dual carriageway (A1) upgraded to motorway
+- junction always numbered
+- blue sign: motorway, green: dual carriageway
+- right hand lane only for overtaking
+- exiting motorway almost always involve slip road
+- roundabouts and traffic lights extremely rare
+
+dual carriageway
+- right hand lane can be for turning right
+- roundabouts and traffic lights very common 
+
 
 # speed limit
 
-built-up | single carr | dual carr | motorway
-cars | 30 | 60 | 70 | 70
-cars towing trailer | 30 | 50 | 60 | 60
-buses, coaches ( <= 12m length) | 30 | 50 | 60 | 70
-goods vehicle (<= 7.5 tonnes) | 30 | 50 | 60 | 70
-goods vehicles (> 7.5 tonnes) | 30 | 40 | 50 | 60
+| type                            | built-up | single carriage | dual carriage | motorway |
+|---------------------------------|----------|-----------------|---------------|----------|
+| cars                            | 30       | 60              | 70            | 70       |
+| cars towing trailer             | 30       | 50              | 60            | 60       |
+| buses, coaches ( <= 12m length) | 30       | 50              | 60            | 70       |
+| goods vehicle (<= 7.5 tonnes)   | 30       | 50              | 60            | 70       |
+| goods vehicles (> 7.5 tonnes)   | 30       | 40              | 50            | 60       |
 
 ## crossroad
 turning right at crossroad when oncoming driver also turn right

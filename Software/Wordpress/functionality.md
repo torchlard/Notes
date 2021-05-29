@@ -98,8 +98,11 @@ allow user page back and forth through multiple pages
 next/prev link: next/previous_posts_link()
 numerical: the_posts_pagination()
 
+# load js, css, external files
+wp_enqueue_script()
+wp_enqueue_style()
 
-
+plugins_url('myscript.js', __FILE__)
 
 
 

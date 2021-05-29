@@ -6,8 +6,3 @@
 
 
 
-
-
-login: 7832650
-pwd: p5ypisj
-investor: pk1pxtt

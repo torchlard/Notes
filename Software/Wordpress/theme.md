@@ -118,6 +118,9 @@ allow user choose image to represent their post
 ## post format
 allow user format their post in different ways based on content of post
 
+- aside, gallery, link, image
+- quote, status, video, audio, chat
+
 ## content width
 make sure no content break container of the site
 
