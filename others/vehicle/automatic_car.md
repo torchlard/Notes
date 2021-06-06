@@ -17,8 +17,12 @@ push button in to move handbrake
 
 up = handbrake on
 
+# kick down
+get this change down a gear
 
-
+sometimes need quick acceleration
+manual car: select lower gear
+auto car: sharply press accelerator pedal right down
 
 
 
