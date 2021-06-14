@@ -157,16 +157,32 @@ road stud
 - green/yellow: temp adjustment to lane layout
 
 
+# crossing
+## puffin crossing (pedestrian user friendly interface)
+detect car and pedestrian
+need to press button
 
+## pelican crossing (pedestrian light controlled)
+need to wait 60 seconds after pressing button, not intelligent
 
+green
+-> amber
+-> red 
+-> flashing amber phase 
+  (let pedestrian to finish corssing, don't need to wait green)
+-> green
 
+## toucan (two can cross)
+pedestiran and cycling
 
+## equestrian crossing
+for horse rider
 
+## zebra crossing
+black and white stripes
 
-
-
-
-
+zig-zag line 
+- must not park, overtake vehicle
 
 
 

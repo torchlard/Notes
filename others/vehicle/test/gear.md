@@ -29,6 +29,6 @@ to change speed, come to complete stop without turning off engine
 
 if clutch not pressed, pressure plate push up against clutch plate
 
-
+clutch down: disconnect engine with wheel
 
 
