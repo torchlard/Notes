@@ -16,7 +16,7 @@ ask:
 ### breakdown on level crossing
 get everyone out of vehicle, clear of crossing
 call signal operator from phone provided
-ony move vehicle if operator tells you to do so
+only move vehicle if operator tells you to do so
 
 ## hazard light
 - suddenly slow down / stop on motorway / high-speed road because of sth ahead
@@ -81,10 +81,20 @@ raise arm if arm wound
 suffer from shock: pale grey skin
 
 ## report incident
-must sto if involved in an incident
+must stop if involved in an incident
 report to owner about damage to another vehicle, property or animal
 
 find out
 - who owns vehicle
 - make, registration number
 - other driver's name, address, tel no.
+
+
+# effect of shock
+rapid pulse
+sweating
+pale grey skin
+rapid shallow breathing
+
+
+

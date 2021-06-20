@@ -358,7 +358,7 @@ vehicle towing trailer
 swtich on hazard light, sidelight at night
 leave vehicle 
 
-use emergency roadside teephone
+use emergency roadside telephone
 - allow easy location by emergency services
 
 rejoin main carriageway of motorway
@@ -380,111 +380,6 @@ Highways Agency Traffic Officers
 reduce traffic bunching: variable speed limi
 
 
-# road type
-## single carriageway
-road with >= 1 lanes arranged within single carriageway 
-with no central reservation to separate opposing flows of traffic
-
-two-lane road: 1 lane for each direction
-
-## dual carriageway
-highway for traffic travelling in opposite directions separated by central reservation
-
-## dual carriageway VS motorway
-motorway
-- only allow motorisd vehicle, no pedestrian / cyclist
-- don't permit tractor and some other slow moving vehicle
-- has hard shoulder 
-- have 'M' designation before / after road number, eg. M1, A1(M)
-  - A1(M): former dual carriageway (A1) upgraded to motorway
-- junction always numbered
-- blue sign: motorway, green: dual carriageway
-- right hand lane only for overtaking
-- exiting motorway almost always involve slip road
-- roundabouts and traffic lights extremely rare
-
-dual carriageway
-- right hand lane can be for turning right
-- roundabouts and traffic lights very common 
-
-
-# speed limit
-
-| type                            | built-up | single carriage | dual carriage | motorway |
-|---------------------------------|----------|-----------------|---------------|----------|
-| cars                            | 30       | 60              | 70            | 70       |
-| cars towing trailer             | 30       | 50              | 60            | 60       |
-| buses, coaches ( <= 12m length) | 30       | 50              | 60            | 70       |
-| goods vehicle (<= 7.5 tonnes)   | 30       | 50              | 60            | 70       |
-| goods vehicles (> 7.5 tonnes)   | 30       | 40              | 50            | 60       |
-
-## crossroad
-turning right at crossroad when oncoming driver also turn right
-- keep other vehicle to right, turn behind it
-
-can wait when oncoming traffic prevent you from turning right
-
-## roundabouts
-signal left just after pass exit before the one you want
-
-when approach roundabout: move nearer to centre line and signal direction
-
-## reverse
-neve reverse from side road into main road
-
-no speed limit signs on road, 30mph indicated by street lighting
-
-cross 30: end of minimum speed 30mph
-
-# one-way street
-may park on right-hand side
-may overtake either on right / left
-
-when intend to turn right, oncoming driver also turn right
-- keep other vehicle to your RIGHT and turn behind it
-
-## must not park
-- near brow of a hill
-- at or near a bus stop
-- within 10m of a junction
-
-park at night on road with 40mph limit
-- should park with parking lights on
-
-if travel in wrong direction in main road
-- don't turn round / reerse from a side road into main road
-- should turn into side road on right and reverse into main road
-
-never reverse from a side road into a main road
-
-in a road car coming towards you
-- pull into a passing place on your left
-
-when a vehicle is overtaking you
-- dip light as soon as vehicle passes you
-
-signals given by direction indicator and brake lights
-
-safest way to turn vehicle around to go opposite way
-- find quiet side road to turn round in
-
-must have blue badge to park in a disabled space
-
-amber flashing beacon for salting vehicle
-
-min speed of 30mph: circle blue background white text
-
-contraflow bus and cycle lane: one-way street
-
-signal to turn right in busy traffic: give an arm signal
-
--> : two way traffic crosses a one-way road
-<-
-
-hump bridge
-direction to park-and-ride car park
-
-white arrow on road ahead: keep left of the hatched markings
 
 ## hazard warning
 when there's queuing traffic ahead 
@@ -494,49 +389,19 @@ when there's queuing traffic ahead
 
 
 
+# cycle
+wait in area marked with cycle
+- when traffic lights change to amber after passed first line
 
-# vehicle loading
-## keep your car stable
-make sure vehicle isn't overloaded
-- affect steering and braking
+horse riders in front
+- slow down and be ready to stop
 
-carry / tow heavy load
-- increase air pressure in tyres
-- adjust aim of headlights
 
-- distribute weight evenly
-- make sure load is fastened
-- ensure loads don't obstruct your view when driving
 
-load on roof rack
-- increase wind resistance
-- make vehicle less stable
 
-animals
-- should be restrained to ensure not interfere with driver / block driver's view
-- travel in special cage
 
-## towing
-use stabiliser fitted to your towbar
-if caravan / trailer has braking system, can fit breakaway cable as extra safety device
-- pull on brakes of braked trailer
 
-if trailer / caravan starts to swerve
-- ease off accelerator
-- reduce speed gradually to regain control
 
-cannot use right lane in 3 lanes motorway
-passengers not allowed to ride in caravan
-
-breakaway cable can fit to trailer braking system
-- if towbar fails the cable activate trailer brakes
-
-use extended-arm side mirror
-
-## inflate tyre
-inflate tyre more than normal
-- driving fast for a long distance
-- carry a heavy load
 
 
 

@@ -76,7 +76,43 @@ when vehicle is coming from right with left indicator
 don't have to carry vehicle document wherever you go
 - if police ask to see them, must produce at police station within 7 days
 
+park at night on road with 40mph limit
+- should park with parking lights on
 
+if travel in wrong direction in main road
+- don't turn round / reerse from a side road into main road
+- should turn into side road on right and reverse into main road
+
+never reverse from a side road into a main road
+
+in a road car coming towards you
+- pull into a passing place on your left
+
+when a vehicle is overtaking you
+- dip light as soon as vehicle passes you
+
+signals given by direction indicator and brake lights
+
+safest way to turn vehicle around to go opposite way
+- find quiet side road to turn round in
+
+must have blue badge to park in a disabled space
+
+amber flashing beacon for salting vehicle
+
+min speed of 30mph: circle blue background white text
+
+contraflow bus and cycle lane: one-way street
+
+signal to turn right in busy traffic: give an arm signal
+
+-> : two way traffic crosses a one-way road
+<-
+
+hump bridge
+direction to park-and-ride car park
+
+white arrow on road ahead: keep left of the hatched markings
 
 
 
