@@ -18,3 +18,18 @@ if import this file, will not execute this block
 solution:
 1. locate pip3
 2. ln -s /<path>/pip3.x /usr/local/bin/pip3
+
+# dictionary merge
+new_dict = {**a, **b}
+
+// merge nested dictionary
+from mergedeep import merge
+new_dict = merge({}, a, b)
+
+
+
+
+
+
+
+
