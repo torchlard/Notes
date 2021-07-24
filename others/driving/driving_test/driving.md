@@ -176,7 +176,11 @@ Give way to bus in space under tunnel
 tractor: amber flashing beacon
 - indicate moving slowly / stopped and a possible hazard
 
-
+# undertaking
+normally prohibited except
+1. driving in average spped zone, follow the flow
+2. overhead says keep in lane
+3. every traffic moving very slowly
 
 
 
