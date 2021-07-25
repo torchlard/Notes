@@ -15,9 +15,12 @@ export INPUT_METHOD=ibus
 solution: disable secure boot
 
 
+# reset corrupted ubuntu repository list
+sudo mv /etc/apt/sources.list ~/backup
+sudo touch /etc/apt/sources.list
 
-
-
+// enable repository options, choose best server
+software-properties-gtk  
 
 
 

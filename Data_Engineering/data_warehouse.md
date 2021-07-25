@@ -52,6 +52,45 @@ for performance reason
 - eg. various users require differnet levels of aggregation
 
 
+# Data Vault
+combine normalisation and dimension model benefit
+
+## raw fault 
+where source data stored, unchanged
+
+## staging layer
+handle batch/streaming
+
+## reporting layer
+designed for reporting, cleansed and secured
+
+## data lake
+store data files for ad hoc use, data exploration
+
+## central table (hub)
+store key code, eg. client no, id
+pick stable business keys
+
+## link table
+3NF multi to multi relation
+hubs connected by link table
+
+## satellite table
+hub and link table carry no descriptive attributes
+always type 2 form
+
+## reference table
+lookup code
+
+## example
+hub: customer no, metadata
+hub: order no, metadata
+link: customer no, order no
+satellite: customer name, customer phone, customer address, metadata
+satellite: order date, order amount, metadata
+reference: currency code, currency description
+
+
 # OLAP operations
 ## slice-dice
 slice data cube to produce simple 2D table / view
@@ -146,20 +185,40 @@ disadv: 存储空间的大量增长
 反馈域：可选项，这部分数据模型主要用于相应前端的反馈数据，数据仓库可以视业务的需要设置这一区域。
 
 # layers
-ODS > DWD -------------> DA
-          > DWS > DWM ->
+ODS > ------- DW ------> ADS
+       DWD, DWM, DWS
 
-## ODS
+## ODS (operational Data store)
+layer closest to data in data source
+save raw data in original form
 数据仓库源头系统的数据表通常会原封不动地存储一份
 准备区, simple cleaning
 
-## DW
+
+## DW (data warehouse)
 将一些数据关联的日期进行拆分，使得其更具体的分类，一般拆分成年、月、日，
 而ODS层到DW层的ETL脚本会根据业务需求对数据进行清洗、设计
 
-## DWS
-从ODS层中对用户的行为做一个初步汇总，抽象出来一些通用的维度：时间、ip、id，
-并根据这些维度做一些统计值，比如用户每个时间段在不同登录ip购买的商品数等
+### DWD (data warehouse details)
+data cleansing, standardize
+eg. clear null, dirty data, out of range data
+
+### DWB (data warehouse base) / MID / DWM (data warehouse middle)
+store objective data, normally use as intermediate layer 
+
+light synthesis and summary statistics of production data of DWD
+mid integration layer fine-grained for analytical application stat 
+
+### DWS (data warehouse service)
+aggregate data for certain topic
+result as wide table, for OLAP, business request
+
+## ADS (application data service)
+provide data for product and analysis
+normally stored in mysql, ES
+
+
+
 
 ## DA
 1. transactional data
