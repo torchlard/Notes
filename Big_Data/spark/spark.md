@@ -36,21 +36,24 @@ GraphX
 - fumdamental operations on graph => Pregel API
 
 SparkR (R on spark)
-- exlore different technique to integrate usability of R with scalability of R
-- data source API
-- data frame optimization: code genration, memory management
-- scalability to many core and machine
 
 support lang: R,python,Scala,Java
 
-## Dataset (Resilient distributed dataset)
+
+# cluster manager
+Standalone
+Apache Mesos
+Hadoop YARN
+Kubernetes
+
+# Dataset (Resilient distributed dataset)
 resilient: if memory lost, can be recreated
 distributed: across cluster
 dataset: initial data come from file / created programmatically
 
 fundamental unit of data in Spark
 
-### operations
+## operations
 - return:
 count
 take(n)
@@ -59,7 +62,7 @@ filter
 map
 reduce
 
-### type
+## type
 RDD can hold any element type
 - primitive: int, char, bool
 - sequence: list, array, typle, dict
@@ -71,7 +74,8 @@ Pair RDD: key-value pair
 - use with Map-Reduce algorithm
 - can use additional fn: sort, join, group, count
 
-## MapReduce VS spark
+
+# MapReduce VS spark
 map reduce:
 each job has 1 map, 1 reduce phase -> limited
 
@@ -109,18 +113,26 @@ can invoke functions like textFile, sequenceFile, parallelize
 ## functionality
 1. get current status of application
 SpkEnv, SparkConf, deployment environment
+
 2. set config
 master URL, form logical group of jobs, logging level
+
 3. cancel job
 DAGScheduler
+
 4. access services
 TaskScheduler, LiveListenBus, BlockManager ...
+
 5. closure cleaning in spark
+
 6. dynamic allocation
 requestExecutors, killExecutors
+
 7. register spark listener
+
 8. access persistent RDD
 getPersistentRDDs
+
 9. cancel stage
 DAGScheduler
 
@@ -160,7 +172,7 @@ provide in-memory storage for Spark RDDs cached by user program through Block Ma
 
 static/dynamic allocation
 
-hearbeat sender thread: sends metrics and heartbeats
+heartbeat sender thread: sends metrics and heartbeats
 describe by id, hostname, environment, classpath
 
 ### condition to create executor
@@ -355,9 +367,11 @@ DataSet: no need GC, use of heap data serialization
 
 ### serialization
 RDD: write to disk, use Java serialization
+
 DataFrame: 
-serialize data into off-heap storage in binary format
-transformation directly off heap, no need serialize
+- serialize data into off-heap storage in binary format
+- transformation directly off heap, no need serialize
+
 DataSet: encoder, use Tungsten binary format
 
 ### usage
@@ -366,6 +380,7 @@ RDD
 - for unstructred data (eg. stream)
 - want to use fp instead of expression in domain to process data
 - not care aboud optimization by structured
+
 DataFrame, DataSet:
 - use both DataFrame and dataset API for high level abstraction
 - high level expression
