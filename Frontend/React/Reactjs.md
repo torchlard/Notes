@@ -180,17 +180,8 @@ eg. directly input address to open
 function that takes a component, return new component
 aim: abstract components with similar patterns to 
 
-example:
-```js
-const CommentListWithSubscription = withSubscription(
-  CommentList, DataSource => DataSouirce.getComments()
-)
-const BlogPostWithSubscription = withSubscription(
-  BlogPost, (DataSource, props) => DataSource.getBlogPost(props.id)
-)
-```
-
 HOC add features to component without drastically altering component
+HOC is pure function
 
 
 # React hook
