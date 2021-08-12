@@ -26,30 +26,7 @@ allow data to be modeled and viewed in multiple dimensions
   - time (day, week, month, quarter, year)
 - fact table contains measure
 
-# conceptual modeling
-## Star schema
-fact table in middle connected to set of dimension tables
 
-fact table: contain factual/quantitative data called measure about a business
-
-dimension table: descriptive data about business
-
-PK of fact table = composite key of all foreign keys
-
-## Snowflake schema
-sometimes dimension in star schema forms natural hierarchy
-  - eg. markets within state/region/country
-
-2 choice
-1. include all information in big flat table
-2. normalize tables => snowflake schema
-
-## Fact constellation
-- multiple fact tables share dimension tables
-- collection of starts (galaxy schema)
-
-for performance reason
-- eg. various users require differnet levels of aggregation
 
 
 # Data Vault
