@@ -30,6 +30,9 @@ createdb mydb -U ade
 # login to db
 psql -d mydb -U ade
 
+psql -h host -d database -U user -W
+
+psql -h 127.0.0.1 -d some_database -f test.sql -W
 
 # start
 jdbc:mariadb://127.0.0.1:3306
