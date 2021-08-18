@@ -6,6 +6,7 @@ ORM: flush controlled by framework; 1 explicit flush before commit
   - if many entries modified, framework can do intermediate flushes
 
 assume T1,T2
+
 ## optimistic lock
 read not acquire locks, write acquire exlusive lock => T1 don't need lock
 

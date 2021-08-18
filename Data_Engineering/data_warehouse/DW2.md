@@ -128,10 +128,12 @@ set of users to extract a limited set of source data and make it available to so
 their unique problems.
 
 
-# fundamental concepts
-## dimension design process
+# dimension design process
 1. select business process
-business process generate / capture performance metrics translate into facts in fact table
+- business process generate / capture performance metrics translate into facts in fact table
+- expressed as action verbs
+- typically supported by operational system
+- triggered by input, result in output metrics
 
 2. declare the grain
 grain is binding contract on the design
@@ -146,6 +148,9 @@ contain entry point and descriptive labels enable analysis
 
 4. identify facts
 facts measurement almost always numeric
+answer question "What is the process measuring ?"
+
+
 
 ## dimension extension
 - facts consistent with grains can be added by creating new column
@@ -384,8 +389,74 @@ original column: id,name,salary,office
 
 
 # dimension hierarchy
+denote how data organised at various levels of aggregation
+identify various trends at 1 level, 
+drill down to lower levels to detect causes for these trends
+roll up to higher levels to see effects trend have on whole business
+
 ## fixed depth positional hierarchies
-many-to-1 relation
+have fixed set of levels, levels agreed upon names
+
+eg. date can be represented into >=2 formats: 'day-month-year', 'day-quarter-year'
+easily represented by single date dimension
+
+eg. represent geographical hierarchy would be difficult
+'address_line-city-state-country'
+'address_line-zone-city-state-country'
+
+## slightly ragged variable depth hierarchy
+range in depth is small, not fixed
+eg. geographical only has 3-6 levels
+
+can force-fit into fixed depth positional design
+
+## ragged variable depth hierarchy (bridge table / pathstring attr)
+num of levels not fixed, range of depth large enough to complicate traversing of hierarchy tree
+
+difficult to model and query in relational db
+limited support for recursive parent/child relationship
+
+
+# fact table technique
+## surrogate key
+implement PK for all dimension tables
+
+fact table surrogate keys not associated with any dimension
+1. as single column OK
+2. serve as immediate identifier without navigating multiple dimensions 
+3. allow interrupted load process
+4. less risky insert + deletes
+
+## centipede fact table
+should be avoided
+
+some go for normalized dimensions, each level many-to-1 hierarchy
+- include all foreign keys in fact table
+- too many low-cardinality dimension table rather than creating junk dimension
+
+
+## numerical value fact / dim ?
+standard list price of product
+
+fact: primarily for calculation purpsoe
+dim: predominantly for filtering and grouping
+
+## multiple currency fact
+fact table record financial transactions should contain columns
+- true currency of tx
+- single standard currency throughout fact table
+
+standard currency value created in ETL process by approved business rule for currency conversion
+
+
+## multipass SQL avoid fac-fact join
+impossible to control cardinality of answer set 
+
+
+# Retail Sales (case study)
+
+
+
 
 
 
