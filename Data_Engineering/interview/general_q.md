@@ -58,7 +58,7 @@ builder: swing the hammer to make sure house gets built
 | customer oriented                       | market-oriented                                    |
 | manage current data for decision making | hugely historical data, facilities for aggregation |
 
-# database VS data lake VS data warehouse
+# database VS datalake VS data warehouse
 database: typically structured with defined schema
 
 data warehouse: exist on top of several db, used for business intelligence

@@ -27,8 +27,7 @@ where k.r = 1
 
 select a1.player_id, a1.event_date, sum(a2.games_played) as games_played_so_far
 from Activity a1
-    left join Activity a2
-        on a1.player_id = a2.player_id  
+  left join Activity a2 on a1.player_id = a2.player_id  
 where a1.event_date >= a2.event_date
 group by a1.player_id, a1.event_date
 

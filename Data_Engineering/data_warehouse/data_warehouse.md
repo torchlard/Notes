@@ -101,6 +101,39 @@ consist of fact tables and dimension tables
 see perspectives of data in warehouse 
 
 
+# data warehouse VS database
+## data warehouse
+store summarized data
+historical + current information
+
+## database
+use detailed data
+day to day fundamental operations
+
+
+# data mart VS data lake
+## data mart
+very specific, allowing for fast, effective analytics
+smaller subset of data from DW
+less expensive, can analyze data faster
+limited range focused on 1 line of business
+
+## datalake
+more flexible, central archive
+
+# data warehouse VS data lake
+## data warehouse
+only store essential data
+extract data using quantitative metrics
+
+for operational users to generate reports for analytics
+
+## data lake
+store all data forever
+utilize different hardware allows cost-effective TB storage
+for deep analysis goes beyond stored data of warehouse
+
+
 # Data warehouse models
 ## enterprise warehouse
 collect all information about subject spanning entire organization

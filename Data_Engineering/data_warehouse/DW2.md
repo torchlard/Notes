@@ -41,37 +41,6 @@ analytic power of the DW/BI environment is directly proportional to the quality 
 depth of the dimension attributes
 
 
-# slowly changing dimension
-## type 0: retain original
-dimension attr never change
-
-## type 1: overwrite
-old attr value overwritten with new value
-reflects most recent assignment => destroys history
-
-useful when
-- correct data
-- no business need to keep historical values
-
-## type 2: add new row
-add new row in dimension with updated attr value
-
-add 3 column
-1. row effective date
-2. row expiration date
-3. current row indicator
-
-## type 3: add new attribute
-add new attribute in dimension to preserve old attr value
-
-alternate reality
-
-## type 4: add mini dimension
-a group of attributes in dimension change sufficiently rapidly
-
-## type 5: add mini dimension and type 1 outrigger
-
-
 # facts, dimension schema
 ## adv
 1. easier to understand and ngvigate
@@ -273,13 +242,154 @@ attached to virtually every fact table
 eg. never want to compute Easter in SQL, rather lookup in calendar date dimension
 
 ## role-playing dimensions
+a dimension table that has multiple valid relationships with a fact table
 eg. a fact table can have several dates, each represented by foreign key to date dimension
+eg. Date Dim can use to fetch order_placed_date, order_shipment_date, order_closure_date
+
+reuse same dimension, save time and memory space
 
 roles: each foreign key have independent dimension views
+
 
 ## junk dimension
 transaction profile dimension
 create single junk dimension to collect miscellaneous, low cadinality flag and indicator
+
+| txn successful | txn failed | no cash | invalid pin | no balance |
+|----------------|------------|---------|-------------|------------|
+| 1              | 0          | 0       | 0           | 0          |
+| 0              | 1          | 1       | 0           | 0          |
+| 0              | 1          | 0       | 1           | 0          |
+| 0              | 1          | 0       | 0           | 1          |
+
+
+## snowflaked dimensions
+when hierarchical relationship normalized, low-cardinality appear as secondary table
+- characteristic multilevel struture
+- should avoid snowflake because difficult to understand
+
+## outrigger 
+dimension can contain reference to another dimension table
+eg. bank account dimension -> dimension of date account openedd
+
+outrigger dimension: 2nd dimension reference
+use with caution, correlation between dimensions should be demoted to fact table
+
+
+# integration
+## conformed dimensions
+dimension table conform when attr in separate dimension table have same column names and domain content
+
+conformed dimensions reused across fact tables, single dimension shared by multiple fact tables
+any change to conformed dimension should not break one of dimensional stars
+
+## shrunken dimensions
+conformed dim that subset of rows and/or columns of base dim
+capture data at higher level of granularity
+
+## drilling across
+make separate queries against >= 2 fact tables
+
+## value chain
+identify natural flow of organization's primary business processes
+each process produce unique metrics at unique time intervals, granularity
+
+## enterprise data warehouse (EDW) bus architecture
+incremental approach
+decompose DW/BI planning process into manageable pieces by focusing on business processes
+- standardized conformed dim reuse across processes
+- technology and database platform independent
+
+## enterprise data warehouse bus matrix
+design and communicate, high abstraction and visionary planning DW architecture
+
+EDW built on bus architecture identifies and enforces relationship 
+between business process metrics (facts) and descriptive attributes (dimensions)
+
+
+
+# slowly changing dimension (SCD)
+## type 0: retain original
+dimension attr never change
+
+## type 1: overwrite
+old attr value overwritten with new value
+reflects most recent assignment => destroys history
+
+
+| id  | name  | salary | office             | effective_Date |
+|-----|-------|--------|--------------------|----------------|
+| 123 | Vivek | 10000  | Gurgaon -> Houston | 10-8-2013      |
+
+useful when
+- correct data
+- no business need to keep historical values
+
+## type 2: add new row
+add new row in dimension with updated attr value
+
+| id  | name  | salary | office     | from_Date | to_date    | curr_flag |
+|-----|-------|--------|------------|-----------|------------|-----------|
+| 123 | Vivek | 10000  | Houston    | 10-8-2013 | 9-1-2015   | Y         |
+| 123 | Vivek | 40000  | Gurgaon    | 10-1-2015 | 24-7-2015  | N         |
+| 123 | Vivek | 40000  | California | 25-7-2015 | 12-12-2009 | N         |
+
+## type 3: add new attribute
+add new attribute in dimension to preserve old attr value
+alternate reality, rarely used
+
+| id  | name  | salary | current_office | historic_office | from_Date |
+|-----|-------|--------|----------------|-----------------|-----------|
+| 123 | Vivek | 10000  | Houston        | Gurgaon         | 10-8-2013 |
+
+
+## type 4: add mini dimension
+use history table to store all historical dimension records
+history table add start_Date and expiry_date for historic values
+original dimension (latest snapshot) only keep current dimension
+
+suitable for rapid chaning dimensions
+
+latest snapshot dimension
+| id  | name  | salary | office  | effective_Date |
+|-----|-------|--------|---------|----------------|
+| 123 | Vivek | 10000  | Houston | 10-8-2013      |
+
+
+history table
+| id  | name  | salary | office     | from_Date | to_date    |
+|-----|-------|--------|------------|-----------|------------|
+| 123 | Vivek | 10000  | Gurgaon    | 10-8-2013 | 9-1-2015   |
+| 123 | Vivek | 40000  | California | 10-1-2015 | 24-7-2015  |
+| 123 | Vivek | 40000  | Houston    | 25-7-2015 | 12-12-2009 |
+
+
+## type 5: add mini dimension and type 1 outrigger
+preserve historical attr value
+embed type 1 ref to mini dimension
+
+must overwrite type 1 mini-dimension reference whenever current mini-dimension assignment change
+
+## type 6: type 1+2+3
+original column: id,name,salary,office
+
+| id  | name  | salary | current_office | historic_office | from_Date | to_date    | curr_flag |
+|-----|-------|--------|----------------|-----------------|-----------|------------|-----------|
+| 123 | Vivek | 10000  | Houston        | Gurgaon         | 10-8-2013 | 9-1-2015   | Y         |
+| 123 | Vivek | 40000  | Houston        | California      | 10-1-2015 | 24-7-2015  | N         |
+| 123 | Vivek | 40000  | Houston        | Houston         | 25-7-2015 | 12-12-2009 | N         |
+
+
+## type 7: dual type 1, 2 dimension
+
+
+# dimension hierarchy
+## fixed depth positional hierarchies
+many-to-1 relation
+
+
+
+
 
 
 

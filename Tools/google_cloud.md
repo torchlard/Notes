@@ -36,3 +36,8 @@ gcloud compute firewall-rules create my-rule --allow tcp:8000
 
 python3 run_test.py --content content/big_flowers.jpg --style_model models/the_scream.ckpt --output result.jpg
 
+
+
+
+
+
