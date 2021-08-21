@@ -32,8 +32,17 @@ if search by secondary index
 special case where index itself contains required data field
 can answer required data
 
-|clustered index|non-clustered index|
-|-|-|
+| clustered index                                  | non-clustered index                                  |
+|--------------------------------------------------|------------------------------------------------------|
+| faster                                           | slower                                               |
+| less memory                                      | more memory                                          |
+| index is main data                               | index is copy of data                                |
+| only 1                                           | multiple                                             |
+| can store data on disk                           | cannot store data on disk                            |
+| store pointer to block not data                  | store both value and pointer to actual row hold data |
+| leaf node actual data                            | leaf node has included columns                       |
+| define order of data within table                | index key define order of data within index          |
+| table record physically reordered to match index | logical order of index not match physical order      |
 
 
 # index type
