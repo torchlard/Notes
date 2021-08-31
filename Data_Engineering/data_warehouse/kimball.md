@@ -72,9 +72,20 @@ a group of attributes in dimension change sufficiently rapidly
 ## type 5: add mini dimension and type 1 outrigger
 
 
+# Date dimension
+cannot populate datetime for every minute, too much
+maybe consider 15-min interval
+OR 1 row per minute within 24 hr period
 
+- if no need to rollup or filter on time-of-day grouping, just handled as in fact table
 
+keep repeated low cardinality value in primary dimension table
 
+data involved in calculations => fact table
+data involed in constraints, groups and labels => dimension table
 
+drill down: go to more specific level, add row header
+drill up: go up to more general, remove row header
+drill through: allow user to pass from 1 report to another while analyzing same dataset
 
 

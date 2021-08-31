@@ -53,7 +53,7 @@ KutYhIiNJgDAJqMgQZI8RnA80wGgrxcPxA==
 # steps
 1. create ~/.ssh if not exists
 2. chmod 700 ~/.ssh
-3. ssh-keygen (keep all default)
+3. ssh-keygen -f <name> (keep all default)
 => id_rsa.pub: public key ; id_rsa: private key
 4. ssh-copy-id -i ~/.ssh/id_rsa.pub <user>@<host>
 - copy key from client to server, so as to ssh to server
