@@ -449,7 +449,7 @@ fact table record financial transactions should contain columns
 standard currency value created in ETL process by approved business rule for currency conversion
 
 
-## multipass SQL avoid fac-fact join
+## multipass SQL avoid fact-fact join
 impossible to control cardinality of answer set 
 
 
