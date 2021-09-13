@@ -17,7 +17,15 @@ responsible for your taxes as usual
 remain the chance of IR35 enquiry from HMRC
 
 
-
+# UK (annual) VS HK (monthly)
+62k -> 44k
+65k -> 48k
+70k -> 51k
+75k -> 54k
+80k -> 58k
+85k -> 60k
+100k -> 70k
+110k -> 74k
 
 
 
