@@ -52,6 +52,40 @@ plan: create an execution plan
 apply: execute the plan
 destroy: destroy resources / infrastructure
 
+# main purpose
+declaring resources, represent infrastructure objects
+
+
+# syntax
+```
+resource "aws_vpc" "main" {
+  cidr_block = var.base_cidr_block
+}
+
+<block type> "<block label>" "<block label>" {
+  <identifier> = <expression>
+}
+```
+
+## input variable
+param for Terraform module
+customized without altering module's own source code
+
+```tf
+variable "a" {
+  type = string|number|bool
+  default = 
+}
+```
+
+
+
+
+
+
+
+
+
 
 
 

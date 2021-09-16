@@ -13,6 +13,13 @@ jupyter notbook list
 jupyter notebook stop 8888
 
 
+# allow absolute path
+```py
+import os, sys
+module_path = os.path.abspath(os.path.join('.'))
+if module_path not in sys.path:
+    sys.path.append(module_path)
+```
 
 
 
