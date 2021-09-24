@@ -21,7 +21,12 @@ if module_path not in sys.path:
     sys.path.append(module_path)
 ```
 
-
+# reload module
+```py
+import app.model.strategy.rsr_model as rm
+import importlib 
+importlib.reload(rm)
+```
 
 
 

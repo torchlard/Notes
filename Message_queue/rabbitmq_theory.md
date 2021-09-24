@@ -59,6 +59,10 @@ automicatic ACK should be considered unsafe
 - consumer's TCP connection / channel can be closed before successful delivery
 
 
+# binding
+relationship between an exchange and a queue
+queue is interested in message from this exchange
+
 
 # Exchanges
 producer can only send msg to an exchange
