@@ -85,7 +85,12 @@ curl -i -u rabbitmq:rabbitmq -X PUT -H "Content-Type: application/json" \
   -d '{"pattern":"h1","definition":{"ha-mode":"exactly","ha-params":2,"ha-sync-mode":"automatic"}}' http://192.168.240.28:30012/api/policies
 
 
+# nack
+nack/reject with requeue=1
+- msg returned to queue as though new msg
 
+nack/reject with requeue=0
+- dead letter exchange
 
 
 
