@@ -35,10 +35,3 @@ fully managed apache airflow
 
 Cloud composer = Airflow + k8s engine + cloud storage
 
-
-
-
-
-
-
-

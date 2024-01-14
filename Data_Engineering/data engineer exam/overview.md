@@ -9,14 +9,12 @@ data processing: Pub/Sub, DataFlow
 Analyze: bigQuery, cloud ML Engine
 Visualize: data studio 
 
+# on-premise
+on-perm, allow you to have full control of your infrastructure
 
+cloud computing: leasing data centre resources from 3rd party service provider
 
-
-
-
-
-
-
-
-
-
+# Google Cloud Replacement
+HDFS -> google cloud storage
+hive -> BigQuery
+HBase -> Bigtable

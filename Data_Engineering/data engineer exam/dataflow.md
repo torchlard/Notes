@@ -1,8 +1,7 @@
-
 # Dataflow
 based on Apache Beam
 unified batch and stream processing
-less overhead, serverless
+less overhead, serverless based infrastructure
 portable across Dataflow, Spark, Flink as runtime
 
 # Dataflow key term
@@ -27,3 +26,18 @@ session: within certain time when event happen
 sliding: overlapping intervals
 fixed
 global: only 1 window
+
+# user case
+ingestion data or replication across subsystem
+ETL workflows ingest data into bigquery
+powering BI dashboard
+Applying ML in realtime to streaming data
+
+# Dataflow VS Dataproc
+dataproc designed for batch processing using hadoop and spark
+dataflwo for realtime and batch processing using variety of frameworks
+
+# FAQ
+- to create unique identifier for each row in streaming data, use DoFn function in Dataflow that call external HTTP service for unique idnetifier
+
+

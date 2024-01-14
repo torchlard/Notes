@@ -51,5 +51,19 @@ who is doing what
 
 not charged for batch load and export
 
+# FAQ
+- bigquery transfer service is moving BigQuery data to Google SaaS application (adwords, doubleClick)
+- order yable appropriately, larger table of left of join, smaller table right side of join
+
+- when size approach limit, need additional node to increase processing ability
+
+- cloud DataPrep create reusable transformation without having to write code 
+
+
+
+
+
+
+
 
 

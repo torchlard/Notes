@@ -56,8 +56,7 @@ better when all features influence output all weights roughtly equal size
 
 ## wide vs deep network
 wide: memorization
-deep:
-    - generalization
+deep: generalization
 
 gcloud ml-engine local train
 
@@ -129,6 +128,7 @@ supply own data to train on
 ## bigquery ML
 use sql syntax to create models
 
-
+# FAQ
+best qualify tranining data min 100 training odcs per label, ideally 100 times more docs for most common label
 
 
