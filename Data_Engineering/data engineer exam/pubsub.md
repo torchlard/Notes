@@ -4,6 +4,13 @@ pub/sub lite: low cost, lower reliability
   - zonal topic storage: only 1 zone
   - regional: replicate to second zone async
 
+## concept
+publisher: create msg, send to msg service on specified topic
+topic
+schema: govern data format of pubsub msg
+subscription
+subcriber
+
 ## compare other tech
 per-message parallelism, not partition based messaging
 track whether message is successfully processed
@@ -19,14 +26,12 @@ acked
 unacked: pub/sub don't receive ack within deadline, will deliver again until msg retention expire 
 nacked: cause pub/sub to redeliver immediately
 
-
-# result
+## result
 - if pub/sub over normal, 
-  - subscriberunable to keep up incoming msg
+  - subscriber unable to keep up incoming msg
   - subscriber not ack msg as they are pulled
 
 snaphost on Subscription, so you can seek back to point in time if need to roll back
-
 wider network can approximate more interaction between input varaiables: for memorization
 
 # apache kafka connector
@@ -41,13 +46,6 @@ collect logs from on-premises kafka solution
 # monitoring
 Monitor topic, subscription
 
-# concept
-publisher: create msg, send to msg service on specified topic
-topic
-schema: govern data format of pubsub msg
-subscription
-subcriber
-
 # integration
 1. stream processing and data integration, support by dataflow
 2. monitoring
@@ -55,8 +53,9 @@ subcriber
 4. push-based delivery to webhook, workflow automation by Cloud Functions
 5. Cloud Composer or other serverless workflows
 
-
-
-
+# FAQ
+- pub/sub globally available, don't need to create on basis of region
+- attach timestamp is responsibility of publishing system, not pub/sub
+- to inspect faulty data: try-catch block, additional output that use PCollection output err data to pubsub
 
 

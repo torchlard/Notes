@@ -22,12 +22,6 @@ Monitoring
 Data Transfer Appliance: from on-premise to Google Cloud Storage
 SQL dump/CSV file -> cloud storage -> cloud SQL
 
-# FAQ
-- signed URL with specific expiry, provider this to 3rd party user => temporary access
-- archive cloud storage for access once every 12 months
-- Bastion hosts still traverse public internet
-- cloud VPN would be inefficient for 90TB of data
-
 # cloud storage connector
 don't need to transfer into HDFS first
 use `gs://` instead of `hdfs://`
@@ -42,3 +36,45 @@ nearline storage
 
 coldline storage
 - long-term, less frequent access
+
+# key concept
+cannot change bucket location, but can move data to bucket in different location
+
+## regional
+data redundancy across availability zones (sync)
+no replication charges
+
+## dual-region 
+200 Gbps (per region, project)
+higher availability than regional, data redundancy across regions (async)
+replication charges apply on write
+highest storage price
+
+## multi-region
+50 Gbps 
+limited performance scaling, variable performance for reads
+outbound data transfer charge when reading data
+
+# pub/sub notification for cloud storage
+send info about change to objects in bucket to pub/sub
+cloud function: only trigger lightweight, standalone function
+
+# FAQ
+- Storage transfer service: perform normal data transfer
+- Transfer Appliance: for on-premise trasfer, not cloud to cloud, not for repeated/scheduled
+- signed URL with specific expiry, provider this to 3rd party user => temporary access
+- archive cloud storage for access once every 12 months
+- Bastion hosts still traverse public internet
+- cloud VPN would be inefficient for 90TB of data
+
+
+
+
+
+
+
+
+
+
+
+

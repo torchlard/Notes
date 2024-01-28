@@ -39,5 +39,6 @@ dataflwo for realtime and batch processing using variety of frameworks
 
 # FAQ
 - to create unique identifier for each row in streaming data, use DoFn function in Dataflow that call external HTTP service for unique idnetifier
-
-
+- to test change easily: DirectRunner to test-run pipeline using local compute power, staging storage bucket
+- flatten transformation merge multiple PCollection into single PCollection
+- not trigger: element size in bytes

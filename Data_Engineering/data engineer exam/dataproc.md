@@ -48,7 +48,7 @@ significantly cheap, short-lived compute instance
 
 
 # FAQ
-dataproc cluster isolated from public internet, not have any public IP address
-- use --no-address flag, make sure private google access enabled for the subnet
-
-- must have max 2:! preemptible to standard workers
+- dataproc cluster isolated from public internet, not have any public IP address
+  - use --no-address flag, make sure private google access enabled for the subnet
+- must have max 2:1 preemptible to standard workers
+  

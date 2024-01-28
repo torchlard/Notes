@@ -121,14 +121,31 @@ landmark detection
 image properties
 web detection
 
+## bigquery ML
+use sql syntax to create models
+
+# Vertex AI
 ## auto ML
 pre-trained api for custom models
 supply own data to train on
 
-## bigquery ML
-use sql syntax to create models
+## custom training
+complete control over training process
+
+## model garden
+discover, test, customize and deploy vertex AI
+
+## generative AI
+access Google's large generative AI models for multiple media (text,code,image,speech)
+
+## bigquery user
+BigQuery ML only support batch predictions 
+MLOps automate monitoring and maintain accuracy of predictions over time
 
 # FAQ
-best qualify tranining data min 100 training odcs per label, ideally 100 times more docs for most common label
+- best qualify tranining data min 10 training odcs per label, ideally 100 times more docs for most common label
+- machine type: master, worker, parameter server
+- use smaller set of features to avoid overfitting
+
 
 
