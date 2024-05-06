@@ -72,4 +72,7 @@ by default encrypted using Google's default encryption
 - create separate project for dev/test, staging and production. Migrate relevant data between projects when ready for next stage
 - a bigtable instance support up to 10k write queries per second per node
 
+# example
+asia#india#mumbai
+
 

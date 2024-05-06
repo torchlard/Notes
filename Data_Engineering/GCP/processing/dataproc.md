@@ -46,9 +46,14 @@ significantly cheap, short-lived compute instance
 - for fault tolerant jobs
 - increase max attempt of master 
 
+## low cost
+Set up a cluster in Standard mode with high-memory machine types. Add 10 additional Preemptible worker nodes.
+
+
 
 # FAQ
 - dataproc cluster isolated from public internet, not have any public IP address
   - use --no-address flag, make sure private google access enabled for the subnet
 - must have max 2:1 preemptible to standard workers
   
+- Deploy a Cloud Dataproc cluster to run Spark and Hadoop jobs, don't need to use Compute Engine to run hadoop job

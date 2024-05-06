@@ -41,7 +41,7 @@ Stage: job divided into smaller set of tasks called stages (similar to mapReduce
 ## Spark workloads
 ### regularly scheduled batch job
 eg. hourly, daily ETL, training ML models with Spark ML
-create cluster for each batch workload, delte cluste cluster when job finished
+create cluster for each batch workload, delete cluste cluster when job finished
 
 1. cluster cluster until finished
 2. submit job to cluster

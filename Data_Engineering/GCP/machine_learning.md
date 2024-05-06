@@ -146,6 +146,8 @@ MLOps automate monitoring and maintain accuracy of predictions over time
 - best qualify tranining data min 10 training odcs per label, ideally 100 times more docs for most common label
 - machine type: master, worker, parameter server
 - use smaller set of features to avoid overfitting
+- Deep and wide models are ideal for a recommendation application.
+
 
 
 
