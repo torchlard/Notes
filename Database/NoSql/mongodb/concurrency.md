@@ -9,6 +9,11 @@ locks are fair, with reads and writes being queued in order
 when 1 request granted, all other compatible requested granted at same time
 => maybe conflicting
 
+ggghhh
+fgghhjh
+
+
+
 most read write operation use optimistic concurrency control
 
 # lock type
